@@ -12,6 +12,9 @@
     <properties>
         <env>local</env>
 
+        <apache-commons-io-version>2.4</apache-commons-io-version>
+        <apache-commons-lang-version>3.4</apache-commons-lang-version>
+        <logback-version>1.0.13</logback-version>
         <jodatime-version>2.8</jodatime-version>
         <junit-version>4.12</junit-version>
 
@@ -32,12 +35,28 @@
     <dependencies>
 
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache-commons-io-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache-commons-lang-version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${jodatime-version}</version>
         </dependency>
-
-
 
         <dependency>
             <groupId>junit</groupId>
@@ -75,6 +94,10 @@
                                 <xsdOption>
                                     <xsd>src/main/resources/zugferd1p0/ZUGFeRD1p0.xsd</xsd>
                                     <packagename>at.austriapro.mappings.zugferd.generated</packagename>
+                                    <extension>true</extension>
+                                    <extensionArgs>
+                                        <extensionArg>-Xfluent-api</extensionArg>
+                                    </extensionArgs>
                                 </xsdOption>
                                 <!-- We might want to move this to a common core - to be discussed -->
                                 <xsdOption>
@@ -83,11 +106,21 @@
                                     <catalog>${basedir}/src/main/resources/catalog/catalog.xml</catalog>
                                     <packagename>at.austriapro.mappings.ebinterface.generated</packagename>
                                     <extension>true</extension>
+                                    <extensionArgs>
+                                        <extensionArg>-Xfluent-api</extensionArg>
+                                    </extensionArgs>
                                 </xsdOption>
                             </xsdOptions>
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-fluent-api</artifactId>
+                        <version>3.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
 

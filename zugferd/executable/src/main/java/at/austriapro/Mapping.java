@@ -1,7 +1,5 @@
 package at.austriapro;
 
-import java.io.InputStream;
-
 /**
  * Common interface, shared among all mappings implemented by AUSTRIAPro
  */
@@ -15,7 +13,7 @@ public abstract class Mapping {
    * @return
    * @throws MappingException
    */
-   public abstract InputStream mapFromebInterface(String ebinterface) throws MappingException;
+   public abstract byte[] mapFromebInterface(String ebinterface) throws MappingException;
 
 
 }
