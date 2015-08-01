@@ -64,7 +64,7 @@
                         <configuration>
                             <xsdOptions>
                                 <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/zugferd1p0/ZUGFeRD1p0.xsd
+                                    <xsd>${project.build.outputDirectory}/zugferd1p0/ZUGFeRD1p0.xsd
                                     </xsd>
                                     <packagename>at.austriapro.mappings.zugferd.generated
                                     </packagename>
@@ -75,12 +75,12 @@
                                 </xsdOption>
                                 <!-- We might want to move this to a common core - to be discussed -->
                                 <xsdOption>
-                                    <xsd>${basedir}/src/main/resources/ebinterface4p1/Invoice.xsd
+                                    <xsd>${project.build.outputDirectory}/ebinterface4p1/Invoice.xsd
                                     </xsd>
                                     <bindingFile>
-                                        ${basedir}/src/main/resources/ebinterface4p1/bindings.xjb
+                                        ${project.build.outputDirectory}/ebinterface4p1/bindings.xjb
                                     </bindingFile>
-                                    <catalog>${basedir}/src/main/resources/catalog/catalog.xml
+                                    <catalog>${project.build.outputDirectory}/catalog/catalog.xml
                                     </catalog>
                                     <packagename>at.austriapro.mappings.ebinterface.generated
                                     </packagename>
