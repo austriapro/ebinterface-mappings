@@ -16,6 +16,7 @@ Currently, the following mappings are planned.
 
  * ZUGFeRD (Germany)
  * UBL 2.1 (International)
+ 
  * e-SLOG (Slovenia)
  * FatturaPA (Italy)
  * GS1 XML (International)
