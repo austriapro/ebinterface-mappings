@@ -40,13 +40,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-ebinterface</artifactId>
-            <version>${ph-ebinterface-version}</version>
-        </dependency>
-
-
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback-version}</version>
