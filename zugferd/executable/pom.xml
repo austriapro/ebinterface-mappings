@@ -1,18 +1,139 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>at.austriapro</groupId>
-  <artifactId>ebinterface-to-zugferd</artifactId>
-  <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>ebinterface-to-zugferd</name>
-  <url>http://maven.apache.org</url>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>at.austriapro</groupId>
+    <artifactId>ebinterface-to-zugferd</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>ebinterface-to-zugferd</name>
+
+
+    <properties>
+        <env>local</env>
+
+        <apache-commons-io-version>2.4</apache-commons-io-version>
+        <apache-commons-lang-version>3.4</apache-commons-lang-version>
+        <guava-version>18.0</guava-version>
+        <logback-version>1.0.13</logback-version>
+        <jodatime-version>2.8</jodatime-version>
+        <junit-version>4.12</junit-version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+
+    <scm>
+        <connection>scm:git:git@github.com:austriapro/ebinterface-mappings.git</connection>
+        <url>https://github.com/austriapro/ebinterface-mappings</url>
+        <developerConnection>scm:git:git@github.com:austriapro/ebinterface-mappings.git</developerConnection>
+    </scm>
+
+
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache-commons-io-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache-commons-lang-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-xjc-plugin</artifactId>
+                <version>2.3.0</version>
+                <configuration>
+                    <extensions>
+                        <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:2.3.0</extension>
+                    </extensions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xsdtojava</goal>
+                        </goals>
+                        <configuration>
+                            <sourceRoot>${basedir}/target/generated-sources/src/main/java</sourceRoot>
+                            <xsdOptions>
+                                <xsdOption>
+                                    <xsd>src/main/resources/zugferd1p0/ZUGFeRD1p0.xsd</xsd>
+                                    <packagename>at.austriapro.mappings.zugferd.generated</packagename>
+                                    <extension>true</extension>
+                                    <extensionArgs>
+                                        <extensionArg>-Xfluent-api</extensionArg>
+                                    </extensionArgs>
+                                </xsdOption>
+                                <!-- We might want to move this to a common core - to be discussed -->
+                                <xsdOption>
+                                    <xsd>src/main/resources/ebinterface4p1/Invoice.xsd</xsd>
+                                    <bindingFile>src/main/resources/ebinterface4p1/bindings.xjb</bindingFile>
+                                    <catalog>${basedir}/src/main/resources/catalog/catalog.xml</catalog>
+                                    <packagename>at.austriapro.mappings.ebinterface.generated</packagename>
+                                    <extension>true</extension>
+                                    <extensionArgs>
+                                        <extensionArg>-Xfluent-api</extensionArg>
+                                    </extensionArgs>
+                                </xsdOption>
+                            </xsdOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-fluent-api</artifactId>
+                        <version>3.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+
+        </plugins>
+
+    </build>
+
+
 </project>
