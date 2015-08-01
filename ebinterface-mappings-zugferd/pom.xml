@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>at.austriapro</groupId>
+    <artifactId>ebinterface-mappings-zugferd</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>ebinterface to ZUGFeRD mapping</name>
+
+
+    <parent>
+        <groupId>at.austriapro</groupId>
+        <artifactId>ebinterface-mappings</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-xjc-plugin</artifactId>
+                <version>2.3.0</version>
+                <configuration>
+                    <extensions>
+                        <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:2.3.0</extension>
+                    </extensions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xsdtojava</goal>
+                        </goals>
+                        <configuration>
+                            <sourceRoot>${basedir}/target/generated-sources/src/main/java
+                            </sourceRoot>
+                            <xsdOptions>
+                                <xsdOption>
+                                    <xsd>src/main/resources/zugferd1p0/ZUGFeRD1p0.xsd</xsd>
+                                    <packagename>at.austriapro.mappings.zugferd.generated
+                                    </packagename>
+                                    <extension>true</extension>
+                                    <extensionArgs>
+                                        <extensionArg>-Xfluent-api</extensionArg>
+                                    </extensionArgs>
+                                </xsdOption>
+                                <!-- We might want to move this to a common core - to be discussed -->
+                                <xsdOption>
+                                    <xsd>src/main/resources/ebinterface4p1/Invoice.xsd</xsd>
+                                    <bindingFile>src/main/resources/ebinterface4p1/bindings.xjb
+                                    </bindingFile>
+                                    <catalog>${basedir}/src/main/resources/catalog/catalog.xml
+                                    </catalog>
+                                    <packagename>at.austriapro.mappings.ebinterface.generated
+                                    </packagename>
+                                    <extension>true</extension>
+                                    <extensionArgs>
+                                        <extensionArg>-Xfluent-api</extensionArg>
+                                    </extensionArgs>
+                                </xsdOption>
+                            </xsdOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-fluent-api</artifactId>
+                        <version>3.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+
+        </plugins>
+
+    </build>
+
+
+</project>
