@@ -1,5 +1,7 @@
 ![ebInterface Logo](https://github.com/pliegl/ebinterface/blob/master/site/images/logo.jpg?raw=true "ebInterface e-Invoice standard")
 
+[![Build Status](https://travis-ci.org/austriapro/ebinterface-mappings.svg?branch=master)](https://travis-ci.org/austriapro/ebinterface-mappings)
+
 #ebInterface Mappings
 
 This project collects various document mappings, allowing to transform a given ebInterface instance to another document format and vice versa.
@@ -26,3 +28,8 @@ Currently, the following mappings are planned.
 For this project the Google code style is used. Please [download the code style file](https://code.google.com/p/google-styleguide/source/browse/trunk/intellij-java-google-style.xml) and set it in your IDE, before you commit to the repository. 
 
 :green_heart: Pull requests are greatly appreciated and welcomed.
+
+##Build status
+
+
+
