@@ -56,7 +56,7 @@ public class DocumentTypeUtils {
     StringReader reader = new StringReader(input);
     Invoice ebInterface = null;
     try {
-      ebInterface = (Invoice)ebInterfaceUnmarshaller.unmarshal(reader);
+      ebInterface = (Invoice) ebInterfaceUnmarshaller.unmarshal(reader);
     } catch (JAXBException e) {
       throw new MappingException("Unable to retrieve JAX-B object for ebInterface XML string.");
     }
@@ -66,15 +66,12 @@ public class DocumentTypeUtils {
 
   /**
    * Parse the given ZUGFeRD input XML string and creates a JAX-B object
-   * @param input
-   * @return
-   * @throws MappingException
    */
   public static CrossIndustryDocumentType parseZUGFeRD(String input) throws MappingException {
     StringReader reader = new StringReader(input);
     CrossIndustryDocumentType zugferd;
     try {
-      zugferd = (CrossIndustryDocumentType)zugferdUnmarshaller.unmarshal(reader);
+      zugferd = (CrossIndustryDocumentType) zugferdUnmarshaller.unmarshal(reader);
     } catch (JAXBException e) {
       throw new MappingException("Unable to retrieve JAX-B object for ZUGFeRD XML string.");
     }
@@ -85,9 +82,6 @@ public class DocumentTypeUtils {
 
   /**
    * Write the ZUGFeRD JAX-B object to a byte array
-   * @param zugferd
-   * @return
-   * @throws MappingException
    */
   public static byte[] writeZUGFeRD(CrossIndustryDocumentType zugferd) throws MappingException {
 
@@ -102,8 +96,6 @@ public class DocumentTypeUtils {
 
     return sw.toString().getBytes();
   }
-
-
 
 
 }

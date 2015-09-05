@@ -170,14 +170,18 @@ public class ZUGFeRDMapping extends Mapping {
 
     //DeliveryID
     //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:DespatchAdviceReferencedDocument/ram:ID
-    zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().withDespatchAdviceReferencedDocument(new ReferencedDocumentType().withID(new IDType().withValue(delivery.getDeliveryID())));
+    zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+        .withDespatchAdviceReferencedDocument(
+            new ReferencedDocumentType().withID(new IDType().withValue(delivery.getDeliveryID())));
 
     //Process address details, in case there's one
     if (delivery.getAddress() != null) {
 
       //Create the necessary elements in ZUGFeRD
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().withDefinedTradeContact(new TradeContactType());
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().withPostalTradeAddress(new TradeAddressType());
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().withDefinedTradeContact(new TradeContactType());
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().withPostalTradeAddress(new TradeAddressType());
 
       Address address = delivery.getAddress();
 
@@ -192,35 +196,52 @@ public class ZUGFeRDMapping extends Mapping {
 
       //Salutation and Name
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipFromTradeParty/ram:Name
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().withName(new TextType().withValue(partyName));
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().withName(new TextType().withValue(partyName));
 
       //Street
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipFromTradeParty/ram:PostalTradeAddress/ram:LineOne
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().getPostalTradeAddress().setLineOne(new TextType().withValue(address.getStreet()));
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().getPostalTradeAddress()
+          .setLineOne(new TextType().withValue(address.getStreet()));
 
       //Town
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipFromTradeParty/ram:PostalTradeAddress/ram:CityName
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().getPostalTradeAddress().setCityName(new TextType().withValue(address.getTown()));
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().getPostalTradeAddress()
+          .setCityName(new TextType().withValue(address.getTown()));
 
       //ZIP
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipFromTradeParty/ram:PostalTradeAddress/ram:PostcodeCode
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().getPostalTradeAddress().getPostcodeCode().add(new CodeType().withValue(address.getZIP()));
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().getPostalTradeAddress().getPostcodeCode()
+          .add(new CodeType().withValue(address.getZIP()));
 
       //Country Code
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipFromTradeParty/ram:PostalTradeAddress/ram:CountryID
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().getPostalTradeAddress().setCountryID(new CountryIDType().withValue(address.getCountry().getCountryCode().value()));
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().getPostalTradeAddress().setCountryID(
+          new CountryIDType().withValue(address.getCountry().getCountryCode().value()));
 
       //Phone
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipFromTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().getDefinedTradeContact().get(0).withTelephoneUniversalCommunication(new UniversalCommunicationType().withCompleteNumber(new TextType().withValue(address.getPhone())));
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().getDefinedTradeContact().get(0)
+          .withTelephoneUniversalCommunication(new UniversalCommunicationType().withCompleteNumber(
+              new TextType().withValue(address.getPhone())));
 
       //Email
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipFromTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:CompleteNumber
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().getDefinedTradeContact().get(0).withEmailURIUniversalCommunication(new UniversalCommunicationType().withCompleteNumber(new TextType().withValue(address.getEmail())));
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().getDefinedTradeContact().get(0)
+          .withEmailURIUniversalCommunication(new UniversalCommunicationType().withCompleteNumber(
+              new TextType().withValue(address.getEmail())));
 
       //Contact
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipFromTradeParty/ram:DefinedTradeContact/ram:PersonName
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().getShipFromTradeParty().getDefinedTradeContact().get(0).setPersonName(new TextType().withValue(address.getContact()));
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .getShipFromTradeParty().getDefinedTradeContact().get(0)
+          .setPersonName(new TextType().withValue(address.getContact()));
 
     }
 

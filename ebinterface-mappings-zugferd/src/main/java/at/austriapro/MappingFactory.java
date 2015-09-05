@@ -11,7 +11,9 @@ public class MappingFactory {
 
 
   //The currently supported mapping types
-  public enum MappingType {ZUGFeRD_BASIC_1p0, ZUGFeRD_COMFORT_1p0, ZUGFeRD_EXTENDED_1p0, UBL, GS1XML, FATTURAPA}
+  public enum MappingType {
+    ZUGFeRD_BASIC_1p0, ZUGFeRD_COMFORT_1p0, ZUGFeRD_EXTENDED_1p0, UBL, GS1XML, FATTURAPA
+  }
 
   ;
 
@@ -46,7 +48,7 @@ public class MappingFactory {
     if (zUGFeRDMapping == null) {
       zUGFeRDMapping = new ZUGFeRDMapping(mappingType);
     }
-    return  zUGFeRDMapping;
+    return zUGFeRDMapping;
   }
 
 }

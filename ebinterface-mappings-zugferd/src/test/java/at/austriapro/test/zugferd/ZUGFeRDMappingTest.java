@@ -14,9 +14,7 @@ import at.austriapro.MappingFactory;
 public class ZUGFeRDMappingTest {
 
 
-
   private static final Logger LOG = LoggerFactory.getLogger(ZUGFeRDMappingTest.class.getName());
-
 
 
   @Test
@@ -24,7 +22,11 @@ public class ZUGFeRDMappingTest {
 
     //Read an eb4p1 sample
     try {
-      String ebInterfaceXML = IOUtils.toString(this.getClass().getResourceAsStream("/ebinterface/ebInterface_4p1_sample.xml"), "UTF-8");
+      String
+          ebInterfaceXML =
+          IOUtils.toString(
+              this.getClass().getResourceAsStream("/ebinterface/ebInterface_4p1_sample.xml"),
+              "UTF-8");
 
       MappingFactory mf = new MappingFactory();
       Mapping zugFeRDMapping = mf.getMapper(MappingFactory.MappingType.ZUGFeRD_BASIC_1p0);
@@ -41,9 +43,6 @@ public class ZUGFeRDMappingTest {
 
 
   }
-
-
-
 
 
 }

@@ -45,6 +45,11 @@
                 </executions>
             </plugin>
 
+            <!--
+               We only execute the generation of the JAX-B classes once, since no change is to be
+               expected in the underlying XSD at the moment. Furhtermore the Travis CI is not really
+               able to deal with the generate-sources Maven phase and the referenced Schema files.
+
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-xjc-plugin</artifactId>
@@ -73,7 +78,6 @@
                                         <extensionArg>-Xfluent-api</extensionArg>
                                     </extensionArgs>
                                 </xsdOption>
-                                <!-- We might want to move this to a common core - to be discussed -->
                                 <xsdOption>
                                     <xsd>${project.build.outputDirectory}/ebinterface4p1/Invoice.xsd
                                     </xsd>
@@ -102,6 +106,7 @@
                 </dependencies>
             </plugin>
 
+            -->
 
         </plugins>
 
