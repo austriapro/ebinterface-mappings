@@ -18,7 +18,7 @@ import at.austriapro.mappings.zugferd.generated.CrossIndustryDocumentType;
 import at.austriapro.mappings.zugferd.generated.ObjectFactory;
 
 /**
- * Provides some convenience methods for dealing with ebInterface instances
+ * Provides some convenience methods for dealing with ebInterface and ZUGFeRD instances
  */
 public class DocumentTypeUtils {
 
