@@ -1,10 +1,14 @@
 package at.austriapro.mappings.zugferd;
 
 
+import at.austriapro.mappings.ebinterface.generated.*;
+import at.austriapro.mappings.zugferd.generated.*;
+import at.austriapro.utils.ISO639ConversionUtil;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 
+import jdk.nashorn.internal.runtime.regexp.joni.constants.NodeType;
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -16,37 +20,7 @@ import java.util.List;
 import at.austriapro.Mapping;
 import at.austriapro.MappingException;
 import at.austriapro.MappingFactory;
-import at.austriapro.mappings.ebinterface.generated.Address;
-import at.austriapro.mappings.ebinterface.generated.Biller;
-import at.austriapro.mappings.ebinterface.generated.CancelledOriginalDocument;
-import at.austriapro.mappings.ebinterface.generated.Delivery;
-import at.austriapro.mappings.ebinterface.generated.DocumentTypeType;
-import at.austriapro.mappings.ebinterface.generated.InvoiceRecipient;
-import at.austriapro.mappings.ebinterface.generated.OrderingParty;
-import at.austriapro.mappings.ebinterface.generated.RelatedDocument;
-import at.austriapro.mappings.zugferd.generated.CodeType;
-import at.austriapro.mappings.zugferd.generated.CountryIDType;
-import at.austriapro.mappings.zugferd.generated.DateTimeType;
-import at.austriapro.mappings.zugferd.generated.DocumentCodeType;
-import at.austriapro.mappings.zugferd.generated.DocumentContextParameterType;
-import at.austriapro.mappings.zugferd.generated.ExchangedDocumentContextType;
-import at.austriapro.mappings.zugferd.generated.ExchangedDocumentType;
-import at.austriapro.mappings.zugferd.generated.IDType;
-import at.austriapro.mappings.zugferd.generated.IndicatorType;
-import at.austriapro.mappings.zugferd.generated.ReferencedDocumentType;
-import at.austriapro.mappings.zugferd.generated.SupplyChainEventType;
-import at.austriapro.mappings.zugferd.generated.SupplyChainTradeAgreementType;
-import at.austriapro.mappings.zugferd.generated.SupplyChainTradeDeliveryType;
-import at.austriapro.mappings.zugferd.generated.SupplyChainTradeSettlementType;
-import at.austriapro.mappings.zugferd.generated.SupplyChainTradeTransactionType;
-import at.austriapro.mappings.zugferd.generated.TextType;
-import at.austriapro.mappings.zugferd.generated.TradeAddressType;
-import at.austriapro.mappings.zugferd.generated.TradeContactType;
-import at.austriapro.mappings.zugferd.generated.TradePartyType;
-import at.austriapro.mappings.zugferd.generated.UniversalCommunicationType;
 import at.austriapro.utils.DocumentTypeUtils;
-import at.austriapro.mappings.ebinterface.generated.Invoice;
-import at.austriapro.mappings.zugferd.generated.CrossIndustryDocumentType;
 
 /**
  * Performs mappings from/to ZUGFeRD
@@ -99,88 +73,94 @@ public class ZUGFeRDMapping extends Mapping {
    */
   private CrossIndustryDocumentType performBasicMapping(Invoice invoice) {
 
-    //Get an empty cross industry document type
-    CrossIndustryDocumentType zugferd = getEmptyCrossIndustryDocumentType();
+      //Get an empty cross industry document type
+      CrossIndustryDocumentType zugferd = getEmptyCrossIndustryDocumentType();
 
-    //eb:ROOT element attributes
-    mapRootAttributes(zugferd, invoice);
+      //eb:ROOT element attributes
+      mapRootAttributes(zugferd, invoice);
 
-    //eb:Related documents
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument
-    mapRelatedDocuments(zugferd, invoice.getRelatedDocuments());
+      //eb:Cancelled original document
+      //exdended: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument
+      //basic and comfort: IncludedNote
+      mapCancelledOriginalDocument(zugferd, invoice.getCancelledOriginalDocument());
 
-    //eb:Delivery
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty
-    mapDelivery(zugferd, invoice.getDelivery());
+      //eb:Related documents
+      //exdended: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument
+      //basic and comfort: IncludedNote
+      mapRelatedDocuments(zugferd, invoice.getRelatedDocuments());
 
-    //eb:Biller
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:SellerTradeParty
-    mapBiller(zugferd, invoice.getBiller());
+      //eb:Delivery
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty
+      mapDelivery(zugferd, invoice.getDelivery());
 
-    //eb:Invoice Recipient
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerTradeParty
-    mapInvoiceRecipient(zugferd, invoice.getInvoiceRecipient());
+      //eb:Biller
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:SellerTradeParty
+      mapBiller(zugferd, invoice.getBiller());
 
-    //eb:Ordering Party
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ProductEndUserTradeParty
-    mapOrderingParty(zugferd, invoice.getOrderingParty());
+      //eb:Invoice Recipient
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerTradeParty
+      mapInvoiceRecipient(zugferd, invoice.getInvoiceRecipient());
 
-    return zugferd;
+      //eb:Ordering Party
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ProductEndUserTradeParty
+      mapOrderingParty(zugferd, invoice.getOrderingParty());
+
+      return zugferd;
   }
 
   /**
    * Map the attributes from the ebInterface ROOT element
    */
   private void mapRootAttributes(CrossIndustryDocumentType zugferd, Invoice invoice) {
-    //ZUGFeRD type
-    String zugFeRDType = getZUGfeRDType();
-    zugferd.getSpecifiedExchangedDocumentContext().withGuidelineSpecifiedDocumentContextParameter(
-        new DocumentContextParameterType().withID(new IDType().withValue(zugFeRDType)));
+      //ZUGFeRD type
+      String zugFeRDType = getZUGfeRDType();
+      zugferd.getSpecifiedExchangedDocumentContext().withGuidelineSpecifiedDocumentContextParameter(
+              new DocumentContextParameterType().withID(new IDType().withValue(zugFeRDType)));
 
-    //eb:Generating system
-    //TODO
+      //eb:Generating system
+      //TODO
 
-    //eb:Document type
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:Name
-    String documentType = getDocumentType(invoice);
-    zugferd.getHeaderExchangedDocument().withName(new TextType().withValue(documentType));
+      //eb:Document type
+      //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:Name
+      String documentType = getDocumentType(invoice);
+      zugferd.getHeaderExchangedDocument().withName(new TextType().withValue(documentType));
 
-    //eb:Document type code
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:TypeCode
-    String typeCode = getDocumentTypeCode(invoice);
-    zugferd.getHeaderExchangedDocument().withTypeCode(new DocumentCodeType().withValue(typeCode));
+      //eb:Document type code
+      //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:TypeCode
+      String typeCode = getDocumentTypeCode(invoice);
+      zugferd.getHeaderExchangedDocument().withTypeCode(new DocumentCodeType().withValue(typeCode));
 
-    //eb:Currency
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:InvoiceCurrencyCode
-    String documentCurrency = invoice.getInvoiceCurrency().value();
-    zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
-        .withInvoiceCurrencyCode(new CodeType().withValue(documentCurrency));
+      //eb:Currency
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:InvoiceCurrencyCode
+      String documentCurrency = invoice.getInvoiceCurrency().value();
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
+              .withInvoiceCurrencyCode(new CodeType().withValue(documentCurrency));
 
-    //eb:Language
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:LanguageID
-    zugferd.getHeaderExchangedDocument().getLanguageID()
-        .add(new IDType().withValue(invoice.getLanguage().value()));
+      if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
+          //eb:Language
+          //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:LanguageID
+          zugferd.getHeaderExchangedDocument().getLanguageID()
+                  .add(new IDType().withValue(ISO639ConversionUtil.convertISO639_2ToISO639_1(invoice.getLanguage().value())));
+      }
 
-    //eb:IsDuplicate
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:CopyIndicator
-    if (BooleanUtils.isTrue(invoice.getIsDuplicate())) {
-      zugferd.getHeaderExchangedDocument()
-          .withCopyIndicator(new IndicatorType().withIndicator(Boolean.TRUE));
-    }
+      if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
+          //eb:IsDuplicate
+          //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:CopyIndicator
+          if (BooleanUtils.isTrue(invoice.getIsDuplicate())) {
+              zugferd.getHeaderExchangedDocument()
+                      .withCopyIndicator(new IndicatorType().withIndicator(Boolean.TRUE));
+          }
+      }
 
-    //eb:Invoice number
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:ID
-    zugferd.getHeaderExchangedDocument().withID(new IDType().withValue(invoice.getInvoiceNumber()));
+      //eb:Invoice number
+      //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:ID
+      zugferd.getHeaderExchangedDocument().withID(new IDType().withValue(invoice.getInvoiceNumber()));
 
-    //eb:Invoice date
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:IssueDateTime
-    zugferd.getHeaderExchangedDocument().withIssueDateTime(new DateTimeType().withDateTimeString(
-        new DateTimeType.DateTimeString().withFormat("102")
-            .withValue(dateTimeFormatter.print(invoice.getInvoiceDate()))));
-
-    //eb:Cancelled original document
-    //TODO - we may put this one in an IncludedNote in the header
-    mapCancelledOriginalDocument(zugferd, invoice.getCancelledOriginalDocument());
+      //eb:Invoice date
+      //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:IssueDateTime
+      zugferd.getHeaderExchangedDocument().withIssueDateTime(new DateTimeType().withDateTimeString(
+              new DateTimeType.DateTimeString().withFormat("102")
+                      .withValue(dateTimeFormatter.print(invoice.getInvoiceDate()))));
   }
 
   /**
@@ -202,7 +182,64 @@ public class ZUGFeRDMapping extends Mapping {
    * Map the biller Target in ZUGFeRD: CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:SellerTradeParty
    */
   private void mapBiller(CrossIndustryDocumentType zugferd, Biller biller) {
-    //TODO
+      if (biller == null) {
+          LOG.debug("No blller element specified in ebInterface - continuing.");
+          return;
+      }
+
+      SupplyChainTradeAgreementType
+              supplyChainTradeAgreementType =
+              getSupplyChainTradeAgreement(zugferd);
+
+      //Create the necessary elements in ZUGFeRD
+
+      //CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/BuyerReference
+      //TODO not in ebInvoice
+      //supplyChainTradeAgreementType.withBuyerReference(new TextType().withValue(""));
+
+      //CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty
+      TradePartyType sellerTradePartyType = new TradePartyType();
+
+      if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType) && biller.getInvoiceRecipientsBillerID() != null) {
+          //eb:Biller/InvoiceRecipientsBillerID
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty/ID
+          sellerTradePartyType.withID(new IDType().withValue(biller.getInvoiceRecipientsBillerID()));
+
+          //eb:Biller/Address/Addressidentifier/@AddressIdentifierType=GLN
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty/GlobalID
+          if (biller.getAddress().getAddressIdentifiers().get(0) != null) {
+              String schema = null;
+              if (biller.getAddress().getAddressIdentifiers().get(0).getAddressIdentifierType().equals(AddressIdentifierTypeType.DUNS)) {
+                  schema = "0060";
+              } else if (biller.getAddress().getAddressIdentifiers().get(0).getAddressIdentifierType().equals(AddressIdentifierTypeType.GLN)) {
+                  schema = "0088";
+              }
+              if (schema != null) {
+                  sellerTradePartyType.withGlobalID(new IDType().withValue(biller.getAddress().getAddressExtensions().get(0)).withSchemeID(schema));
+              }
+          }
+      }
+
+      String lineOne = "";
+      if (biller.getAddress().getStreet() != null) {
+          lineOne = biller.getAddress().getStreet();
+      } else {
+          lineOne = biller.getAddress().getPOBox();
+      }
+
+      sellerTradePartyType.withName(new TextType().withValue(biller.getAddress().getName()));
+      sellerTradePartyType.withPostalTradeAddress(
+              new TradeAddressType()
+                      .withPostcodeCode(new CodeType().withValue(biller.getAddress().getZIP()))
+                      .withLineOne(new TextType().withValue(lineOne))
+                      .withLineTwo(new TextType().withValue(biller.getAddress().getContact()))
+                      .withCityName(new TextType().withValue(biller.getAddress().getTown()))
+                      .withCountryID(new CountryIDType().withValue(biller.getAddress().getCountry().getCountryCode().value())));
+      sellerTradePartyType.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(new IDType().withValue(biller.getVATIdentificationNumber()).withSchemeID("VA")));
+
+      supplyChainTradeAgreementType.withSellerTradeParty(sellerTradePartyType);
+
+
   }
 
   /**
@@ -210,58 +247,119 @@ public class ZUGFeRDMapping extends Mapping {
    */
   private void mapRelatedDocuments(CrossIndustryDocumentType zugferd,
                                    List<RelatedDocument> relatedDocuments) {
-    if (Iterables.isEmpty(relatedDocuments)) {
-      LOG.debug("No related documents specified in ebInterface - continuing");
-      return;
-    }
+      if (Iterables.isEmpty(relatedDocuments)) {
+          LOG.debug("No related documents specified in ebInterface - continuing");
+          return;
+      }
 
-    SupplyChainTradeAgreementType
-        supplyChainTradeAgreementType =
-        getSupplyChainTradeAgreement(zugferd);
+      SupplyChainTradeAgreementType
+              supplyChainTradeAgreementType =
+              getSupplyChainTradeAgreement(zugferd);
 
-    for (RelatedDocument relatedDocument : relatedDocuments) {
+      for (RelatedDocument relatedDocument : relatedDocuments) {
 
-      //Create a new related document type and assign it to the supply chain trade agreement
+          if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
+              //Create a new related document type and assign it to the supply chain trade agreement
 
-      ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
-      supplyChainTradeAgreementType.getAdditionalReferencedDocument().add(referencedDocumentType);
+              ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
+              supplyChainTradeAgreementType.getAdditionalReferencedDocument().add(referencedDocumentType);
 
-      //eb:InvoiceNumber
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:ID
-      referencedDocumentType.withID(new IDType().withValue(relatedDocument.getInvoiceNumber()));
+              //eb:InvoiceNumber
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:ID
+              referencedDocumentType.withID(new IDType().withValue(relatedDocument.getInvoiceNumber()));
 
-      //eb:InvoiceDate
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:IssueDateTime
-      referencedDocumentType.withIssueDateTime(
-          dateTimeFormatter.print(relatedDocument.getInvoiceDate()));
+              //eb:InvoiceDate
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:IssueDateTime
+              referencedDocumentType.withIssueDateTime(
+                      dateTimeFormatter.print(relatedDocument.getInvoiceDate()));
 
-      //eb:Document type
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:TypeCode
-      referencedDocumentType.withTypeCode(
-          new DocumentCodeType().withValue(relatedDocument.getDocumentType().value()));
+              //eb:Document type
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:TypeCode
+              //OI = Reference number identifying a previously issued invoice. (http://www.unece.org/trade/untdid/i98a/uncl/uncl1153.htm)
+              referencedDocumentType.withTypeCode(
+                      new DocumentCodeType().withValue("OI"));
 
-      //eb:Comment
-      //TODO - not really an element in ZUGFeRD which fits here...
+              //eb:Comment
+              //TODO - not really an element in ZUGFeRD which fits here...
+          }else{
+              StringBuilder text = new StringBuilder();
 
-    }
+              text.append("Zugehörige Rechnung:\n");
+
+              if (relatedDocument.getInvoiceNumber() != null) {
+                  text.append(relatedDocument.getInvoiceNumber());
+              }
+
+              if (relatedDocument.getInvoiceDate() != null) {
+                  text.append(dateTimeFormatter.print(relatedDocument.getInvoiceDate())).append("\n");
+              }
+              if (relatedDocument.getComment() != null) text.append(relatedDocument.getComment());
+
+              zugferd.getHeaderExchangedDocument().getIncludedNote().add(new NoteType().withContent(new TextType().withValue(text.toString())));
+          }
+
+      }
 
 
   }
 
-  /**
-   * Map the details of the cancelled document Target in ZUGFeRD: TODO
-   */
-  private void mapCancelledOriginalDocument(CrossIndustryDocumentType zugferd,
-                                            CancelledOriginalDocument cancelledOriginalDocument) {
+    /**
+     * Map the details of the cancelled document Target in ZUGFeRD: TODO
+     */
+    private void mapCancelledOriginalDocument(CrossIndustryDocumentType zugferd,
+                                              CancelledOriginalDocument cancelledOriginalDocument) {
 
-    if (cancelledOriginalDocument == null) {
-      LOG.debug("No cancelled original document specified in ebInterface - continuing");
-      return;
+        if (cancelledOriginalDocument == null) {
+            LOG.debug("No cancelled original document specified in ebInterface - continuing");
+            return;
+        }
+
+        if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
+            SupplyChainTradeAgreementType
+                    supplyChainTradeAgreementType =
+                    getSupplyChainTradeAgreement(zugferd);
+
+            //Create a new related document type and assign it to the supply chain trade agreement
+            ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
+            supplyChainTradeAgreementType.getAdditionalReferencedDocument().add(referencedDocumentType);
+
+            //eb:InvoiceNumber
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:ID
+            referencedDocumentType.withID(new IDType().withValue(cancelledOriginalDocument.getInvoiceNumber()));
+
+            //eb:InvoiceDate
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:IssueDateTime
+            referencedDocumentType.withIssueDateTime(
+                    dateTimeFormatter.print(cancelledOriginalDocument.getInvoiceDate()));
+
+            //eb:Document type
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:TypeCode
+            //ACW = Reference number assigned to the message which was previously issued (e.g. in the case of a cancellation,
+            //      the primary reference of the message to be cancelled will be quoted in this element). (http://www.unece.org/trade/untdid/i98a/uncl/uncl1153.htm)
+            referencedDocumentType.withTypeCode(
+                    new DocumentCodeType().withValue("ACW"));
+
+            //eb:Comment
+            //TODO - not really an element in ZUGFeRD which fits here...
+
+
+        } else {
+            StringBuilder text = new StringBuilder();
+
+            text.append("Stornierte Rechnung:\n");
+
+            if (cancelledOriginalDocument.getInvoiceNumber() != null) {
+                text.append(cancelledOriginalDocument.getInvoiceNumber());
+            }
+
+            if (cancelledOriginalDocument.getInvoiceDate() != null) {
+                text.append(dateTimeFormatter.print(cancelledOriginalDocument.getInvoiceDate())).append("\n");
+            }
+            if (cancelledOriginalDocument.getComment() != null) text.append(cancelledOriginalDocument.getComment());
+
+            zugferd.getHeaderExchangedDocument().getIncludedNote().add(new NoteType().withContent(new TextType().withValue(text.toString())));
+        }
     }
-
-    //TODO
-
-  }
 
 
   /**
@@ -270,107 +368,113 @@ public class ZUGFeRDMapping extends Mapping {
    */
   private void mapDelivery(CrossIndustryDocumentType zugferd, Delivery delivery) {
 
-    if (delivery == null) {
-      LOG.debug("No delivery element specified in ebInterface - continuing.");
-      return;
-    }
-
-    //Create the necessary elements in ZUGFeRD
-    zugferd.getSpecifiedSupplyChainTradeTransaction().withApplicableSupplyChainTradeDelivery(
-        new SupplyChainTradeDeliveryType().withShipToTradeParty(new TradePartyType()));
-
-    //eb:Delivery/Date
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString
-    if (delivery.getDate() != null) {
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
-              new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
-                  dateTimeFormatter.print(delivery.getDate())).withFormat(
-                  "102"))));
-    }
-
-    //eb:DeliveryID
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:DespatchAdviceReferencedDocument/ram:ID
-    zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-        .withDespatchAdviceReferencedDocument(
-            new ReferencedDocumentType().withID(new IDType().withValue(delivery.getDeliveryID())));
-
-    //Process address details, in case there's one
-    if (delivery.getAddress() != null) {
+      if (delivery == null) {
+          LOG.debug("No delivery element specified in ebInterface - continuing.");
+          return;
+      }
 
       //Create the necessary elements in ZUGFeRD
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().withDefinedTradeContact(new TradeContactType());
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().withPostalTradeAddress(new TradeAddressType());
 
-      Address address = delivery.getAddress();
+      zugferd.getSpecifiedSupplyChainTradeTransaction().withApplicableSupplyChainTradeDelivery(
+              new SupplyChainTradeDeliveryType().withShipToTradeParty(new TradePartyType()));
 
-      String partyName = "";
-      //Build the person name string
-      if (!Strings.isNullOrEmpty(address.getSalutation())) {
-        partyName += address.getSalutation() + " ";
-      }
-      if (!Strings.isNullOrEmpty(address.getName())) {
-        partyName += address.getName();
+      //eb:Delivery/Date
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString
+      if (delivery.getDate() != null) {
+          zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                  .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
+                          new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
+                                  dateTimeFormatter.print(delivery.getDate())).withFormat(
+                                  "102"))));
       }
 
-      //eb:Salutation and Name
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:Name
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().withName(new TextType().withValue(partyName));
+      if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)&& delivery.getDeliveryID() != null) {
+          //eb:DeliveryID
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:DespatchAdviceReferencedDocument/ram:ID
+          zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                  .withDespatchAdviceReferencedDocument(
+                          new ReferencedDocumentType().withID(new IDType().withValue(delivery.getDeliveryID())));
+      }
 
-      //eb:Street
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineOne
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().getPostalTradeAddress()
-          .setLineOne(new TextType().withValue(address.getStreet()));
+      if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
+          //Process address details, in case there's one
+          if (delivery.getAddress() != null) {
 
-      //eb:Town
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().getPostalTradeAddress()
-          .setCityName(new TextType().withValue(address.getTown()));
 
-      //eb:ZIP
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:PostcodeCode
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().getPostalTradeAddress().getPostcodeCode()
-          .add(new CodeType().withValue(address.getZIP()));
+              //Create the necessary elements in ZUGFeRD
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().withDefinedTradeContact(new TradeContactType());
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().withPostalTradeAddress(new TradeAddressType());
 
-      //eb:Country Code
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CountryID
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().getPostalTradeAddress().setCountryID(
-          new CountryIDType().withValue(address.getCountry().getCountryCode().value()));
+              Address address = delivery.getAddress();
 
-      //eb:Phone
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().getDefinedTradeContact().get(0)
-          .withTelephoneUniversalCommunication(new UniversalCommunicationType().withCompleteNumber(
-              new TextType().withValue(address.getPhone())));
+              String partyName = "";
+              //Build the person name string
+              if (!Strings.isNullOrEmpty(address.getSalutation())) {
+                  partyName += address.getSalutation() + " ";
+              }
+              if (!Strings.isNullOrEmpty(address.getName())) {
+                  partyName += address.getName();
+              }
 
-      //eb:Email
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:CompleteNumber
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().getDefinedTradeContact().get(0)
-          .withEmailURIUniversalCommunication(new UniversalCommunicationType().withCompleteNumber(
-              new TextType().withValue(address.getEmail())));
+              //eb:Salutation and Name
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:Name
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().withName(new TextType().withValue(partyName));
 
-      //eb:Contact
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:PersonName
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .getShipToTradeParty().getDefinedTradeContact().get(0)
-          .setPersonName(new TextType().withValue(address.getContact()));
+              //eb:Street
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineOne
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().getPostalTradeAddress()
+                      .setLineOne(new TextType().withValue(address.getStreet()));
 
-      //eb:Address extension
+              //eb:Town
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().getPostalTradeAddress()
+                      .setCityName(new TextType().withValue(address.getTown()));
+
+              //eb:ZIP
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:PostcodeCode
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().getPostalTradeAddress().getPostcodeCode()
+                      .add(new CodeType().withValue(address.getZIP()));
+
+              //eb:Country Code
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CountryID
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().getPostalTradeAddress().setCountryID(
+                      new CountryIDType().withValue(address.getCountry().getCountryCode().value()));
+
+              //eb:Phone
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().getDefinedTradeContact().get(0)
+                      .withTelephoneUniversalCommunication(new UniversalCommunicationType().withCompleteNumber(
+                              new TextType().withValue(address.getPhone())));
+
+              //eb:Email
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:CompleteNumber
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().getDefinedTradeContact().get(0)
+                      .withEmailURIUniversalCommunication(new UniversalCommunicationType().withCompleteNumber(
+                              new TextType().withValue(address.getEmail())));
+
+              //eb:Contact
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:PersonName
+              zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+                      .getShipToTradeParty().getDefinedTradeContact().get(0)
+                      .setPersonName(new TextType().withValue(address.getContact()));
+
+              //eb:Address extension
+              //TODO - no field in ZUGFeRD for that
+          }
+      }
+
+
+      //eb:Description
       //TODO - no field in ZUGFeRD for that
-
-    }
-
-    //eb:Description
-    //TODO - no field in ZUGFeRD for that
 
   }
 
