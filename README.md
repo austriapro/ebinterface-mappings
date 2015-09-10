@@ -29,7 +29,6 @@ For this project the Google code style is used. Please [download the code style 
 
 :green_heart: Pull requests are greatly appreciated and welcomed.
 
-##Build status
 
 
 
