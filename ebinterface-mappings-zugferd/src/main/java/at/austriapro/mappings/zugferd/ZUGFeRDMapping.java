@@ -425,17 +425,27 @@ public class ZUGFeRDMapping extends Mapping {
     if (invoice.getTax().getVAT().getVATItems().size() > 0) {
 
       for (VATItem vATItems : invoice.getTax().getVAT().getVATItems()) {
-        sctst.withApplicableTradeTax(new TradeTaxType()
-                                         .withCalculatedAmount(
-                                             new AmountType().withValue(vATItems.getAmount())
-                                                 .withCurrencyID(documentCurrency))
-                                         .withTypeCode(new TaxTypeCodeType().withValue("VAT"))
-                                         .withBasisAmount(
-                                             new AmountType().withValue(vATItems.getTaxedAmount())
-                                                 .withCurrencyID(documentCurrency))
-                                         .withApplicablePercent(
-                                             new PercentType()
-                                                 .withValue(vATItems.getVATRate().getValue())));
+
+        TradeTaxType tradeTaxType = new TradeTaxType();
+
+        //eb:Amount
+        tradeTaxType.withCalculatedAmount(
+            new AmountType().withValue(vATItems.getAmount())
+                .withCurrencyID(documentCurrency));
+
+        //Tax type - always VAT in this case
+        tradeTaxType.withTypeCode(new TaxTypeCodeType().withValue("VAT"));
+
+        //eb:TaxedAmount
+        tradeTaxType.withBasisAmount(new AmountType().withValue(vATItems.getTaxedAmount())
+                                         .withCurrencyID(documentCurrency));
+
+        //eb:VATRate
+        if (vATItems.getVATRate() != null) {
+          tradeTaxType.withApplicablePercent(
+              new PercentType()
+                  .withValue(vATItems.getVATRate().getValue()));
+        }
       }
     }
 
