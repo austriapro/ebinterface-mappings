@@ -16,6 +16,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import at.austriapro.Mapping;
@@ -106,22 +107,130 @@ public class ZUGFeRDMapping extends Mapping {
     //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ProductEndUserTradeParty
     mapOrderingParty(zugferd, invoice.getOrderingParty());
 
-    //eb:OrderingParty/OrderReference
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument
-    mapOrderReference(zugferd, invoice.getOrderingParty().getOrderReference());
+    //eb:Details
+    mapDetails(zugferd, invoice.getDetails());
 
-    //eb:?
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ContractReferencedDocument
-    mapContractReference(zugferd, invoice);
+    //eb:ReductionAndSurchargeDetails
+    mapReductionAndSurchargeDetails(zugferd, invoice.getReductionAndSurchargeDetails());
 
-    //eb:?
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:CustomerOrderReferencedDocument
-    mapCustomerOrderReference(zugferd, invoice);
+    //eb:Tax
+    mapTax(zugferd, invoice.getTax());
+
+    //eb:TotalGrossAmount
+    mapTotalGrossAmount(zugferd, invoice.getTotalGrossAmount());
+
+    //eb:PayableAmount
+    mapPayableAmount(zugferd, invoice.getPayableAmount());
+
+    //eb:PaymentMethod
+    mapPaymentMethod(zugferd, invoice.getPaymentMethod());
+
+    //eb:PaymentConditions
+    mapPaymentConditions(zugferd, invoice.getPaymentConditions());
+
+    //eb:PresentationDetails
+    mapPresentationDetails(zugferd, invoice.getPresentationDetails());
+
+    //eb:Comment
+    mapComment(zugferd, invoice.getComment());
 
     //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement
-    mapTradeSettlement(zugferd, invoice);
+
+    //TODO - we need to refactor this - we always map from the ebInterface elements to the ZUGFeRD elements, by taking the
+    //top level elements in ebInterface as a starting point
+    //mapTradeSettlement(zugferd, invoice);
 
     return zugferd;
+  }
+
+
+  /**
+   * Map details of ebInterface comments
+   * @param zugferd
+   * @param comment
+   */
+  private void mapComment(CrossIndustryDocumentType zugferd, String comment) {
+
+  }
+
+
+  /**
+   * Map presentation details
+   * @param zugferd
+   * @param presentationDetails
+   */
+  private void mapPresentationDetails(CrossIndustryDocumentType zugferd,
+                                      PresentationDetails presentationDetails) {
+
+  }
+
+  /**
+   * Map the details of payment conditions
+   * @param zugferd
+   * @param paymentConditions
+   */
+  private void mapPaymentConditions(CrossIndustryDocumentType zugferd,
+                                    PaymentConditions paymentConditions) {
+
+  }
+
+
+  /**
+   * Map details of payment method
+   * @param zugferd
+   * @param paymentMethod
+   */
+  private void mapPaymentMethod(CrossIndustryDocumentType zugferd, PaymentMethod paymentMethod) {
+
+  }
+
+  /**
+   * Map details of payable amount
+   * @param zugferd
+   * @param payableAmount
+   */
+  private void mapPayableAmount(CrossIndustryDocumentType zugferd, BigDecimal payableAmount) {
+
+  }
+
+  /**
+   * ebInterface total gross details
+   * @param zugferd
+   * @param totalGrossAmount
+   */
+  private void mapTotalGrossAmount(CrossIndustryDocumentType zugferd, BigDecimal totalGrossAmount) {
+
+  }
+
+
+  /**
+   * Map the tax details to the ZUGFeRD equivalent
+   * @param zugferd
+   * @param tax
+   */
+  private void mapTax(CrossIndustryDocumentType zugferd, Tax tax) {
+
+  }
+
+
+  /**
+   * Map the different reductions and surcharges in ebInterface to the respective fields in ZUGFeRD
+   * @param zugferd
+   * @param reductionAndSurchargeDetails
+   */
+  private void mapReductionAndSurchargeDetails(CrossIndustryDocumentType zugferd,
+                                               ReductionAndSurchargeDetails reductionAndSurchargeDetails) {
+
+  }
+
+  /**
+   * Map the details section of ebInterace, containing the different line items, to the correct
+   * fields in ZUGFeRD
+   * @param zugferd
+   * @param details
+   */
+  private void mapDetails(CrossIndustryDocumentType zugferd, Details details) {
+
   }
 
   /**
@@ -192,26 +301,10 @@ public class ZUGFeRDMapping extends Mapping {
           getSupplyChainTradeAgreement(zugferd);
       supplyChainTradeAgreementType.withProductEndUserTradeParty(productEndUserTradeParty);
 
-      //TODO
-    }
-  }
-
-  /**
-   * Map the ordering party Target in ZUGFeRD: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument
-   */
-  private void mapOrderReference(CrossIndustryDocumentType zugferd,
-                                 OrderReferenceType orderReference) {
-    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-      if (orderReference == null) {
-        LOG.debug("No biller element specified in ebInterface - continuing.");
-        return;
-      }
+      //TODO - rest of the elements in orderingParty
 
       //Create a trade party for the invoice recipient
       ReferencedDocumentType buyerOrderReferencedDocument = new ReferencedDocumentType();
-      SupplyChainTradeAgreementType
-          supplyChainTradeAgreementType =
-          getSupplyChainTradeAgreement(zugferd);
       supplyChainTradeAgreementType.withBuyerOrderReferencedDocument(buyerOrderReferencedDocument);
 
       //eb:OrderReference
@@ -220,28 +313,12 @@ public class ZUGFeRDMapping extends Mapping {
         buyerOrderReferencedDocument
             .withIssueDateTime(
                 dateTimeFormatter
-                    .print(orderReference.getReferenceDate())) //IssueDateTime is a String
-            .withID(new IDType().withValue(orderReference.getOrderID()));
+                    .print(orderingParty.getOrderReference()
+                               .getReferenceDate())) //IssueDateTime is a String
+            .withID(new IDType().withValue(orderingParty.getOrderReference().getOrderID()));
       }
     }
-  }
 
-  /**
-   * Map the ordering party Target in ZUGFeRD: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ContractReferencedDocument
-   */
-  private void mapContractReference(CrossIndustryDocumentType zugferd, Invoice invoice) {
-    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-      //TODO not in ebInvoice
-    }
-  }
-
-  /**
-   * Map the ordering party Target in ZUGFeRD: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:CustomerOrderReferencedDocument
-   */
-  private void mapCustomerOrderReference(CrossIndustryDocumentType zugferd, Invoice invoice) {
-    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-      //TODO not in ebInvoice
-    }
   }
 
   /**
@@ -450,7 +527,7 @@ public class ZUGFeRDMapping extends Mapping {
     }
 
     //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/?
-    //TODO set OtherTaxes propper
+    //TODO set OtherTaxes proper
     if (invoice.getTax().getOtherTaxes().size() > 0) {
 
       for (OtherTax otherTax : invoice.getTax().getOtherTaxes()) {
