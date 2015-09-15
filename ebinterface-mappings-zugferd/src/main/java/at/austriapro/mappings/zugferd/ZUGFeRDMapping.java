@@ -55,16 +55,8 @@ public class ZUGFeRDMapping extends Mapping {
     //Retrieve an Invoice object
     Invoice invoice = DocumentTypeUtils.parseebInterface(ebinterface);
 
-    //Perform mapping - currently we only consider ZUGFeRD Basic by default
-    CrossIndustryDocumentType zugferd = null;
-
-    if (MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-      zugferd = performBasicMapping(invoice);
-    } else if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
-      throw new UnsupportedOperationException("ZUGFeRD Comfort is not supported at the moment.");
-    } else {
-      throw new UnsupportedOperationException("ZUGFeRD Extended is not supported at the moment");
-    }
+    //Perform mapping
+    CrossIndustryDocumentType zugferd = performMapping(invoice);
 
     return DocumentTypeUtils.writeZUGFeRD(zugferd);
   }
@@ -73,7 +65,7 @@ public class ZUGFeRDMapping extends Mapping {
   /**
    * Map the ebInterface object to a ZUGFeRD object
    */
-  private CrossIndustryDocumentType performBasicMapping(Invoice invoice) {
+  private CrossIndustryDocumentType performMapping(Invoice invoice) {
 
     //Get an empty cross industry document type
     CrossIndustryDocumentType zugferd = getEmptyCrossIndustryDocumentType();
@@ -365,7 +357,7 @@ public class ZUGFeRDMapping extends Mapping {
         }
         if (schema != null) {
           invoiceRecipientTradePartyType.withGlobalID(
-              new IDType().withValue(invoiceRecipient.getAddress().getAddressExtensions().get(0))
+              new IDType().withValue(invoiceRecipient.getAddress().getAddressIdentifiers().get(0).getValue())
                   .withSchemeID(schema));
         }
       }
@@ -580,7 +572,7 @@ public class ZUGFeRDMapping extends Mapping {
         }
         if (schema != null) {
           sellerTradePartyType.withGlobalID(
-              new IDType().withValue(biller.getAddress().getAddressExtensions().get(0))
+              new IDType().withValue(biller.getAddress().getAddressIdentifiers().get(0).getValue())
                   .withSchemeID(schema));
         }
       }
