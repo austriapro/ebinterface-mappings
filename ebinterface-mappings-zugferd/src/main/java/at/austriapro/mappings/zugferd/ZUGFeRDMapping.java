@@ -247,6 +247,12 @@ public class ZUGFeRDMapping extends Mapping {
     String typeCode = getDocumentTypeCode(invoice);
     zugferd.getHeaderExchangedDocument().withTypeCode(new DocumentCodeType().withValue(typeCode));
 
+    //eb:Currency
+    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:InvoiceCurrencyCode
+    String documentCurrency = invoice.getInvoiceCurrency().value();
+    zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
+        .withInvoiceCurrencyCode(new CodeType().withValue(documentCurrency));
+
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
       //eb:Language
       //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:LanguageID
@@ -254,6 +260,8 @@ public class ZUGFeRDMapping extends Mapping {
           .add(new IDType().withValue(ISO639ConversionUtil.convertISO639_2ToISO639_1(
               invoice.getLanguage().value())));
     }
+
+    //eb:ManualProcessing
 
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
       //eb:IsDuplicate
@@ -357,7 +365,8 @@ public class ZUGFeRDMapping extends Mapping {
         }
         if (schema != null) {
           invoiceRecipientTradePartyType.withGlobalID(
-              new IDType().withValue(invoiceRecipient.getAddress().getAddressIdentifiers().get(0).getValue())
+              new IDType().withValue(
+                  invoiceRecipient.getAddress().getAddressIdentifiers().get(0).getValue())
                   .withSchemeID(schema));
         }
       }
@@ -416,10 +425,8 @@ public class ZUGFeRDMapping extends Mapping {
     sctst.withPaymentReference(new TextType().withValue(
         invoice.getPaymentMethod().getUniversalBankTransaction().getPaymentReference().getValue()));
 
-    //eb:Currency
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:InvoiceCurrencyCode
-    String documentCurrency = invoice.getInvoiceCurrency().value();
-    sctst.withInvoiceCurrencyCode(new CodeType().withValue(documentCurrency));
+    //get zugferd currency
+    String documentCurrency = sctst.getInvoiceCurrencyCode().getValue();
 
     TradeSettlementPaymentMeansType tspmt = new TradeSettlementPaymentMeansType();
     sctst.withSpecifiedTradeSettlementPaymentMeans(tspmt);
