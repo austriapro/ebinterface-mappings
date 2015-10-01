@@ -73,6 +73,9 @@ public class ZUGFeRDMapping extends Mapping {
     //eb:ROOT element attributes
     mapRootAttributes(zugferd, invoice);
 
+    //eb:Signature
+    mapSignature(zugferd, invoice.getSignature());
+
     //eb:Cancelled original document
     //exdended: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument
     //basic and comfort: IncludedNote
@@ -286,6 +289,13 @@ public class ZUGFeRDMapping extends Mapping {
           new DateTimeType.DateTimeString().withFormat("102")
               .withValue(dateTimeFormatter.print(invoice.getInvoiceDate()))));
     }
+  }
+
+  /**
+   * Map the signature from the ebInterface
+   */
+  private void mapSignature(CrossIndustryDocumentType zugferd, Signature signature) {
+    //TODO not supported in ZUGFeRD
   }
 
   /**
