@@ -253,6 +253,12 @@ public class ZUGFeRDMapping extends Mapping {
     zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
         .withInvoiceCurrencyCode(new CodeType().withValue(documentCurrency));
 
+    //eb:ManualProcessing
+    //TODO not found in ZUGFeRD
+
+    //eb:DocumentTitle
+    //TODO not found in ZUGFeRD
+
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
       //eb:Language
       //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:LanguageID
@@ -260,8 +266,6 @@ public class ZUGFeRDMapping extends Mapping {
           .add(new IDType().withValue(ISO639ConversionUtil.convertISO639_2ToISO639_1(
               invoice.getLanguage().value())));
     }
-
-    //eb:ManualProcessing
 
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
       //eb:IsDuplicate
