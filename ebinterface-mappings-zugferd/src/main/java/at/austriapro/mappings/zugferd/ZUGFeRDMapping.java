@@ -570,17 +570,12 @@ public class ZUGFeRDMapping extends Mapping {
     TradePartyType sellerTradePartyType = new TradePartyType();
     supplyChainTradeAgreementType.withSellerTradeParty(sellerTradePartyType);
 
-    //CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/BuyerReference
-    //TODO not in ebInvoice
-    //supplyChainTradeAgreementType.withBuyerReference(new TextType().withValue(""));
+    //eb:VATIdentification
+    sellerTradePartyType.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(
+        new IDType().withValue(biller.getVATIdentificationNumber()).withSchemeID("VA")));
 
-    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
-        && biller.getInvoiceRecipientsBillerID() != null) {
-      //eb:Biller/InvoiceRecipientsBillerID
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty/ID
-      sellerTradePartyType.withID(new IDType().withValue(biller.getInvoiceRecipientsBillerID()));
-
-      //eb:Biller/Address/Addressidentifier/@AddressIdentifierType=GLN
+    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
+      //eb:Biller/Address/Addressidentifier/@AddressIdentifierType
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty/GlobalID
       if (biller.getAddress().getAddressIdentifiers().get(0) != null) {
         String schema = null;
@@ -595,6 +590,13 @@ public class ZUGFeRDMapping extends Mapping {
           sellerTradePartyType.withGlobalID(
               new IDType().withValue(biller.getAddress().getAddressIdentifiers().get(0).getValue())
                   .withSchemeID(schema));
+        }
+
+        //eb:OrderReference
+        //CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/BuyerReference
+        if (biller.getOrderReference().getOrderID() != null) {
+          supplyChainTradeAgreementType
+              .withBuyerReference(new TextType().withValue(biller.getOrderReference().getOrderID()));
         }
       }
 
@@ -615,10 +617,14 @@ public class ZUGFeRDMapping extends Mapping {
               .withCityName(new TextType().withValue(biller.getAddress().getTown()))
               .withCountryID(new CountryIDType().withValue(
                   biller.getAddress().getCountry().getCountryCode().value())));
+    }
 
-      //eb:VATIdentification
-      sellerTradePartyType.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(
-          new IDType().withValue(biller.getVATIdentificationNumber()).withSchemeID("VA")));
+    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
+      //eb:Biller/InvoiceRecipientsBillerID
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty/ID
+      if (biller.getInvoiceRecipientsBillerID() != null) {
+        sellerTradePartyType.withID(new IDType().withValue(biller.getInvoiceRecipientsBillerID()));
+      }
     }
   }
 
