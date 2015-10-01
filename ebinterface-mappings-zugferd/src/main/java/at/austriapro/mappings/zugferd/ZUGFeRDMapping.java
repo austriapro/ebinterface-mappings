@@ -745,7 +745,6 @@ public class ZUGFeRDMapping extends Mapping {
     }
   }
 
-
   /**
    * Map the details of an ebInterface delivery element Target in ZUGFeRD:
    * rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty
@@ -758,28 +757,34 @@ public class ZUGFeRDMapping extends Mapping {
     }
 
     //Create the necessary elements in ZUGFeRD
-
     zugferd.getSpecifiedSupplyChainTradeTransaction().withApplicableSupplyChainTradeDelivery(
         new SupplyChainTradeDeliveryType().withShipToTradeParty(new TradePartyType()));
-
-    //eb:Delivery/Date
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString
-    if (delivery.getDate() != null) {
-      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
-              new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
-                  dateTimeFormatter.print(delivery.getDate())).withFormat(
-                  "102"))));
-    }
 
     if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
         && delivery.getDeliveryID() != null) {
       //eb:DeliveryID
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:DespatchAdviceReferencedDocument/ram:ID
       zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
-          .withDespatchAdviceReferencedDocument(
+          .withDeliveryNoteReferencedDocument(
               new ReferencedDocumentType()
                   .withID(new IDType().withValue(delivery.getDeliveryID())));
+    }
+
+    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString
+    if (delivery.getDate() != null) {
+      //eb:Delivery/Date
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
+              new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
+                  dateTimeFormatter.print(delivery.getDate())).withFormat(
+                  "102"))));
+    }else if (delivery.getPeriod().getFromDate() != null){
+      //eb:Delivery/Period/FromDate
+      zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
+          .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
+              new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
+                  dateTimeFormatter.print(delivery.getPeriod().getFromDate())).withFormat(
+                  "102"))));
     }
 
     if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
@@ -861,9 +866,7 @@ public class ZUGFeRDMapping extends Mapping {
 
     //eb:Description
     //TODO - no field in ZUGFeRD for that
-
   }
-
 
   /**
    * Create an empty cross industry invoice, with the most important elements already added with
