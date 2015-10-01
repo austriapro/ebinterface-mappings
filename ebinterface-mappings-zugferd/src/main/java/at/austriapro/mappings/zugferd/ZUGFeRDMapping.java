@@ -315,24 +315,75 @@ public class ZUGFeRDMapping extends Mapping {
           getSupplyChainTradeAgreement(zugferd);
       supplyChainTradeAgreementType.withProductEndUserTradeParty(productEndUserTradeParty);
 
-      //TODO - rest of the elements in orderingParty
+      //eb:VATIdentification
+      productEndUserTradeParty.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(
+          new IDType().withValue(orderingParty.getVATIdentificationNumber()).withSchemeID("VA")));
 
-      //Create a trade party for the invoice recipient
-      ReferencedDocumentType buyerOrderReferencedDocument = new ReferencedDocumentType();
-      supplyChainTradeAgreementType.withBuyerOrderReferencedDocument(buyerOrderReferencedDocument);
+      //eb:FurtherIdentification
+      if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
+          && orderingParty.getFurtherIdentifications() != null
+          && orderingParty.getFurtherIdentifications().size() > 0) {
 
-      //eb:OrderReference
-      if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-        //eb:OrderID
-        buyerOrderReferencedDocument
-            .withIssueDateTime(
-                dateTimeFormatter
-                    .print(orderingParty.getOrderReference()
-                               .getReferenceDate())) //IssueDateTime is a String
-            .withID(new IDType().withValue(orderingParty.getOrderReference().getOrderID()));
+        for (FurtherIdentification furtherIdentification : orderingParty
+            .getFurtherIdentifications()) {
+          productEndUserTradeParty
+              .withID(new IDType().withValue(furtherIdentification.getValue()).withSchemeID(
+                  furtherIdentification.getIdentificationType()));
+        }
+
+        //eb:InvoiceRecipient/Address/Addressidentifier/@AddressIdentifierType=(GLN, DUNS)
+        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/BuyerTradeParty/GlobalID
+        if (orderingParty.getAddress().getAddressIdentifiers().get(0) != null) {
+          String schema = null;
+          if (orderingParty.getAddress().getAddressIdentifiers().get(0).getAddressIdentifierType()
+              .equals(AddressIdentifierTypeType.DUNS)) {
+            schema = "0060";
+          } else if (orderingParty.getAddress().getAddressIdentifiers().get(0)
+              .getAddressIdentifierType()
+              .equals(AddressIdentifierTypeType.GLN)) {
+            schema = "0088";
+          }
+          if (schema != null) {
+            productEndUserTradeParty.withGlobalID(
+                new IDType().withValue(
+                    orderingParty.getAddress().getAddressIdentifiers().get(0).getValue())
+                    .withSchemeID(schema));
+          }
+        }
+      }
+
+      //OrderReference
+      //TODO
+
+      //eb:Address
+      String lineOne = "";
+      if (orderingParty.getAddress().getStreet() != null) {
+        lineOne = orderingParty.getAddress().getStreet();
+      } else {
+        lineOne = orderingParty.getAddress().getPOBox();
+      }
+
+      productEndUserTradeParty.withName(
+          new TextType().withValue(orderingParty.getAddress().getName()));
+      productEndUserTradeParty.withPostalTradeAddress(
+          new TradeAddressType()
+              .withPostcodeCode(
+                  new CodeType().withValue(orderingParty.getAddress().getZIP()))
+              .withLineOne(new TextType().withValue(lineOne))
+              .withLineTwo(
+                  new TextType().withValue(orderingParty.getAddress().getContact()))
+              .withCityName(
+                  new TextType().withValue(orderingParty.getAddress().getTown()))
+              .withCountryID(new CountryIDType().withValue(
+                  orderingParty.getAddress().getCountry().getCountryCode().value())));
+
+      //eb:BillersInvoiceRecipientID
+      if (!Strings.isNullOrEmpty(orderingParty.getBillersOrderingPartyID())) {
+        productEndUserTradeParty.withID(
+            new IDType().withValue(orderingParty.getBillersOrderingPartyID()).withSchemeID(
+                "Rechnungsempfänger-ID des Rechnungsstellers"));
       }
     }
-
   }
 
   /**
@@ -352,6 +403,10 @@ public class ZUGFeRDMapping extends Mapping {
         supplyChainTradeAgreementType =
         getSupplyChainTradeAgreement(zugferd);
     supplyChainTradeAgreementType.withBuyerTradeParty(invoiceRecipientTradePartyType);
+
+    //eb:VATIdentification
+    invoiceRecipientTradePartyType.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(
+        new IDType().withValue(invoiceRecipient.getVATIdentificationNumber()).withSchemeID("VA")));
 
     //eb:FurtherIdentification
     if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
@@ -386,18 +441,8 @@ public class ZUGFeRDMapping extends Mapping {
       }
     }
 
-    //eb:BillersInvoiceRecipientID
-    if (!Strings.isNullOrEmpty(invoiceRecipient.getBillersInvoiceRecipientID())) {
-      invoiceRecipientTradePartyType.withID(
-          new IDType().withValue(invoiceRecipient.getBillersInvoiceRecipientID()).withSchemeID(
-              "Rechnungsempfänger-ID des Rechnungsstellers"));
-    }
-
-    //eb:AccountingArea
-    //TODO - no respective field
-
-    //eb:SubOrganizationID
-    //TODO - no respective field
+    //OrderReference
+    //TODO
 
     //eb:Address
     String lineOne = "";
@@ -421,9 +466,18 @@ public class ZUGFeRDMapping extends Mapping {
             .withCountryID(new CountryIDType().withValue(
                 invoiceRecipient.getAddress().getCountry().getCountryCode().value())));
 
-    //eb:VATIdentification
-    invoiceRecipientTradePartyType.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(
-        new IDType().withValue(invoiceRecipient.getVATIdentificationNumber()).withSchemeID("VA")));
+    //eb:BillersInvoiceRecipientID
+    if (!Strings.isNullOrEmpty(invoiceRecipient.getBillersInvoiceRecipientID())) {
+      invoiceRecipientTradePartyType.withID(
+          new IDType().withValue(invoiceRecipient.getBillersInvoiceRecipientID()).withSchemeID(
+              "Rechnungsempfänger-ID des Rechnungsstellers"));
+    }
+
+    //eb:AccountingArea
+    //TODO - no respective field
+
+    //eb:SubOrganizationID
+    //TODO - no respective field
   }
 
   /**
