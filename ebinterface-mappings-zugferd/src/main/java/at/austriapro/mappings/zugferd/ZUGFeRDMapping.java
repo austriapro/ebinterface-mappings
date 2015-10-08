@@ -598,12 +598,117 @@ public class ZUGFeRDMapping extends Mapping {
 
                 //eb:Address extension
                 //TODO - no field in ZUGFeRD for that
-
               }
 
               //eb:Description
               //TODO - no field in ZUGFeRD for that
+            }
 
+            //eb:BillersOrderReference
+            //TODO - Not in ZUGFeRD
+
+            //eb:InvoiceRecipientsOrderReference
+            if (!MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+                && item.getInvoiceRecipientsOrderReference() != null) {
+
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument
+              ReferencedDocumentType bor = new ReferencedDocumentType();
+              scta.withBuyerOrderReferencedDocument(bor);
+
+              //eb:OrderID
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument/ram:OrderID
+              if (item.getInvoiceRecipientsOrderReference().getOrderID() != null) {
+                bor.withID(
+                    new IDType().withValue(item.getInvoiceRecipientsOrderReference().getOrderID()));
+              }
+
+              //eb:OrderPositionNumber
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument/ram:LineID
+              if (item.getInvoiceRecipientsOrderReference().getOrderPositionNumber() != null) {
+                bor.withLineID(
+                    new IDType().withValue(
+                        item.getInvoiceRecipientsOrderReference().getOrderPositionNumber()));
+              }
+
+              //eb:ReferenceDate
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument/ram:IssueDateTime
+              if (item.getInvoiceRecipientsOrderReference().getReferenceDate() != null) {
+                bor.withIssueDateTime(dateTimeFormatter
+                                          .print(
+                                              item.getInvoiceRecipientsOrderReference()
+                                                  .getReferenceDate()));
+              }
+            }
+
+            //eb:AdditionalInformation
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic
+            if (!MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+                && item.getAdditionalInformation() != null) {
+              AdditionalInformation ai = item.getAdditionalInformation();
+
+              String typeCode, description, unitCode, value;
+              BigDecimal valueMeasure = null;
+
+              //ed:SerialNumber
+              if (ai.getSerialNumbers() != null && ai.getSerialNumbers().size() > 0) {
+                for (String sn : ai.getSerialNumbers()) {
+                  typeCode = "SERIAL_NUMBER";
+                  description = "Seriennummer";
+                  valueMeasure = null;
+                  unitCode = null;
+                  value = sn;
+
+                  stp.withApplicableProductCharacteristic(
+                      getApplicableProductCharacteristic(typeCode, description, valueMeasure,
+                                                         unitCode, value));
+                }
+              }
+
+              //ed:ChargeNumber
+              if (ai.getChargeNumbers() != null && ai.getChargeNumbers().size() > 0) {
+                for (String ch : ai.getChargeNumbers()) {
+                  typeCode = "LOT_NUMBER";
+                  description = "Chargennummer";
+                  valueMeasure = null;
+                  unitCode = null;
+                  value = ch;
+
+                  stp.withApplicableProductCharacteristic(
+                      getApplicableProductCharacteristic(typeCode, description, valueMeasure,
+                                                         unitCode, value));
+                }
+              }
+
+              //ed:Classifications
+              if (ai.getClassifications() != null && ai.getClassifications().size() > 0) {
+                for (Classification cl : ai.getClassifications()) {
+                  //TODO - Classifications can't be mapped to a typeCode, OTHER is not documented and now a placeholder
+                  typeCode = "OTHER";
+                  description = cl.getClassificationSchema();
+                  valueMeasure = null;
+                  unitCode = null;
+                  value = cl.getValue();
+
+                  stp.withApplicableProductCharacteristic(
+                      getApplicableProductCharacteristic(typeCode, description, valueMeasure,
+                                                         unitCode, value));
+                }
+              }
+
+              //ed:AlternativeQuantity
+              if (ai.getAlternativeQuantity() != null) {
+                //TODO - AlternativeQuantity can't be mapped to a typeCode, ALTERNATIVE_QUANTITY is not documented and now a placeholder
+                typeCode = "ALTERNATIVE_QUANTITY";
+                description = "Alternative Quantity";
+                valueMeasure = ai.getAlternativeQuantity().getValue();
+                unitCode = ai.getAlternativeQuantity().getUnit();
+                value = null;
+
+                stp.withApplicableProductCharacteristic(
+                    getApplicableProductCharacteristic(typeCode, description, valueMeasure,
+                                                       unitCode, value));
+
+              }
             }
 
             //Add SupplyChainTradeLineItem to SupplyChainTradeLineItem list
@@ -1453,5 +1558,41 @@ public class ZUGFeRDMapping extends Mapping {
     }
 
     return atac;
+  }
+
+  private ProductCharacteristicType getApplicableProductCharacteristic (String typeCode, String description, BigDecimal valueMeasure, String unitCode, String value){
+    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic
+    ProductCharacteristicType pc = new ProductCharacteristicType();
+
+    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:TypeCode
+    if (typeCode != null) {
+      pc.withTypeCode(new CodeType().withValue(typeCode));
+    }
+
+    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:Description
+    if (description != null) {
+      pc.withDescription(new TextType().withValue(description));
+    }
+
+    if (valueMeasure != null) {
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:ValueMeasure
+      MeasureType m = new MeasureType();
+
+      m.withValue(valueMeasure);
+
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:ValueMeasure/ram:unitCode
+      if (unitCode != null){
+        m.withUnitCode(unitCode);
+      }
+
+      pc.withValueMeasure(m);
+    }
+
+    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:Value
+    if (value != null) {
+      pc.withValue(new TextType().withValue(value));
+    }
+
+    return pc;
   }
 }
