@@ -36,9 +36,11 @@ public class ZUGFeRDMappingTest {
 
       LOG.info("Result of ZUGFeRD mapping is {}", zugferd);
 
-
+      assert(true);
     } catch (Exception e) {
       LOG.error("Unable to perform mapping.", e);
+
+      assert(false);
     }
 
 
