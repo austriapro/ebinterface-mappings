@@ -508,51 +508,6 @@ public class ZUGFeRDMapping extends Mapping {
     }
   }
 
-  private TradeAllowanceChargeType getTradeAllowanceChargeType (boolean chargeIndicator, BigDecimal baseAmount, String documentCurrency, BigDecimal percentage,
-  BigDecimal amount, String comment) {
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge
-    TradeAllowanceChargeType atac = new TradeAllowanceChargeType();
-
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:ChargeIndicator
-    //surcharge: true
-    //reduction: false
-    atac.withChargeIndicator(new IndicatorType().withIndicator(chargeIndicator));
-
-    if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
-      if (baseAmount != null) {
-        //eb:BaseAmount
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:BasisAmount
-        atac.withBasisAmount(
-            new AmountType().withValue(baseAmount)
-                .withCurrencyID(
-                    documentCurrency));
-      }
-
-      if (percentage != null) {
-        //eb:Percentage
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:CalculationPercent
-        atac.withCalculationPercent(
-            new PercentType().withValue(percentage));
-      }
-    }
-
-    if (amount != null) {
-      //eb:Amount
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:ActualAmount
-      atac.withActualAmount(new AmountType().withValue(amount)
-                                .withCurrencyID(
-                                    documentCurrency));
-    }
-
-    if (comment != null) {
-      //eb:Comment
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:Reason
-      atac.withReason(new TextType().withValue(comment));
-    }
-
-    return atac;
-  }
-
   /**
    * Map the attributes from the ebInterface ROOT element
    */
@@ -1343,5 +1298,50 @@ public class ZUGFeRDMapping extends Mapping {
           .getApplicableSupplyChainTradeAgreement().get(0);
     }
 
+  }
+
+  private TradeAllowanceChargeType getTradeAllowanceChargeType (boolean chargeIndicator, BigDecimal baseAmount, String documentCurrency, BigDecimal percentage,
+                                                                BigDecimal amount, String comment) {
+    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge
+    TradeAllowanceChargeType atac = new TradeAllowanceChargeType();
+
+    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:ChargeIndicator
+    //surcharge: true
+    //reduction: false
+    atac.withChargeIndicator(new IndicatorType().withIndicator(chargeIndicator));
+
+    if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
+      if (baseAmount != null) {
+        //eb:BaseAmount
+        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:BasisAmount
+        atac.withBasisAmount(
+            new AmountType().withValue(baseAmount)
+                .withCurrencyID(
+                    documentCurrency));
+      }
+
+      if (percentage != null) {
+        //eb:Percentage
+        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:CalculationPercent
+        atac.withCalculationPercent(
+            new PercentType().withValue(percentage));
+      }
+    }
+
+    if (amount != null) {
+      //eb:Amount
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:ActualAmount
+      atac.withActualAmount(new AmountType().withValue(amount)
+                                .withCurrencyID(
+                                    documentCurrency));
+    }
+
+    if (comment != null) {
+      //eb:Comment
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge/ram:Reason
+      atac.withReason(new TextType().withValue(comment));
+    }
+
+    return atac;
   }
 }
