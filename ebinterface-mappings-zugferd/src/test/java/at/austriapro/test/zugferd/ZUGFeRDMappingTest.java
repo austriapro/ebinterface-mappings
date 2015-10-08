@@ -29,7 +29,7 @@ public class ZUGFeRDMappingTest {
               "UTF-8");
 
       MappingFactory mf = new MappingFactory();
-      Mapping zugFeRDMapping = mf.getMapper(MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0);
+      Mapping zugFeRDMapping = mf.getMapper(MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0);
 
       //Map to ZUGFeRD Basic
       String zugferd = new String(zugFeRDMapping.mapFromebInterface(ebInterfaceXML));
@@ -42,8 +42,6 @@ public class ZUGFeRDMappingTest {
 
       assert(false);
     }
-
-
   }
 
 
