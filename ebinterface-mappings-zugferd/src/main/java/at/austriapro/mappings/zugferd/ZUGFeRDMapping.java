@@ -489,9 +489,9 @@ public class ZUGFeRDMapping extends Mapping {
                   //Create TradeAllowanceCharge and add it to ZUGFeRD
                   //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge
                   gpptp.withAppliedTradeAllowanceCharge(
-                      getTradeAllowanceChargeType(chargeIndicator, baseAmount, documentCurrency,
-                                                  percentage,
-                                                  amount, comment.trim()));
+                      getTradeAllowanceCharge(chargeIndicator, baseAmount, documentCurrency,
+                                              percentage,
+                                              amount, comment.trim()));
                 }
               }
             }
@@ -1300,7 +1300,7 @@ public class ZUGFeRDMapping extends Mapping {
 
   }
 
-  private TradeAllowanceChargeType getTradeAllowanceChargeType (boolean chargeIndicator, BigDecimal baseAmount, String documentCurrency, BigDecimal percentage,
+  private TradeAllowanceChargeType getTradeAllowanceCharge (boolean chargeIndicator, BigDecimal baseAmount, String documentCurrency, BigDecimal percentage,
                                                                 BigDecimal amount, String comment) {
     //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge
     TradeAllowanceChargeType atac = new TradeAllowanceChargeType();
