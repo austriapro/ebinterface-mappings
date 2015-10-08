@@ -496,6 +496,116 @@ public class ZUGFeRDMapping extends Mapping {
               }
             }
 
+            //eb:Delivery
+            if (!MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+                && item.getDelivery() != null) {
+              //Create the necessary elements in ZUGFeRD
+              TradePartyType stttp = new TradePartyType();
+              ssctd.withShipToTradeParty(stttp);
+
+              //eb:DeliveryID
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:DeliveryNoteReferencedDocument/ram:ID
+              ssctd.withDeliveryNoteReferencedDocument(new ReferencedDocumentType()
+                                                           .withID(new IDType().withValue(
+                                                               item.getDelivery()
+                                                                   .getDeliveryID())));
+
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString
+              if (item.getDelivery().getDate() != null) {
+                //eb:Delivery/Date
+                ssctd.withActualDeliverySupplyChainEvent(
+                    new SupplyChainEventType().withOccurrenceDateTime(
+                        new DateTimeType()
+                            .withDateTimeString(new DateTimeType.DateTimeString().withValue(
+                                dateTimeFormatter.print(item.getDelivery().getDate())).withFormat(
+                                "102"))));
+              } else if (item.getDelivery().getPeriod().getFromDate() != null) {
+                //eb:Delivery/Period/FromDate
+                ssctd.withActualDeliverySupplyChainEvent(new SupplyChainEventType()
+                                                             .withOccurrenceDateTime(
+                                                                 new DateTimeType()
+                                                                     .withDateTimeString(
+                                                                         new DateTimeType.DateTimeString()
+                                                                             .withValue(
+                                                                                 dateTimeFormatter
+                                                                                     .print(
+                                                                                         item.getDelivery()
+                                                                                             .getPeriod()
+                                                                                             .getFromDate()))
+                                                                             .withFormat(
+                                                                                 "102"))));
+              }
+
+              if (item.getDelivery().getAddress() != null) {
+
+                //Create the necessary elements in ZUGFeRD
+                stttp.withDefinedTradeContact(new TradeContactType());
+                stttp.withPostalTradeAddress(new TradeAddressType());
+
+                Address address = item.getDelivery().getAddress();
+
+                String partyName = "";
+                //Build the person name string
+                if (!Strings.isNullOrEmpty(address.getSalutation())) {
+                  partyName += address.getSalutation() + " ";
+                }
+                if (!Strings.isNullOrEmpty(address.getName())) {
+                  partyName += address.getName();
+                }
+
+                //eb:Salutation and Name
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:Name
+                stttp.withName(new TextType().withValue(partyName));
+
+                //eb:Street
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineOne
+                stttp.getPostalTradeAddress()
+                    .setLineOne(new TextType().withValue(address.getStreet()));
+
+                //eb:Town
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName
+                stttp.getPostalTradeAddress()
+                    .setCityName(new TextType().withValue(address.getTown()));
+
+                //eb:ZIP
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:PostcodeCode
+                stttp.getPostalTradeAddress().getPostcodeCode()
+                    .add(new CodeType().withValue(address.getZIP()));
+
+                //eb:Country Code
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CountryID
+                stttp.getPostalTradeAddress().setCountryID(
+                    new CountryIDType().withValue(address.getCountry().getCountryCode().value()));
+
+                //eb:Phone
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber
+                stttp.getDefinedTradeContact().get(0)
+                    .withTelephoneUniversalCommunication(
+                        new UniversalCommunicationType().withCompleteNumber(
+                            new TextType().withValue(address.getPhone())));
+
+                //eb:Email
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:CompleteNumber
+                stttp.getDefinedTradeContact().get(0)
+                    .withEmailURIUniversalCommunication(
+                        new UniversalCommunicationType().withCompleteNumber(
+                            new TextType().withValue(address.getEmail())));
+
+                //eb:Contact
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:PersonName
+                stttp.getDefinedTradeContact().get(0)
+                    .setPersonName(new TextType().withValue(address.getContact()));
+
+                //eb:Address extension
+                //TODO - no field in ZUGFeRD for that
+
+              }
+
+              //eb:Description
+              //TODO - no field in ZUGFeRD for that
+
+            }
+
             //Add SupplyChainTradeLineItem to SupplyChainTradeLineItem list
             listSCTLI.add(sctli);
           }
