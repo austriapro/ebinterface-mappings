@@ -212,7 +212,6 @@ public class ZUGFeRDMapping extends Mapping {
 
   }
 
-
   /**
    * Map the different reductions and surcharges in ebInterface to the respective fields in ZUGFeRD
    * @param zugferd
@@ -220,7 +219,143 @@ public class ZUGFeRDMapping extends Mapping {
    */
   private void mapReductionAndSurchargeDetails(CrossIndustryDocumentType zugferd,
                                                ReductionAndSurchargeDetails reductionAndSurchargeDetails) {
+    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
+        && reductionAndSurchargeDetails != null) {
+      if (reductionAndSurchargeDetails.getReductionsAndSurchargesAndOtherVATableTaxes() != null
+          && !reductionAndSurchargeDetails.getReductionsAndSurchargesAndOtherVATableTaxes()
+          .isEmpty()) {
 
+        String
+            documentCurrency =
+            zugferd.getSpecifiedSupplyChainTradeTransaction()
+                .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
+
+        SupplyChainTradeSettlementType
+            ascts =
+            zugferd.getSpecifiedSupplyChainTradeTransaction()
+                .getApplicableSupplyChainTradeSettlement();
+
+        for (Serializable rSVItem : reductionAndSurchargeDetails
+            .getReductionsAndSurchargesAndOtherVATableTaxes()) {
+          boolean chargeIndicator;
+          BigDecimal baseAmount = null;
+          BigDecimal percentage = null;
+          BigDecimal amount = null;
+          String comment = null;
+
+          TradeAllowanceChargeType stac;
+
+          if (rSVItem instanceof OtherVATableTax) {
+            OtherVATableTax
+                oVatItem =
+                (OtherVATableTax) rSVItem;
+
+            //Taxes are surcharges => chargeIndicator: true
+            chargeIndicator = true;
+
+            if (oVatItem.getBaseAmount() != null) {
+              //eb:BaseAmount
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:BasisAmount
+              baseAmount = oVatItem.getBaseAmount();
+            }
+
+            if (oVatItem.getPercentage() != null) {
+              //eb:Percentage
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:CalculationPercent
+              percentage = oVatItem.getPercentage();
+            }
+
+            if (oVatItem.getAmount() != null) {
+              //eb:Amount
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:ActualAmount
+              amount = oVatItem.getAmount();
+            }
+
+            if (oVatItem.getComment() != null) {
+              //eb:TaxID
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason
+              comment = oVatItem.getComment() + "\n";
+            }
+
+            if (oVatItem.getComment() != null) {
+              //eb:Comment
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason
+              comment += oVatItem.getComment();
+            }
+
+            stac =
+                getTradeAllowanceCharge(chargeIndicator, baseAmount, documentCurrency,
+                                        percentage,
+                                        amount, comment.trim());
+
+            if (oVatItem.getVATRate() != null) {
+              //eb:VATRate
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:CategoryTradeTax
+              stac.withCategoryTradeTax(
+                  new TradeTaxType().withTypeCode(new TaxTypeCodeType().withValue("VAT"))
+                      .withCategoryCode(new TaxCategoryCodeType().withValue("S"))
+                      .withApplicablePercent(
+                          new PercentType().withValue(oVatItem.getVATRate().getValue())));
+            }
+          } else {
+            JAXBElement<? extends Serializable> jabxItem = (JAXBElement<? extends Serializable>) rSVItem;
+
+            ReductionAndSurchargeType
+                rsItem =
+                (ReductionAndSurchargeType) jabxItem.getValue();
+
+            //Surcharge (SurchargeListLineItem) => chargeIndicator: true
+            //Reduction (ReductionListLineItem) => chargeIndicator: false
+            chargeIndicator =
+                jabxItem.getName().getLocalPart()
+                    .equals("Surcharge");
+
+            if (rsItem.getBaseAmount() != null) {
+              //eb:BaseAmount
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:BasisAmount
+              baseAmount = rsItem.getBaseAmount();
+            }
+
+            if (rsItem.getPercentage() != null) {
+              //eb:Percentage
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:CalculationPercent
+              percentage = rsItem.getPercentage();
+            }
+
+            if (rsItem.getAmount() != null) {
+              //eb:Amount
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:ActualAmount
+              amount = rsItem.getAmount();
+            }
+
+            if (rsItem.getComment() != null) {
+              //eb:Comment
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason
+              comment = rsItem.getComment();
+            }
+
+            stac =
+                getTradeAllowanceCharge(chargeIndicator, baseAmount, documentCurrency,
+                                        percentage,
+                                        amount, comment.trim());
+
+            if (rsItem.getVATRate() != null) {
+              //eb:VATRate
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:CategoryTradeTax
+              stac.withCategoryTradeTax(
+                  new TradeTaxType().withTypeCode(new TaxTypeCodeType().withValue("VAT"))
+                      .withCategoryCode(new TaxCategoryCodeType().withValue("S"))
+                      .withApplicablePercent(new PercentType().withValue(rsItem.getVATRate()
+                                                                             .getValue())));
+            }
+          }
+
+          //Create TradeAllowanceCharge and add it to ZUGFeRD
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge
+          ascts.withSpecifiedTradeAllowanceCharge(stac);
+        }
+      }
+    }
   }
 
   /**
@@ -812,6 +947,9 @@ public class ZUGFeRDMapping extends Mapping {
                     new AmountType().withValue(sum).withCurrencyID(documentCurrency));
               }
             }
+
+            //eb:ListLineItemExtension//eb:ListLineItemExtension//eb:BeneficiarySocialInsuranceNumber
+            //TODO - not in ZUGFeRD
 
             //Add SupplyChainTradeLineItem to SupplyChainTradeLineItem list
             listSCTLI.add(sctli);
