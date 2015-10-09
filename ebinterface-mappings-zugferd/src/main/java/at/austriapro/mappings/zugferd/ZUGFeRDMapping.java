@@ -209,7 +209,102 @@ public class ZUGFeRDMapping extends Mapping {
    * @param tax
    */
   private void mapTax(CrossIndustryDocumentType zugferd, Tax tax) {
+    //eb:UniversalBankTransaction / eb:DirectDebit
+    if (tax != null) {
+      String
+          documentCurrency =
+          zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
 
+      if (tax.getVAT() != null && tax.getVAT().getVATItems().size() > 0) {
+
+        for (VATItem vATItems : tax.getVAT().getVATItems()) {
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax
+          TradeTaxType tradeTaxType = new TradeTaxType();
+
+          //eb:TaxedAmount
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:BasisAmount
+          if (vATItems.getTaxedAmount() != null) {
+            tradeTaxType.withBasisAmount(new AmountType().withValue(vATItems.getTaxedAmount())
+                                             .withCurrencyID(documentCurrency));
+          }
+
+          //eb:VATRate
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:ApplicablePercent
+          if (vATItems.getVATRate() != null) {
+            tradeTaxType.withApplicablePercent(
+                new PercentType()
+                    .withValue(vATItems.getVATRate().getValue()));
+          }
+
+          if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:ExcemptionReason
+            if (vATItems.getTaxExemption() != null) {
+              String addCode = "";
+
+              //eb:TaxException//eb:TaxExemptionCode
+              if (vATItems.getTaxExemption().getTaxExemptionCode() != null) {
+                addCode = vATItems.getTaxExemption().getTaxExemptionCode();
+              }
+
+              //eb:TaxException
+              tradeTaxType.withExemptionReason(
+                  new TextType().withValue(addCode + " " + vATItems.getTaxExemption().getValue()));
+            }
+          }
+
+          //eb:Amount
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:CalculatedAmount
+          if (vATItems.getAmount() != null) {
+            tradeTaxType.withCalculatedAmount(
+                new AmountType().withValue(vATItems.getAmount())
+                    .withCurrencyID(documentCurrency));
+          }
+
+          //Tax type - always VAT in this case
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:TypeCode
+          tradeTaxType.withTypeCode(new TaxTypeCodeType().withValue("VAT"));
+        }
+      }
+
+      //eb:OtherTax
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/?
+      if (tax.getOtherTaxes() != null && tax.getOtherTaxes().size() > 0) {
+
+        SupplyChainTradeSettlementType
+            ascts =
+            zugferd.getSpecifiedSupplyChainTradeTransaction()
+                .getApplicableSupplyChainTradeSettlement();
+
+        for (OtherTax otherTax : tax.getOtherTaxes()) {
+          boolean chargeIndicator;
+          BigDecimal amount = null;
+          String comment = null;
+
+          //Taxes are surcharge => chargeIndicator: true
+          chargeIndicator = true;
+
+          if (otherTax.getAmount() != null) {
+            //eb:Amount
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:ActualAmount
+            amount = otherTax.getAmount();
+          }
+
+          if (otherTax.getComment() != null) {
+            //eb:Comment
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason
+            comment = otherTax.getComment();
+          }
+
+          //Create TradeAllowanceCharge and add it to ZUGFeRD
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge
+          ascts.withSpecifiedTradeAllowanceCharge(
+              getTradeAllowanceCharge(chargeIndicator, null, documentCurrency,
+                                      null,
+                                      amount, comment));
+        }
+      }
+    }
   }
 
   /**
