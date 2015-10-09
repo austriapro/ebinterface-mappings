@@ -497,7 +497,7 @@ public class ZUGFeRDMapping extends Mapping {
             }
 
             //eb:Delivery
-            if (!MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+            if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
                 && item.getDelivery() != null) {
               //Create the necessary elements in ZUGFeRD
               TradePartyType stttp = new TradePartyType();
@@ -608,7 +608,7 @@ public class ZUGFeRDMapping extends Mapping {
             //TODO - Not in ZUGFeRD
 
             //eb:InvoiceRecipientsOrderReference
-            if (!MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+            if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
                 && item.getInvoiceRecipientsOrderReference() != null) {
 
               //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument
@@ -642,7 +642,7 @@ public class ZUGFeRDMapping extends Mapping {
 
             //eb:AdditionalInformation
             //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic
-            if (!MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+            if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
                 && item.getAdditionalInformation() != null) {
               AdditionalInformation ai = item.getAdditionalInformation();
 
@@ -682,7 +682,7 @@ public class ZUGFeRDMapping extends Mapping {
               //ed:Classifications
               if (ai.getClassifications() != null && ai.getClassifications().size() > 0) {
                 for (Classification cl : ai.getClassifications()) {
-                  //TODO - Classifications can't be mapped to a typeCode, OTHER is not documented and now a placeholder
+                  //TODO - Classifications can't be mapped to a typeCode, OTHER is not documented and a placeholder for now
                   typeCode = "OTHER";
                   description = cl.getClassificationSchema();
                   valueMeasure = null;
@@ -697,7 +697,7 @@ public class ZUGFeRDMapping extends Mapping {
 
               //ed:AlternativeQuantity
               if (ai.getAlternativeQuantity() != null) {
-                //TODO - AlternativeQuantity can't be mapped to a typeCode, ALTERNATIVE_QUANTITY is not documented and now a placeholder
+                //TODO - AlternativeQuantity can't be mapped to a typeCode, ALTERNATIVE_QUANTITY is not documented and a placeholder for now
                 typeCode = "ALTERNATIVE_QUANTITY";
                 description = "Alternative Quantity";
                 valueMeasure = ai.getAlternativeQuantity().getValue();
@@ -708,6 +708,108 @@ public class ZUGFeRDMapping extends Mapping {
                     getApplicableProductCharacteristic(typeCode, description, valueMeasure,
                                                        unitCode, value));
 
+              }
+
+              //ed:Size
+              if (ai.getSize() != null) {
+                typeCode = "SIZE_TEXT";
+                description = "Größenbezeichnung";
+                valueMeasure = null;
+                unitCode = null;
+                value = ai.getSize();
+
+                stp.withApplicableProductCharacteristic(
+                    getApplicableProductCharacteristic(typeCode, description, valueMeasure,
+                                                       unitCode, value));
+
+              }
+
+              //ed:Weight
+              if (ai.getWeight() != null) {
+                typeCode = "WEIGHT_NET";
+                description = "Netto-Gewicht";
+                valueMeasure = ai.getWeight().getValue();
+                if (ai.getWeight().getUnit() != null) {
+                  unitCode = ai.getWeight().getUnit();
+                } else {
+                  unitCode = null;
+                }
+                value = null;
+
+                stp.withApplicableProductCharacteristic(
+                    getApplicableProductCharacteristic(typeCode, description, valueMeasure,
+                                                       unitCode, value));
+
+              }
+
+              //ed:Boxes
+              if (ai.getColor() != null) {
+                //TODO - Boxes can't be mapped to a typeCode, BOXES_QUANTITY is not documented and a placeholder for now
+                typeCode = "BOXES_QUANTITY";
+                description = "Quantity boxes/container";
+                valueMeasure = null;
+                unitCode = null;
+                value = ai.getBoxes().toString();
+
+                stp.withApplicableProductCharacteristic(
+                    getApplicableProductCharacteristic(typeCode, description, valueMeasure,
+                                                       unitCode, value));
+
+              }
+
+              //ed:Color
+              if (ai.getColor() != null) {
+                typeCode = "COLOR_TEXT";
+                description = "Farbe als Text";
+                valueMeasure = null;
+                unitCode = null;
+                value = ai.getColor();
+
+                stp.withApplicableProductCharacteristic(
+                    getApplicableProductCharacteristic(typeCode, description, valueMeasure,
+                                                       unitCode, value));
+
+              }
+            }
+
+            if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
+                && item.getLineItemAmount() != null) {
+              //eb:LineItemAmount
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem[/ram:SpecifiedSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:LineTotalAmount
+              scts.withSpecifiedTradeSettlementMonetarySummation(
+                  new TradeSettlementMonetarySummationType().withLineTotalAmount(
+                      new AmountType().withValue(item.getLineItemAmount())
+                          .withCurrencyID(documentCurrency)));
+
+              if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+                  && gpptp.getAppliedTradeAllowanceCharge() != null
+                  && gpptp.getAppliedTradeAllowanceCharge().size() > 0) {
+                BigDecimal sum = new BigDecimal(0);
+
+                for (TradeAllowanceChargeType ch : gpptp.getAppliedTradeAllowanceCharge()) {
+                  BigDecimal am;
+
+                  if (ch.getActualAmount() != null && ch.getActualAmount().size() > 0) {
+                    am = ch.getActualAmount().get(0).getValue();
+                  } else if (ch.getCalculationPercent() != null && ch.getBasisAmount() != null) {
+                    am =
+                        ch.getBasisAmount().getValue()
+                            .multiply(ch.getCalculationPercent().getValue())
+                            .divide(new BigDecimal(100));
+                  } else {
+                    am = null;
+                  }
+
+                  if (am != null && ch.getChargeIndicator().getIndicator()) {
+                    sum = sum.subtract(am);
+                  } else {
+                    sum = sum.add(am);
+                  }
+                }
+
+                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem[/ram:SpecifiedSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:TotalAllowanceChargeAmount
+                scts.getSpecifiedTradeSettlementMonetarySummation().withTotalAllowanceChargeAmount(
+                    new AmountType().withValue(sum).withCurrencyID(documentCurrency));
               }
             }
 
