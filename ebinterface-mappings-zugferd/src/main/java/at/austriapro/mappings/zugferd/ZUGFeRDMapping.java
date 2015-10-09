@@ -243,6 +243,8 @@ public class ZUGFeRDMapping extends Mapping {
           BigDecimal amount = null;
           String comment = null;
 
+          //Create TradeAllowanceCharge
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge
           TradeAllowanceChargeType stac;
 
           if (rSVItem instanceof OtherVATableTax) {
@@ -337,7 +339,7 @@ public class ZUGFeRDMapping extends Mapping {
             stac =
                 getTradeAllowanceCharge(chargeIndicator, baseAmount, documentCurrency,
                                         percentage,
-                                        amount, comment.trim());
+                                        amount, comment);
 
             if (rsItem.getVATRate() != null) {
               //eb:VATRate
@@ -350,7 +352,7 @@ public class ZUGFeRDMapping extends Mapping {
             }
           }
 
-          //Create TradeAllowanceCharge and add it to ZUGFeRD
+          //add SpecifiedTradeAllowanceCharge to ZUGFeRD
           //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount/ram:AppliedTradeAllowanceCharge
           ascts.withSpecifiedTradeAllowanceCharge(stac);
         }
