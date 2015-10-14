@@ -181,7 +181,187 @@ public class ZUGFeRDMapping extends Mapping {
    * @param paymentMethod
    */
   private void mapPaymentMethod(CrossIndustryDocumentType zugferd, PaymentMethod paymentMethod) {
+    if (paymentMethod != null) {
+      TradeSettlementPaymentMeansType tspmt = new TradeSettlementPaymentMeansType();
 
+      if (paymentMethod.getDirectDebit() != null) {
+        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/TypeCode
+        tspmt.withTypeCode(new PaymentMeansCodeType().withValue("49"));
+
+        if (paymentMethod.getComment() != null) {
+          //eb:Comment
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/Information
+          tspmt.withInformation(new TextType().withValue(paymentMethod.getComment()));
+        }
+
+        //TODO - all other information is in custom extensions
+
+        zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
+            .withSpecifiedTradeSettlementPaymentMeans(
+                tspmt);
+      } else if (paymentMethod.getSEPADirectDebit() != null) {
+        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/TypeCode
+        tspmt.withTypeCode(new PaymentMeansCodeType().withValue("49"));
+
+        if (paymentMethod.getComment() != null) {
+          //eb:Comment
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/Information
+          tspmt.withInformation(new TextType().withValue(paymentMethod.getComment()));
+        }
+
+        //eb:SEPADirectDebit/eb:Type
+        //TODO - not in Zugferd
+
+        //eb:SEPADirectDebit/eb:BankAccountOwner
+        //TODO - not in Zugferd
+
+        if (paymentMethod.getSEPADirectDebit().getMandateReference() != null) {
+          //eb:SEPADirectDebit/eb:MandateReference
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ID
+          tspmt.withID(
+              new IDType().withValue(paymentMethod.getSEPADirectDebit().getMandateReference()));
+        }
+
+        if (paymentMethod.getSEPADirectDebit().getCreditorID() != null) {
+          //eb:SEPADirectDebit/eb:IBAN
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount
+          tspmt
+              .withPayeePartyCreditorFinancialAccount(new CreditorFinancialAccountType().withIBANID(
+                  new IDType().withValue(paymentMethod.getSEPADirectDebit().getCreditorID())));
+        }
+
+        if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
+          if (paymentMethod.getSEPADirectDebit().getIBAN() != null) {
+            //eb:SEPADirectDebit/eb:IBAN
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerPartyDebtorFinancialAccount
+            tspmt.withPayerPartyDebtorFinancialAccount(new DebtorFinancialAccountType().withIBANID(
+                new IDType().withValue(paymentMethod.getSEPADirectDebit().getIBAN())));
+          }
+
+          if (paymentMethod.getSEPADirectDebit().getBIC() != null) {
+            //eb:SEPADirectDebit/eb:BIC
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerSpecifiedDebtorFinancialInstitution
+            tspmt.withPayerSpecifiedDebtorFinancialInstitution(new DebtorFinancialInstitutionType()
+                                                                   .withBICID(
+                                                                       new IDType().withValue(
+                                                                           paymentMethod
+                                                                               .getSEPADirectDebit()
+                                                                               .getBIC())));
+          }
+
+          if (paymentMethod.getSEPADirectDebit().getDebitCollectionDate() != null) {
+            //eb:SEPADirectDebit/eb:DebitCollectionDate
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:BillingSpecifiedPeriod
+            zugferd.getSpecifiedSupplyChainTradeTransaction()
+                .getApplicableSupplyChainTradeSettlement().withBillingSpecifiedPeriod(
+                new SpecifiedPeriodType().withStartDateTime(new DateTimeType()
+                                                                .withDateTimeString(
+                                                                    new DateTimeType.DateTimeString()
+                                                                        .withValue(
+                                                                            dateTimeFormatter
+                                                                                .print(
+                                                                                    paymentMethod
+                                                                                        .getSEPADirectDebit()
+                                                                                        .getDebitCollectionDate()))
+                                                                        .withFormat(
+                                                                            "102")))
+                    .withEndDateTime(new DateTimeType()
+                                         .withDateTimeString(
+                                             new DateTimeType.DateTimeString()
+                                                 .withValue(
+                                                     dateTimeFormatter
+                                                         .print(
+                                                             paymentMethod
+                                                                 .getSEPADirectDebit()
+                                                                 .getDebitCollectionDate()))
+                                                 .withFormat(
+                                                     "102"))));
+          }
+        }
+
+        zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
+            .withSpecifiedTradeSettlementPaymentMeans(
+                tspmt);
+
+        //eb:SEPADirectDebit/eb:BankAccountOwner
+        //TODO - not in Zugferd
+      } else if (paymentMethod.getUniversalBankTransaction() != null) {
+        for (BeneficiaryAccount ba : paymentMethod.getUniversalBankTransaction().getBeneficiaryAccounts()){
+          tspmt = new TradeSettlementPaymentMeansType();
+
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode
+          tspmt.withTypeCode(new PaymentMeansCodeType().withValue("31"));
+
+          if (paymentMethod.getComment() != null) {
+            //eb:Comment
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/Information
+            tspmt.withInformation(new TextType().withValue(paymentMethod.getComment()));
+          }
+
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount
+          CreditorFinancialAccountType cfa = new CreditorFinancialAccountType();
+          tspmt
+              .withPayeePartyCreditorFinancialAccount(cfa);
+
+          if (ba.getIBAN() != null) {
+            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:IBAN
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID
+            cfa.withIBANID(
+                new IDType().withValue(ba.getIBAN()));
+          }
+
+          if (ba.getBankAccountOwner() != null) {
+            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BankAccountOwner
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:AccountName
+            cfa.withAccountName(new TextType().withValue(ba.getBankAccountOwner()));
+          }
+
+          if (ba.getBankAccountNr() != null) {
+            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BankAccountNr
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID
+            cfa.withProprietaryID(new IDType().withValue(ba.getBankAccountNr()));
+          }
+
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialInstitution
+          CreditorFinancialInstitutionType cft = new CreditorFinancialInstitutionType();
+          tspmt
+              .withPayeeSpecifiedCreditorFinancialInstitution(cft);
+
+          if (ba.getBIC() != null) {
+            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BIC
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialInstitution/ram:BICID
+            cft.withBICID(new IDType().withValue(ba.getBIC()));
+          }
+
+          /*
+          if (ba.getBankCode() != null) {
+            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BankCode
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialInstitution/ram:GermanBankleitzahlID
+            cft.withGermanBankleitzahlID(new IDType().withValue(ba.getBankCode().getValue())));
+          }
+          */
+
+          if (ba.getBankName() != null) {
+            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BankName
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialInstitution/ram:Name
+            cft.withName(new TextType().withValue(ba.getBankName()));
+          }
+
+          zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
+              .withSpecifiedTradeSettlementPaymentMeans(
+                  tspmt);
+        }
+
+        if (paymentMethod.getUniversalBankTransaction().getPaymentReference().getValue() != null) {
+          //eb:UniversalBankTransaction/eb:PaymentReference
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:PaymentReference
+          zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement()
+              .withPaymentReference(new TextType().withValue(
+                  paymentMethod.getUniversalBankTransaction().getPaymentReference().getValue()));
+        }
+      }
+    }
   }
 
   /**
@@ -190,6 +370,27 @@ public class ZUGFeRDMapping extends Mapping {
    * @param payableAmount
    */
   private void mapPayableAmount(CrossIndustryDocumentType zugferd, BigDecimal payableAmount) {
+    //eb:PayableAmount
+    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType) && payableAmount != null) {
+      TradeSettlementMonetarySummationType stsms;
+      if (zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement()
+              .getSpecifiedTradeSettlementMonetarySummation() == null) {
+        stsms = new TradeSettlementMonetarySummationType();
+        zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
+            .withSpecifiedTradeSettlementMonetarySummation(stsms);
+      } else {
+        stsms =
+            zugferd.getSpecifiedSupplyChainTradeTransaction()
+                .getApplicableSupplyChainTradeSettlement()
+                .getSpecifiedTradeSettlementMonetarySummation();
+      }
+
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:DuePayableAmount
+      stsms.withDuePayableAmount(new AmountType().withValue(payableAmount).withCurrencyID(
+          zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue()));
+    }
 
   }
 
@@ -199,7 +400,27 @@ public class ZUGFeRDMapping extends Mapping {
    * @param totalGrossAmount
    */
   private void mapTotalGrossAmount(CrossIndustryDocumentType zugferd, BigDecimal totalGrossAmount) {
+    //eb:TotalGrossAmount
+    if (totalGrossAmount != null) {
+      TradeSettlementMonetarySummationType stsms;
+      if (zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement()
+              .getSpecifiedTradeSettlementMonetarySummation() == null) {
+        stsms = new TradeSettlementMonetarySummationType();
+        zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
+            .withSpecifiedTradeSettlementMonetarySummation(stsms);
+      } else {
+        stsms =
+            zugferd.getSpecifiedSupplyChainTradeTransaction()
+                .getApplicableSupplyChainTradeSettlement()
+                .getSpecifiedTradeSettlementMonetarySummation();
+      }
 
+      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:GrandTotalAmount
+      stsms.withGrandTotalAmount(new AmountType().withValue(totalGrossAmount).withCurrencyID(
+          zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue()));
+    }
   }
 
 
@@ -1007,7 +1228,7 @@ public class ZUGFeRDMapping extends Mapping {
             if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
                 && item.getLineItemAmount() != null) {
               //eb:LineItemAmount
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem[/ram:SpecifiedSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:LineTotalAmount
+              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:LineTotalAmount
               scts.withSpecifiedTradeSettlementMonetarySummation(
                   new TradeSettlementMonetarySummationType().withLineTotalAmount(
                       new AmountType().withValue(item.getLineItemAmount())
@@ -1310,134 +1531,6 @@ public class ZUGFeRDMapping extends Mapping {
 
     //eb:SubOrganizationID
     //TODO - no respective field
-  }
-
-  /**
-   * Map the biller Target in ZUGFeRD: //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement
-   */
-  private void mapTradeSettlement(CrossIndustryDocumentType zugferd, Invoice invoice) {
-    SupplyChainTradeSettlementType
-        sctst =
-        zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement();
-
-    //eb:PaymentReference
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:PaymentReference
-    sctst.withPaymentReference(new TextType().withValue(
-        invoice.getPaymentMethod().getUniversalBankTransaction().getPaymentReference().getValue()));
-
-    //get zugferd currency
-    String documentCurrency = sctst.getInvoiceCurrencyCode().getValue();
-
-    TradeSettlementPaymentMeansType tspmt = new TradeSettlementPaymentMeansType();
-    sctst.withSpecifiedTradeSettlementPaymentMeans(tspmt);
-
-    //eb:?
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ID
-    //TODO not in ebInvoice
-
-    String paymentMethod = "";
-    if (invoice.getPaymentMethod().getDirectDebit() != null) {
-      paymentMethod = "49";
-    } else if (invoice.getPaymentMethod().getUniversalBankTransaction() != null) {
-      paymentMethod = "31";
-    } else {
-      paymentMethod = "1";
-    }
-
-    //eb:UniversalBankTransaction / eb:DirectDebit
-    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/TypeCode
-      tspmt.withTypeCode(new PaymentMeansCodeType().withValue(paymentMethod));
-
-      //eb:Comment
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/Information
-      tspmt.withInformation(new TextType().withValue(invoice.getPaymentMethod().getComment()));
-
-      if (paymentMethod.equals("49")) {
-        //eb:?
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/PayerPartyDebtorFinancialAccount
-        //TODO not in ebInvoice
-
-        //eb:?
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/PayerSpecifiedDebtorFinancialInstitution
-        //TODO not in ebInvoice
-      }
-    }
-
-    if (paymentMethod.equals("31")
-        && invoice.getPaymentMethod().getUniversalBankTransaction().getBeneficiaryAccounts().size()
-           > 1) {
-      //eb:UniversalBankTransaction
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialAccount
-      tspmt.withPayeePartyCreditorFinancialAccount(new CreditorFinancialAccountType()
-                                                       .withIBANID(new IDType().withValue(
-                                                           invoice.getPaymentMethod()
-                                                               .getUniversalBankTransaction()
-                                                               .getBeneficiaryAccounts().get(0)
-                                                               .getIBAN()))
-                                                       .withAccountName(new TextType().withValue(
-                                                           invoice.getPaymentMethod()
-                                                               .getUniversalBankTransaction()
-                                                               .getBeneficiaryAccounts().get(0)
-                                                               .getBankAccountOwner())));
-
-      //eb:UniversalBankTransaction
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/PayeeSpecifiedCreditorFinancialInstitution
-      tspmt.withPayeeSpecifiedCreditorFinancialInstitution(new CreditorFinancialInstitutionType()
-                                                               .withBICID(new IDType().withValue(
-                                                                   invoice.getPaymentMethod()
-                                                                       .getUniversalBankTransaction()
-                                                                       .getBeneficiaryAccounts()
-                                                                       .get(0).getBIC()))
-                                                               .withName(new TextType().withValue(
-                                                                   invoice.getPaymentMethod()
-                                                                       .getUniversalBankTransaction()
-                                                                       .getBeneficiaryAccounts()
-                                                                       .get(0).getBankName())));
-
-    }
-
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax
-    if (invoice.getTax().getVAT().getVATItems().size() > 0) {
-
-      for (VATItem vATItems : invoice.getTax().getVAT().getVATItems()) {
-
-        TradeTaxType tradeTaxType = new TradeTaxType();
-
-        //eb:Amount
-        tradeTaxType.withCalculatedAmount(
-            new AmountType().withValue(vATItems.getAmount())
-                .withCurrencyID(documentCurrency));
-
-        //Tax type - always VAT in this case
-        tradeTaxType.withTypeCode(new TaxTypeCodeType().withValue("VAT"));
-
-        //eb:TaxedAmount
-        tradeTaxType.withBasisAmount(new AmountType().withValue(vATItems.getTaxedAmount())
-                                         .withCurrencyID(documentCurrency));
-
-        //eb:VATRate
-        if (vATItems.getVATRate() != null) {
-          tradeTaxType.withApplicablePercent(
-              new PercentType()
-                  .withValue(vATItems.getVATRate().getValue()));
-        }
-      }
-    }
-
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/?
-    //TODO set OtherTaxes proper
-    if (invoice.getTax().getOtherTaxes().size() > 0) {
-
-      for (OtherTax otherTax : invoice.getTax().getOtherTaxes()) {
-                /*sctst.withApplicableTradeTax(new TradeTaxType()
-                        .withCalculatedAmount(new AmountType().withValue(vATItems.getAmount()).withCurrencyID(documentCurrency))
-                        .withTypeCode(new TaxTypeCodeType().withValue("VAT"))
-                        .withBasisAmount(new AmountType().withValue(vATItems.getTaxedAmount()).withCurrencyID(documentCurrency))
-                        .withApplicablePercent(new PercentType().withValue(vATItems.getVATRate().getValue())));*/
-      }
-    }
-
   }
 
   /**
