@@ -35,6 +35,7 @@ public class ZUGFeRDMapping extends Mapping {
 
   private MappingFactory.MappingType mappingType;
   private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
+  private DateTimeFormatter issueDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
 
   private static final Logger LOG = LoggerFactory.getLogger(ZUGFeRDMapping.class.getName());
 
@@ -1213,7 +1214,7 @@ public class ZUGFeRDMapping extends Mapping {
               //eb:ReferenceDate
               //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument/ram:IssueDateTime
               if (item.getInvoiceRecipientsOrderReference().getReferenceDate() != null) {
-                bor.withIssueDateTime(dateTimeFormatter
+                bor.withIssueDateTime(issueDateTimeFormatter
                                           .print(
                                               item.getInvoiceRecipientsOrderReference()
                                                   .getReferenceDate()));
@@ -1467,7 +1468,7 @@ public class ZUGFeRDMapping extends Mapping {
       //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:IssueDateTime
       zugferd.getHeaderExchangedDocument().withIssueDateTime(new DateTimeType().withDateTimeString(
           new DateTimeType.DateTimeString().withFormat("102")
-              .withValue(dateTimeFormatter.print(invoice.getInvoiceDate()))));
+              .withValue(issueDateTimeFormatter.print(invoice.getInvoiceDate()))));
     }
   }
 
@@ -1763,7 +1764,7 @@ public class ZUGFeRDMapping extends Mapping {
         //eb:InvoiceDate
         //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:IssueDateTime
         referencedDocumentType.withIssueDateTime(
-            dateTimeFormatter.print(relatedDocument.getInvoiceDate()));
+            issueDateTimeFormatter.print(relatedDocument.getInvoiceDate()));
 
         //eb:Document type
         //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:TypeCode
@@ -1823,7 +1824,7 @@ public class ZUGFeRDMapping extends Mapping {
       //eb:InvoiceDate
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:IssueDateTime
       referencedDocumentType.withIssueDateTime(
-          dateTimeFormatter.print(cancelledOriginalDocument.getInvoiceDate()));
+          issueDateTimeFormatter.print(cancelledOriginalDocument.getInvoiceDate()));
 
       //eb:Document type
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:TypeCode

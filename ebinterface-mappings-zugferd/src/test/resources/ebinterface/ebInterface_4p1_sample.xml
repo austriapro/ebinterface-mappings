@@ -210,7 +210,7 @@
             </HeaderDescription>
             <ListLineItem xmlns:n3="http://www.ebinterface.at/schema/4p1/">
                 <Description>Produkt B</Description>
-                <Quantity n3:Unit="">345</Quantity>
+                <Quantity n3:Unit="kg">345</Quantity>
                 <UnitPrice>12</UnitPrice>
                 <VATRate n3:TaxCode="AT022">20.00</VATRate>
                 <LineItemAmount>4140</LineItemAmount>
