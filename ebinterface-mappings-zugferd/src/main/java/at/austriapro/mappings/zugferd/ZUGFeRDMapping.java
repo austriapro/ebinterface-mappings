@@ -150,7 +150,9 @@ public class ZUGFeRDMapping extends Mapping {
    * @param comment
    */
   private void mapComment(CrossIndustryDocumentType zugferd, String comment) {
-
+    if(comment != null){
+      zugferd.getHeaderExchangedDocument().withIncludedNote(new NoteType().withContent(new TextType().withValue(comment)));
+    }
   }
 
 
@@ -161,7 +163,7 @@ public class ZUGFeRDMapping extends Mapping {
    */
   private void mapPresentationDetails(CrossIndustryDocumentType zugferd,
                                       PresentationDetails presentationDetails) {
-
+    //TODO - not in ZUGFeRD
   }
 
   /**
