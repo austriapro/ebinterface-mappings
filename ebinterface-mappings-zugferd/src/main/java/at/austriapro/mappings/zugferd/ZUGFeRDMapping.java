@@ -171,9 +171,134 @@ public class ZUGFeRDMapping extends Mapping {
    */
   private void mapPaymentConditions(CrossIndustryDocumentType zugferd,
                                     PaymentConditions paymentConditions) {
+    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
+        && paymentConditions != null) {
+      String
+          documentCurrency =
+          zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
 
+      TradePaymentTermsType stpt;
+
+      if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+          && paymentConditions.getDiscounts() != null
+          && paymentConditions.getDiscounts().size() > 0) {
+        //eb:Discount
+        for (Discount discount : paymentConditions.getDiscounts()) {
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms
+          stpt = new TradePaymentTermsType();
+          zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement().withSpecifiedTradePaymentTerms(stpt);
+
+          if (paymentConditions.getDueDate() != null) {
+            //eb:DueDate
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime
+            stpt.withDueDateDateTime(new DateTimeType()
+                                         .withDateTimeString(
+                                             new DateTimeType.DateTimeString()
+                                                 .withValue(
+                                                     dateTimeFormatter
+                                                         .print(
+                                                             paymentConditions.getDueDate()))
+                                                 .withFormat(
+                                                     "102")));
+          }
+
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms
+          TradePaymentDiscountTermsType atpd = new TradePaymentDiscountTermsType();
+          stpt.withApplicableTradePaymentDiscountTerms(atpd);
+
+          if (discount.getPaymentDate() != null) {
+            //eb:Discount/eb:PaymentDate
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:BasisDateTime
+            atpd.withBasisDateTime(new DateTimeType()
+                                       .withDateTimeString(
+                                           new DateTimeType.DateTimeString()
+                                               .withValue(
+                                                   dateTimeFormatter
+                                                       .print(
+                                                           discount.getPaymentDate()))
+                                               .withFormat(
+                                                   "102")));
+          }
+
+          if (discount.getBaseAmount() != null) {
+            //eb:Discount/eb:BaseAmount
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:BasisAmount
+            atpd.withBasisAmount(new AmountType().withValue(discount.getBaseAmount())
+                                     .withCurrencyID(documentCurrency));
+          }
+
+          if (discount.getPercentage() != null) {
+            //eb:Discount/eb:Percentage
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:CalculationPercent
+            atpd.withCalculationPercent(new PercentType().withValue(discount.getPercentage()));
+          }
+
+          if (discount.getAmount() != null) {
+            //eb:Discount/eb:Amount
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:ActualDiscountAmount
+            atpd.withActualDiscountAmount(new AmountType().withValue(discount.getAmount())
+                                              .withCurrencyID(documentCurrency));
+          }
+
+          if (paymentConditions.getMinimumPayment() != null) {
+            //eb:MinimumPayment
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:PartialPaymentAmount
+            stpt.withPartialPaymentAmount(
+                new AmountType().withValue(paymentConditions.getMinimumPayment())
+                    .withCurrencyID(documentCurrency));
+          }
+
+          if (paymentConditions.getComment() != null) {
+            //eb:Comment
+            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:Description
+            stpt.withDescription(new TextType().withValue(paymentConditions.getComment()));
+          }
+
+          //eb:PaymentConditionsExtension
+          //TODO - No fields specified
+        }
+      } else {
+        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms
+        stpt = new TradePaymentTermsType();
+        zugferd.getSpecifiedSupplyChainTradeTransaction()
+            .getApplicableSupplyChainTradeSettlement().withSpecifiedTradePaymentTerms(stpt);
+
+        if (paymentConditions.getDueDate() != null) {
+          //eb:DueDate
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime
+          stpt.withDueDateDateTime(new DateTimeType()
+                                       .withDateTimeString(
+                                           new DateTimeType.DateTimeString()
+                                               .withValue(
+                                                   dateTimeFormatter
+                                                       .print(
+                                                           paymentConditions.getDueDate()))
+                                               .withFormat(
+                                                   "102")));
+        }
+
+        if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
+            && paymentConditions.getMinimumPayment() != null) {
+          //eb:MinimumPayment
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:PartialPaymentAmount
+          stpt.withPartialPaymentAmount(
+              new AmountType().withValue(paymentConditions.getMinimumPayment())
+                  .withCurrencyID(documentCurrency));
+        }
+
+        if (paymentConditions.getComment() != null) {
+          //eb:Comment
+          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:Description
+          stpt.withDescription(new TextType().withValue(paymentConditions.getComment()));
+        }
+
+        //eb:PaymentConditionsExtension
+        //TODO - No fields specified
+      }
+    }
   }
-
 
   /**
    * Map details of payment method
