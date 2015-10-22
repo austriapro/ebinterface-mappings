@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -596,29 +597,56 @@ public class ZUGFeRDMapping extends Mapping {
         if (monSum.getLineTotalAmount() != null && monSum.getLineTotalAmount().size() > 0) {
           totalLineAmount = totalLineAmount.add(monSum.getLineTotalAmount().get(0).getValue());
         }
-        if (monSum.getChargeTotalAmount() != null && monSum.getChargeTotalAmount().size() > 0) {
-          totalChargeAmount =
-              totalChargeAmount.add(monSum.getChargeTotalAmount().get(0).getValue());
+
+        if (items.getSpecifiedSupplyChainTradeAgreement()
+                .getGrossPriceProductTradePrice().get(0).getAppliedTradeAllowanceCharge() != null
+            && items.getSpecifiedSupplyChainTradeAgreement()
+                   .getGrossPriceProductTradePrice().get(0).getAppliedTradeAllowanceCharge().size()
+               > 0) {
+          for (TradeAllowanceChargeType tac : items.getSpecifiedSupplyChainTradeAgreement()
+              .getGrossPriceProductTradePrice().get(0).getAppliedTradeAllowanceCharge()) {
+            if (tac.getChargeIndicator().getIndicator()) {
+              totalChargeAmount =
+                  totalChargeAmount.add(tac.getActualAmount().get(0).getValue());
+            } else {
+              totalAllowanceAmount =
+                  totalAllowanceAmount.add(tac.getActualAmount().get(0).getValue());
+            }
+          }
         }
-        if (monSum.getAllowanceTotalAmount() != null
-            && monSum.getAllowanceTotalAmount().size() > 0) {
-          totalAllowanceAmount =
-              totalAllowanceAmount.add(monSum.getAllowanceTotalAmount().get(0).getValue());
-        }
-        if (monSum.getTaxBasisTotalAmount() != null && monSum.getTaxBasisTotalAmount().size() > 0) {
-          totalTaxBasisAmount =
-              totalTaxBasisAmount.add(monSum.getTaxBasisTotalAmount().get(0).getValue());
-        }
-        if (monSum.getTaxTotalAmount() != null && monSum.getTaxTotalAmount().size() > 0) {
-          totalTaxAmount = totalTaxAmount.add(monSum.getTaxTotalAmount().get(0).getValue());
+
+        if (items.getSpecifiedSupplyChainTradeSettlement()
+                .getApplicableTradeTax() != null && items.getSpecifiedSupplyChainTradeSettlement()
+                                                        .getApplicableTradeTax().size() > 0) {
+          for (TradeTaxType tt : items.getSpecifiedSupplyChainTradeSettlement()
+              .getApplicableTradeTax()) {
+            if (!tt.getCategoryCode().getValue().equals("E")) {
+              totalTaxBasisAmount =
+                  totalTaxBasisAmount.add(monSum.getLineTotalAmount().get(
+                      0).getValue());
+              totalTaxAmount = totalTaxAmount.add(monSum.getLineTotalAmount().get(
+                  0).getValue().divide(new BigDecimal(100))
+                                                      .multiply(
+                                                          tt.getApplicablePercent().getValue())
+                                                      .setScale(2, BigDecimal.ROUND_HALF_UP));
+            }
+          }
         }
       }
 
-      /*
-
-      --TODO - calcolation for sums has to be checked again!
-
-       */
+      if (zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge() != null
+          && zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge().size()
+             > 0) {
+        for (TradeAllowanceChargeType tac : zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge()) {
+          if (tac.getChargeIndicator().getIndicator()) {
+            totalChargeAmount =
+                totalChargeAmount.add(tac.getActualAmount().get(0).getValue());
+          } else {
+            totalAllowanceAmount =
+                totalAllowanceAmount.add(tac.getActualAmount().get(0).getValue());
+          }
+        }
+      }
 
       //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:LineTotalAmount
       stsms.withLineTotalAmount(
