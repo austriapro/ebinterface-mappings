@@ -8,8 +8,6 @@ import com.google.common.base.Strings;
 
 import com.google.common.collect.Iterables;
 
-import com.sun.javafx.collections.transformation.SortedList;
-
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -19,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
