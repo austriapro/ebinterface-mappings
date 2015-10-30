@@ -1,25 +1,23 @@
 package at.austriapro.test.zugferd;
 
-import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
-import com.sun.org.apache.xml.internal.utils.ListingErrorHandler;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
 
 import javax.xml.XMLConstants;
-import javax.xml.transform.ErrorListener;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
@@ -27,7 +25,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import javax.xml.transform.Transformer;
 
 import at.austriapro.Mapping;
 import at.austriapro.MappingErrorHandler;
@@ -41,6 +38,28 @@ public class ZUGFeRDMappingTest {
 
 
   private static final Logger LOG = LoggerFactory.getLogger(ZUGFeRDMappingTest.class.getName());
+
+  private static Validator validator;
+
+  static {
+
+    SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+    Schema schema = null;
+    try {
+      schema = factory.newSchema(new StreamSource(new File(
+          ZUGFeRDMappingTest.class
+              .getResource("/zugferd1p0/ZUGFeRD1p0.xsd").toURI())));
+    } catch (SAXException e) {
+      LOG.error(e.getMessage(), e);
+    } catch (URISyntaxException e) {
+      LOG.error(e.getMessage(), e);
+    }
+
+    validator = schema.newValidator();
+  }
+
+
 
 
   @Test
@@ -60,23 +79,15 @@ public class ZUGFeRDMappingTest {
       //Map to ZUGFeRD Basic
       String zugferd = new String(zugFeRDMapping.mapFromebInterface(ebInterfaceXML));
 
-      SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
-      Schema schema = factory.newSchema(new StreamSource(new File(
-          ZUGFeRDMappingTest.class
-              .getResource("/ZUGFeRD/Schema/ZUGFeRD1p0.xsd").toURI())));
-
-      Validator validator = schema.newValidator();
 
       SAXSource saxSource = new SAXSource(new InputSource(
           new ByteArrayInputStream(zugferd.getBytes("UTF-8"))));
 
       MappingErrorHandler eh = new MappingErrorHandler();
       validator.setErrorHandler(eh);
-
       validator.validate(saxSource);
 
-      if (eh.catchedError()){
+      if (eh.catchedError()) {
         throw new RuntimeException("XSD validation failed:\n" + eh.toString());
       }
 
@@ -85,7 +96,7 @@ public class ZUGFeRDMappingTest {
       Source source = new StreamSource(new StringReader(zugferd));
       Source xsl = new StreamSource(new File(
           ZUGFeRDMappingTest.class
-              .getResource("/ZUGFeRD/Schema/ZUGFeRD_1p0-compiled.xsl").toURI()));
+              .getResource("/zugferd1p0/ZUGFeRD_1p0-compiled.xsl").toURI()));
 
       StringWriter destination = new StringWriter();
       Result result = new StreamResult(destination);
@@ -100,7 +111,7 @@ public class ZUGFeRDMappingTest {
       transformer.setErrorListener(el);
       transformer.transform(source, result);
 
-      if (el.catchedError()){
+      if (el.catchedError()) {
         throw new RuntimeException("Schematron validation failed:\n" + el.toString());
       }
 
