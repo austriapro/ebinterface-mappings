@@ -691,6 +691,7 @@ public class ZUGFeRDMapping extends Mapping {
         for (VATItem vATItems : tax.getVAT().getVATItems()) {
           //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax
           TradeTaxType tradeTaxType = new TradeTaxType();
+            zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement().withApplicableTradeTax(tradeTaxType);
 
           //eb:TaxedAmount
           //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:BasisAmount
@@ -1667,8 +1668,7 @@ public class ZUGFeRDMapping extends Mapping {
       //eb:Language
       //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:LanguageID
       zugferd.getHeaderExchangedDocument().getLanguageID()
-          .add(new IDType().withValue(ISO639ConversionUtil.convertISO639_2ToISO639_1(
-              invoice.getLanguage().value())));
+          .add(new IDType().withValue(invoice.getLanguage().value()));
     }
 
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
@@ -1689,7 +1689,7 @@ public class ZUGFeRDMapping extends Mapping {
     //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:IssueDateTime
     zugferd.getHeaderExchangedDocument().withIssueDateTime(new DateTimeType().withDateTimeString(
         new DateTimeType.DateTimeString().withFormat("102")
-            .withValue(issueDateTimeFormatter.print(invoice.getInvoiceDate()))));
+            .withValue(dateTimeFormatter.print(invoice.getInvoiceDate()))));
   }
 
   /**
