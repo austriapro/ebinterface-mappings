@@ -16,14 +16,18 @@
     </parent>
 
     <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <!-- here the phase you need -->
+
+    <plugins>
+        <!--
+           We only execute the generation of the JAX-B classes once, since no change is to be
+           expected in the underlying XSD at the moment. Furhtermore the Travis CI is not really
+           able to deal with the generate-sources Maven phase and the referenced Schema files.
+        <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.7</version>
+            <executions>
+                <execution>
+                    <id>copy-resources</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -40,11 +44,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--
-               We only execute the generation of the JAX-B classes once, since no change is to be
-               expected in the underlying XSD at the moment. Furhtermore the Travis CI is not really
-               able to deal with the generate-sources Maven phase and the referenced Schema files.
 
             <plugin>
                 <groupId>org.apache.cxf</groupId>
@@ -101,7 +100,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
             -->
         </plugins>
     </build>
