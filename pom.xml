@@ -13,9 +13,10 @@
         <module>ebinterface-mappings-zugferd</module>
     </modules>
 
-
     <properties>
         <env>local</env>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <apache-commons-io-version>2.4</apache-commons-io-version>
         <apache-commons-lang-version>3.4</apache-commons-lang-version>
@@ -24,10 +25,7 @@
         <jodatime-version>2.8</jodatime-version>
         <junit-version>4.12</junit-version>
         <ph-ebinterface-version>4.0.0</ph-ebinterface-version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-
 
     <scm>
         <connection>scm:git:git@github.com:austriapro/ebinterface-mappings.git</connection>
@@ -36,9 +34,7 @@
         </developerConnection>
     </scm>
 
-
     <dependencies>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -69,6 +65,7 @@
             <version>${jodatime-version}</version>
         </dependency>
 
+        <!--Test dependencies-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -76,6 +73,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
 </project>

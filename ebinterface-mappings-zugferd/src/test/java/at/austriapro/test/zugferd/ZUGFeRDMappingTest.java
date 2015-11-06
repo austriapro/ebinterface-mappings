@@ -70,7 +70,7 @@ public class ZUGFeRDMappingTest {
       String
           ebInterfaceXML =
           IOUtils.toString(
-              this.getClass().getResourceAsStream("/ebinterface/ebInterface_4p1_sample.xml"),
+              this.getClass().getResourceAsStream("/ebinterface/ebInterface_4p1_demo.xml"),
               "UTF-8");
 
       MappingFactory mf = new MappingFactory();
