@@ -1,10 +1,6 @@
 package at.austriapro.mappings.zugferd;
 
-import at.austriapro.mappings.ebinterface.generated.*;
-import at.austriapro.mappings.zugferd.generated.*;
-
 import com.google.common.base.Strings;
-
 import com.google.common.collect.Iterables;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -25,6 +21,83 @@ import javax.xml.bind.JAXBElement;
 import at.austriapro.Mapping;
 import at.austriapro.MappingException;
 import at.austriapro.MappingFactory;
+import at.austriapro.mappings.ebinterface.generated.AdditionalInformation;
+import at.austriapro.mappings.ebinterface.generated.Address;
+import at.austriapro.mappings.ebinterface.generated.AddressIdentifierTypeType;
+import at.austriapro.mappings.ebinterface.generated.ArticleNumber;
+import at.austriapro.mappings.ebinterface.generated.BeneficiaryAccount;
+import at.austriapro.mappings.ebinterface.generated.Biller;
+import at.austriapro.mappings.ebinterface.generated.CancelledOriginalDocument;
+import at.austriapro.mappings.ebinterface.generated.Classification;
+import at.austriapro.mappings.ebinterface.generated.Delivery;
+import at.austriapro.mappings.ebinterface.generated.Details;
+import at.austriapro.mappings.ebinterface.generated.Discount;
+import at.austriapro.mappings.ebinterface.generated.DocumentTypeType;
+import at.austriapro.mappings.ebinterface.generated.FurtherIdentification;
+import at.austriapro.mappings.ebinterface.generated.Invoice;
+import at.austriapro.mappings.ebinterface.generated.InvoiceRecipient;
+import at.austriapro.mappings.ebinterface.generated.ItemList;
+import at.austriapro.mappings.ebinterface.generated.ListLineItem;
+import at.austriapro.mappings.ebinterface.generated.OrderingParty;
+import at.austriapro.mappings.ebinterface.generated.OtherTax;
+import at.austriapro.mappings.ebinterface.generated.OtherVATableTax;
+import at.austriapro.mappings.ebinterface.generated.OtherVATableTaxBaseType;
+import at.austriapro.mappings.ebinterface.generated.PaymentConditions;
+import at.austriapro.mappings.ebinterface.generated.PaymentMethod;
+import at.austriapro.mappings.ebinterface.generated.PresentationDetails;
+import at.austriapro.mappings.ebinterface.generated.ReductionAndSurchargeBaseType;
+import at.austriapro.mappings.ebinterface.generated.ReductionAndSurchargeDetails;
+import at.austriapro.mappings.ebinterface.generated.ReductionAndSurchargeType;
+import at.austriapro.mappings.ebinterface.generated.RelatedDocument;
+import at.austriapro.mappings.ebinterface.generated.Signature;
+import at.austriapro.mappings.ebinterface.generated.Tax;
+import at.austriapro.mappings.ebinterface.generated.VATItem;
+import at.austriapro.mappings.zugferd.generated.AmountType;
+import at.austriapro.mappings.zugferd.generated.CodeType;
+import at.austriapro.mappings.zugferd.generated.CountryIDType;
+import at.austriapro.mappings.zugferd.generated.CreditorFinancialAccountType;
+import at.austriapro.mappings.zugferd.generated.CreditorFinancialInstitutionType;
+import at.austriapro.mappings.zugferd.generated.CrossIndustryDocumentType;
+import at.austriapro.mappings.zugferd.generated.DateTimeType;
+import at.austriapro.mappings.zugferd.generated.DebtorFinancialAccountType;
+import at.austriapro.mappings.zugferd.generated.DebtorFinancialInstitutionType;
+import at.austriapro.mappings.zugferd.generated.DocumentCodeType;
+import at.austriapro.mappings.zugferd.generated.DocumentContextParameterType;
+import at.austriapro.mappings.zugferd.generated.DocumentLineDocumentType;
+import at.austriapro.mappings.zugferd.generated.ExchangedDocumentContextType;
+import at.austriapro.mappings.zugferd.generated.ExchangedDocumentType;
+import at.austriapro.mappings.zugferd.generated.IDType;
+import at.austriapro.mappings.zugferd.generated.IndicatorType;
+import at.austriapro.mappings.zugferd.generated.MeasureType;
+import at.austriapro.mappings.zugferd.generated.NoteType;
+import at.austriapro.mappings.zugferd.generated.PaymentMeansCodeType;
+import at.austriapro.mappings.zugferd.generated.PercentType;
+import at.austriapro.mappings.zugferd.generated.ProductCharacteristicType;
+import at.austriapro.mappings.zugferd.generated.QuantityType;
+import at.austriapro.mappings.zugferd.generated.ReferencedDocumentType;
+import at.austriapro.mappings.zugferd.generated.SpecifiedPeriodType;
+import at.austriapro.mappings.zugferd.generated.SupplyChainEventType;
+import at.austriapro.mappings.zugferd.generated.SupplyChainTradeAgreementType;
+import at.austriapro.mappings.zugferd.generated.SupplyChainTradeDeliveryType;
+import at.austriapro.mappings.zugferd.generated.SupplyChainTradeLineItemType;
+import at.austriapro.mappings.zugferd.generated.SupplyChainTradeSettlementType;
+import at.austriapro.mappings.zugferd.generated.SupplyChainTradeTransactionType;
+import at.austriapro.mappings.zugferd.generated.TaxCategoryCodeType;
+import at.austriapro.mappings.zugferd.generated.TaxRegistrationType;
+import at.austriapro.mappings.zugferd.generated.TaxTypeCodeType;
+import at.austriapro.mappings.zugferd.generated.TextType;
+import at.austriapro.mappings.zugferd.generated.TradeAddressType;
+import at.austriapro.mappings.zugferd.generated.TradeAllowanceChargeType;
+import at.austriapro.mappings.zugferd.generated.TradeContactType;
+import at.austriapro.mappings.zugferd.generated.TradePartyType;
+import at.austriapro.mappings.zugferd.generated.TradePaymentDiscountTermsType;
+import at.austriapro.mappings.zugferd.generated.TradePaymentTermsType;
+import at.austriapro.mappings.zugferd.generated.TradePriceType;
+import at.austriapro.mappings.zugferd.generated.TradeProductType;
+import at.austriapro.mappings.zugferd.generated.TradeSettlementMonetarySummationType;
+import at.austriapro.mappings.zugferd.generated.TradeSettlementPaymentMeansType;
+import at.austriapro.mappings.zugferd.generated.TradeTaxType;
+import at.austriapro.mappings.zugferd.generated.UniversalCommunicationType;
 import at.austriapro.utils.DocumentTypeUtils;
 import at.austriapro.utils.ISO639Util;
 
@@ -35,7 +108,9 @@ public class ZUGFeRDMapping extends Mapping {
 
   private MappingFactory.MappingType mappingType;
   private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
-  private DateTimeFormatter issueDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+  private DateTimeFormatter
+      issueDateTimeFormatter =
+      DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
 
   private static final Logger LOG = LoggerFactory.getLogger(ZUGFeRDMapping.class.getName());
 
@@ -73,64 +148,64 @@ public class ZUGFeRDMapping extends Mapping {
     //Get an empty cross industry document type
     CrossIndustryDocumentType zugferd = getEmptyCrossIndustryDocumentType();
 
-    //eb:ROOT element attributes
+    //ebInterface: ROOT element attributes
     mapRootAttributes(zugferd, invoice);
 
-    //eb:Signature
+    //ebInterface: Signature
     mapSignature(zugferd, invoice.getSignature());
 
-    //eb:Cancelled original document
-    //exdended: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument
-    //basic and comfort: IncludedNote
+    //ebInterface: Cancelled original document
+    //ZUGFeRD exdended: rsm:CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument
+    //ZUGFeRD basic and comfort: IncludedNote
     mapCancelledOriginalDocument(zugferd, invoice.getCancelledOriginalDocument());
 
-    //eb:Related documents
-    //exdended: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument
-    //basic and comfort: IncludedNote
+    //ebInterface: Related documents
+    //ZUGFeRD exdended: CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument
+    //ZUGFeRD basic and comfort: IncludedNote
     mapRelatedDocuments(zugferd, invoice.getRelatedDocuments());
 
-    //eb:Delivery
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty
+    //ebInterface: Delivery
+    //ZUGFeRD: CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty
     mapDelivery(zugferd, invoice.getDelivery());
 
-    //eb:Biller
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:SellerTradeParty
+    //ebInterface: Biller
+    //ZUGFeRD: CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/SellerTradeParty
     mapBiller(zugferd, invoice.getBiller());
 
-    //eb:Invoice Recipient
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerTradeParty
+    //ebInterface: Invoice Recipient
+    //ZUGFeRD: CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/BuyerTradeParty
     mapInvoiceRecipient(zugferd, invoice.getInvoiceRecipient());
 
-    //eb:Ordering Party
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ProductEndUserTradeParty
+    //ebInterface: Ordering Party
+    //ZUGFeRD: CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/ProductEndUserTradeParty
     mapOrderingParty(zugferd, invoice.getOrderingParty());
 
-    //eb:Details
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem
+    //ebInterface: Details
+    //ZUGFeRD: CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem
     mapDetails(zugferd, invoice.getDetails());
 
-    //eb:ReductionAndSurchargeDetails
+    //ebInterface: ReductionAndSurchargeDetails
     mapReductionAndSurchargeDetails(zugferd, invoice.getReductionAndSurchargeDetails());
 
-    //eb:Tax
+    //ebInterface: Tax
     mapTax(zugferd, invoice.getTax());
 
-    //eb:TotalGrossAmount
+    //ebInterface: TotalGrossAmount
     mapTotalGrossAmount(zugferd, invoice.getTotalGrossAmount());
 
-    //eb:PayableAmount
+    //ebInterface: PayableAmount
     mapPayableAmount(zugferd, invoice.getPayableAmount());
 
-    //eb:PaymentMethod
+    //ebInterface: PaymentMethod
     mapPaymentMethod(zugferd, invoice.getPaymentMethod());
 
-    //eb:PaymentConditions
+    //ebInterface: PaymentConditions
     mapPaymentConditions(zugferd, invoice.getPaymentConditions());
 
-    //eb:PresentationDetails
+    //ebInterface: PresentationDetails
     mapPresentationDetails(zugferd, invoice.getPresentationDetails());
 
-    //eb:Comment
+    //ebInterface: Comment
     mapComment(zugferd, invoice.getComment());
 
     return zugferd;
@@ -139,26 +214,24 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * Map details of ebInterface comments
-   * @param zugferd
-   * @param comment
    */
   private void mapComment(CrossIndustryDocumentType zugferd, String comment) {
-    if(comment != null){
-      zugferd.getHeaderExchangedDocument().withIncludedNote(new NoteType().withContent(new TextType().withValue(comment)));
+    //ebInterface: /Invoice/Comment
+    if (comment != null) {
+      zugferd.getHeaderExchangedDocument()
+          .withIncludedNote(new NoteType().withContent(new TextType().withValue(comment)));
     }
   }
 
 
   /**
    * Map presentation details
-   * @param zugferd
-   * @param presentationDetails
    */
   private void mapPresentationDetails(CrossIndustryDocumentType zugferd,
                                       PresentationDetails presentationDetails) {
     //TODO - not in ZUGFeRD
     if (presentationDetails != null) {
-      //eb:PresentationDetails
+      //ebInterface: /Invoice/PresentationDetails
       //TODO - no field in ZUGFeRD for that
       mLog.add(
           "PresentationDetails not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -169,8 +242,6 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * Map the details of payment conditions
-   * @param zugferd
-   * @param paymentConditions
    */
   private void mapPaymentConditions(CrossIndustryDocumentType zugferd,
                                     PaymentConditions paymentConditions) {
@@ -186,16 +257,16 @@ public class ZUGFeRDMapping extends Mapping {
       if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
           && paymentConditions.getDiscounts() != null
           && paymentConditions.getDiscounts().size() > 0) {
-        //eb:Discount
+        //ebInterface: /Invoice/PaymentConditions/Discount
         for (Discount discount : paymentConditions.getDiscounts()) {
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms
           stpt = new TradePaymentTermsType();
           zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getApplicableSupplyChainTradeSettlement().withSpecifiedTradePaymentTerms(stpt);
 
           if (paymentConditions.getDueDate() != null) {
-            //eb:DueDate
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime
+            //ebInterface: /Invoice/PaymentConditions/DueDate
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/DueDateDateTime
             stpt.withDueDateDateTime(new DateTimeType()
                                          .withDateTimeString(
                                              new DateTimeType.DateTimeString()
@@ -207,13 +278,13 @@ public class ZUGFeRDMapping extends Mapping {
                                                      "102")));
           }
 
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/ApplicableTradePaymentDiscountTerms
           TradePaymentDiscountTermsType atpd = new TradePaymentDiscountTermsType();
           stpt.withApplicableTradePaymentDiscountTerms(atpd);
 
           if (discount.getPaymentDate() != null) {
-            //eb:Discount/eb:PaymentDate
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:BasisDateTime
+            //ebInterface: /Invoice/PaymentConditions/Discount/PaymentDate
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/ApplicableTradePaymentDiscountTerms/BasisDateTime
             atpd.withBasisDateTime(new DateTimeType()
                                        .withDateTimeString(
                                            new DateTimeType.DateTimeString()
@@ -226,41 +297,41 @@ public class ZUGFeRDMapping extends Mapping {
           }
 
           if (discount.getBaseAmount() != null) {
-            //eb:Discount/eb:BaseAmount
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:BasisAmount
+            //ebInterface: /Invoice/PaymentConditions/Discount/BaseAmount
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/ApplicableTradePaymentDiscountTerms/BasisAmount
             atpd.withBasisAmount(new AmountType().withValue(discount.getBaseAmount())
                                      .withCurrencyID(documentCurrency));
           }
 
           if (discount.getPercentage() != null) {
-            //eb:Discount/eb:Percentage
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:CalculationPercent
+            //ebInterface: /Invoice/PaymentConditions/Discount/Percentage
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/ApplicableTradePaymentDiscountTerms/CalculationPercent
             atpd.withCalculationPercent(new PercentType().withValue(discount.getPercentage()));
           }
 
           if (discount.getAmount() != null) {
-            //eb:Discount/eb:Amount
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:ActualDiscountAmount
+            //ebInterface: /Invoice/PaymentConditions/Discount/Amount
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/ApplicableTradePaymentDiscountTerms/ActualDiscountAmount
             atpd.withActualDiscountAmount(new AmountType().withValue(discount.getAmount())
                                               .withCurrencyID(documentCurrency));
           }
 
           if (paymentConditions.getMinimumPayment() != null) {
-            //eb:MinimumPayment
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:PartialPaymentAmount
+            //ebInterface: /Invoice/PaymentConditions/MinimumPayment
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/PartialPaymentAmount
             stpt.withPartialPaymentAmount(
                 new AmountType().withValue(paymentConditions.getMinimumPayment())
                     .withCurrencyID(documentCurrency));
           }
 
           if (paymentConditions.getComment() != null) {
-            //eb:Comment
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:Description
+            //ebInterface: /Invoice/PaymentConditions/Comment
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/Description
             stpt.withDescription(new TextType().withValue(paymentConditions.getComment()));
           }
 
           if (paymentConditions.getPaymentConditionsExtension() != null) {
-            //eb:PaymentConditionsExtension
+            //ebInterface: /Invoice/PaymentConditions/PaymentConditionsExtension
             //TODO - no field in ZUGFeRD for that
             mLog.add(
                 "PaymentConditionsExtension not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -269,14 +340,14 @@ public class ZUGFeRDMapping extends Mapping {
           }
         }
       } else {
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms
         stpt = new TradePaymentTermsType();
         zugferd.getSpecifiedSupplyChainTradeTransaction()
             .getApplicableSupplyChainTradeSettlement().withSpecifiedTradePaymentTerms(stpt);
 
         if (paymentConditions.getDueDate() != null) {
-          //eb:DueDate
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime
+          //ebInterface: /Invoice/PaymentConditions/DueDate
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/DueDateDateTime
           stpt.withDueDateDateTime(new DateTimeType()
                                        .withDateTimeString(
                                            new DateTimeType.DateTimeString()
@@ -290,21 +361,21 @@ public class ZUGFeRDMapping extends Mapping {
 
         if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
             && paymentConditions.getMinimumPayment() != null) {
-          //eb:MinimumPayment
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:PartialPaymentAmount
+          //ebInterface: /Invoice/PaymentConditions/MinimumPayment
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/PartialPaymentAmount
           stpt.withPartialPaymentAmount(
               new AmountType().withValue(paymentConditions.getMinimumPayment())
                   .withCurrencyID(documentCurrency));
         }
 
         if (paymentConditions.getComment() != null) {
-          //eb:Comment
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:Description
+          //ebInterface: /Invoice/PaymentConditions/Comment
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/Description
           stpt.withDescription(new TextType().withValue(paymentConditions.getComment()));
         }
 
         if (paymentConditions.getPaymentConditionsExtension() != null) {
-          //eb:PaymentConditionsExtension
+          //ebInterface: PaymentConditionsExtension
           //TODO - no field in ZUGFeRD for that
           mLog.add(
               "PaymentConditionsExtension not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -317,25 +388,23 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * Map details of payment method
-   * @param zugferd
-   * @param paymentMethod
    */
   private void mapPaymentMethod(CrossIndustryDocumentType zugferd, PaymentMethod paymentMethod) {
     if (paymentMethod != null) {
       TradeSettlementPaymentMeansType tspmt = new TradeSettlementPaymentMeansType();
 
       if (paymentMethod.getDirectDebit() != null) {
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/TypeCode
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/TypeCode
         tspmt.withTypeCode(new PaymentMeansCodeType().withValue("49"));
 
         if (paymentMethod.getComment() != null) {
-          //eb:Comment
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/Information
+          //ebInterface: /Invoice/PaymentMethod/Comment
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/Information
           tspmt.withInformation(new TextType().withValue(paymentMethod.getComment()));
         }
 
         if (paymentMethod.getPaymentMethodExtension() != null) {
-          //eb:PaymentMethodExtension/eb:Custom
+          //ebInterface: /Invoice/PaymentMethod/PaymentMethodExtension/**AnyContent**
           //TODO - all other information is in custom extensions
           mLog.add(
               "PaymentMethodExtension/Custom not mapped to ZUGFeRD: no proper information to map to ZUGFeRD",
@@ -347,17 +416,17 @@ public class ZUGFeRDMapping extends Mapping {
             .withSpecifiedTradeSettlementPaymentMeans(
                 tspmt);
       } else if (paymentMethod.getSEPADirectDebit() != null) {
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/TypeCode
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/TypeCode
         tspmt.withTypeCode(new PaymentMeansCodeType().withValue("49"));
 
         if (paymentMethod.getComment() != null) {
-          //eb:Comment
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/Information
+          //ebInterface: /Invoice/PaymentMethod/Comment
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/Information
           tspmt.withInformation(new TextType().withValue(paymentMethod.getComment()));
         }
 
         if (paymentMethod.getSEPADirectDebit().getType() != null) {
-          //eb:SEPADirectDebit/eb:Type
+          //ebInterface: /Invoice/PaymentMethod/SEPADirectDebit/Type
           //TODO - not in Zugferd
           mLog.add(
               "SEPADirectDebit/Type not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -366,7 +435,7 @@ public class ZUGFeRDMapping extends Mapping {
         }
 
         if (paymentMethod.getSEPADirectDebit().getBankAccountOwner() != null) {
-          //eb:SEPADirectDebit/eb:BankAccountOwner
+          //ebInterface: /Invoice/PaymentMethod/SEPADirectDebit/BankAccountOwner
           //TODO - not in Zugferd
           mLog.add(
               "SEPADirectDebit/BankAccountOwner not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -375,15 +444,15 @@ public class ZUGFeRDMapping extends Mapping {
         }
 
         if (paymentMethod.getSEPADirectDebit().getMandateReference() != null) {
-          //eb:SEPADirectDebit/eb:MandateReference
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ID
+          //ebInterface: /Invoice/PaymentMethod/SEPADirectDebit/MandateReference
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/ID
           tspmt.withID(
               new IDType().withValue(paymentMethod.getSEPADirectDebit().getMandateReference()));
         }
 
         if (paymentMethod.getSEPADirectDebit().getCreditorID() != null) {
-          //eb:SEPADirectDebit/eb:IBAN
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount
+          //ebInterface: /Invoice/PaymentMethod/SEPADirectDebit/IBAN
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialAccount
           tspmt
               .withPayeePartyCreditorFinancialAccount(new CreditorFinancialAccountType().withIBANID(
                   new IDType().withValue(paymentMethod.getSEPADirectDebit().getCreditorID())));
@@ -391,15 +460,15 @@ public class ZUGFeRDMapping extends Mapping {
 
         if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
           if (paymentMethod.getSEPADirectDebit().getIBAN() != null) {
-            //eb:SEPADirectDebit/eb:IBAN
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerPartyDebtorFinancialAccount
+            //ebInterface: /Invoice/PaymentMethod/SEPADirectDebit/IBAN
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayerPartyDebtorFinancialAccount
             tspmt.withPayerPartyDebtorFinancialAccount(new DebtorFinancialAccountType().withIBANID(
                 new IDType().withValue(paymentMethod.getSEPADirectDebit().getIBAN())));
           }
 
           if (paymentMethod.getSEPADirectDebit().getBIC() != null) {
-            //eb:SEPADirectDebit/eb:BIC
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerSpecifiedDebtorFinancialInstitution
+            //ebInterface: /Invoice/PaymentMethod/SEPADirectDebit/BIC
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayerSpecifiedDebtorFinancialInstitution
             tspmt.withPayerSpecifiedDebtorFinancialInstitution(new DebtorFinancialInstitutionType()
                                                                    .withBICID(
                                                                        new IDType().withValue(
@@ -409,8 +478,8 @@ public class ZUGFeRDMapping extends Mapping {
           }
 
           if (paymentMethod.getSEPADirectDebit().getDebitCollectionDate() != null) {
-            //eb:SEPADirectDebit/eb:DebitCollectionDate
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:BillingSpecifiedPeriod
+            //ebInterface: /Invoice/PaymentMethod/SEPADirectDebit/DebitCollectionDate
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/BillingSpecifiedPeriod
             zugferd.getSpecifiedSupplyChainTradeTransaction()
                 .getApplicableSupplyChainTradeSettlement().withBillingSpecifiedPeriod(
                 new SpecifiedPeriodType().withStartDateTime(new DateTimeType()
@@ -442,75 +511,77 @@ public class ZUGFeRDMapping extends Mapping {
             .withSpecifiedTradeSettlementPaymentMeans(
                 tspmt);
       } else if (paymentMethod.getUniversalBankTransaction() != null) {
-        for (BeneficiaryAccount ba : paymentMethod.getUniversalBankTransaction().getBeneficiaryAccounts()){
+        for (BeneficiaryAccount ba : paymentMethod.getUniversalBankTransaction()
+            .getBeneficiaryAccounts()) {
           tspmt = new TradeSettlementPaymentMeansType();
 
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/TypeCode
           tspmt.withTypeCode(new PaymentMeansCodeType().withValue("31"));
 
           if (paymentMethod.getComment() != null) {
-            //eb:Comment
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/Information
+            //ebInterface: /Invoice/PaymentMethod/Comment
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/Information
             tspmt.withInformation(new TextType().withValue(paymentMethod.getComment()));
           }
 
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialAccount
           CreditorFinancialAccountType cfa = new CreditorFinancialAccountType();
           tspmt
               .withPayeePartyCreditorFinancialAccount(cfa);
 
           if (ba.getIBAN() != null) {
-            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:IBAN
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID
+            //ebInterface: /Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/IBAN
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialAccount/IBANID
             cfa.withIBANID(
                 new IDType().withValue(ba.getIBAN()));
           }
 
           if (ba.getBankAccountOwner() != null) {
-            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BankAccountOwner
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:AccountName
+            //ebInterface: /Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BankAccountOwner
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialAccount/AccountName
             cfa.withAccountName(new TextType().withValue(ba.getBankAccountOwner()));
           }
 
           if (ba.getBankAccountNr() != null) {
-            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BankAccountNr
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID
+            //ebInterface: /Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BankAccountNr
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialAccount/ProprietaryID
             cfa.withProprietaryID(new IDType().withValue(ba.getBankAccountNr()));
           }
 
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialInstitution
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialInstitution
           CreditorFinancialInstitutionType cft = new CreditorFinancialInstitutionType();
           tspmt
               .withPayeeSpecifiedCreditorFinancialInstitution(cft);
 
           if (ba.getBIC() != null) {
-            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BIC
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialInstitution/ram:BICID
+            //ebInterface: /Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BIC
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialInstitution/BICID
             cft.withBICID(new IDType().withValue(ba.getBIC()));
           }
 
           /*
           if (ba.getBankCode() != null) {
-            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BankCode
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialInstitution/ram:GermanBankleitzahlID
+            //ebInterface: /Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BankCode
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialInstitution/GermanBankleitzahlID
             cft.withGermanBankleitzahlID(new IDType().withValue(ba.getBankCode().getValue())));
           }
           */
 
           if (ba.getBankName() != null) {
-            //eb:UniversalBankTransaction/eb:BeneficiaryAccount/eb:BankName
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialInstitution/ram:Name
+            //ebInterface: /Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BankName
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialInstitution/Name
             cft.withName(new TextType().withValue(ba.getBankName()));
           }
 
-          zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
+          zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement()
               .withSpecifiedTradeSettlementPaymentMeans(
                   tspmt);
         }
 
         if (paymentMethod.getUniversalBankTransaction().getPaymentReference().getValue() != null) {
-          //eb:UniversalBankTransaction/eb:PaymentReference
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:PaymentReference
+          //ebInterface: /Invoice/PaymentMethod/UniversalBankTransaction/PaymentReference
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/PaymentReference
           zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getApplicableSupplyChainTradeSettlement()
               .withPaymentReference(new TextType().withValue(
@@ -522,12 +593,11 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * Map details of payable amount
-   * @param zugferd
-   * @param payableAmount
    */
   private void mapPayableAmount(CrossIndustryDocumentType zugferd, BigDecimal payableAmount) {
-    //eb:PayableAmount
-    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType) && payableAmount != null) {
+    //ebInterface: /Invoice/PayableAmount
+    if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
+        && payableAmount != null) {
       TradeSettlementMonetarySummationType stsms;
       if (zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getApplicableSupplyChainTradeSettlement()
@@ -542,7 +612,7 @@ public class ZUGFeRDMapping extends Mapping {
                 .getSpecifiedTradeSettlementMonetarySummation();
       }
 
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:DuePayableAmount
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/DuePayableAmount
       stsms.withDuePayableAmount(new AmountType().withValue(payableAmount).withCurrencyID(
           zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue()));
@@ -552,11 +622,9 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * ebInterface total gross details
-   * @param zugferd
-   * @param totalGrossAmount
    */
   private void mapTotalGrossAmount(CrossIndustryDocumentType zugferd, BigDecimal totalGrossAmount) {
-    //eb:TotalGrossAmount
+    //ebInterface: /Invoice/TotalGrossAmount
     if (totalGrossAmount != null) {
       TradeSettlementMonetarySummationType stsms;
       if (zugferd.getSpecifiedSupplyChainTradeTransaction()
@@ -575,7 +643,7 @@ public class ZUGFeRDMapping extends Mapping {
       String documentCurrency = zugferd.getSpecifiedSupplyChainTradeTransaction()
           .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
 
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:GrandTotalAmount
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/GrandTotalAmount
       stsms.withGrandTotalAmount(new AmountType().withValue(totalGrossAmount).withCurrencyID(
           documentCurrency));
 
@@ -631,10 +699,14 @@ public class ZUGFeRDMapping extends Mapping {
         }
       }
 
-      if (zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge() != null
-          && zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge().size()
+      if (zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge() != null
+          && zugferd.getSpecifiedSupplyChainTradeTransaction()
+                 .getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge()
+                 .size()
              > 0) {
-        for (TradeAllowanceChargeType tac : zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge()) {
+        for (TradeAllowanceChargeType tac : zugferd.getSpecifiedSupplyChainTradeTransaction()
+            .getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge()) {
           if (tac.getChargeIndicator().getIndicator()) {
             totalChargeAmount =
                 totalChargeAmount.add(tac.getActualAmount().get(0).getValue());
@@ -645,27 +717,27 @@ public class ZUGFeRDMapping extends Mapping {
         }
       }
 
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:LineTotalAmount
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/LineTotalAmount
       stsms.withLineTotalAmount(
           new AmountType().withValue(totalLineAmount).withCurrencyID(documentCurrency
           ));
 
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:ChargeTotalAmount
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/ChargeTotalAmount
       stsms.withChargeTotalAmount(
           new AmountType().withValue(totalChargeAmount).withCurrencyID(documentCurrency
           ));
 
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:AllowanceTotalAmount
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/AllowanceTotalAmount
       stsms.withAllowanceTotalAmount(
           new AmountType().withValue(totalAllowanceAmount).withCurrencyID(documentCurrency
           ));
 
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:TaxBasisTotalAmount
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/TaxBasisTotalAmount
       stsms.withTaxBasisTotalAmount(
           new AmountType().withValue(totalTaxBasisAmount).withCurrencyID(documentCurrency
           ));
 
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:TaxTotalAmount
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/TaxTotalAmount
       stsms.withTaxTotalAmount(
           new AmountType().withValue(totalTaxAmount).withCurrencyID(documentCurrency
           ));
@@ -675,33 +747,34 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * Map the tax details to the ZUGFeRD equivalent
-   * @param zugferd
-   * @param tax
    */
   private void mapTax(CrossIndustryDocumentType zugferd, Tax tax) {
-    //eb:UniversalBankTransaction / eb:DirectDebit
+    //ebInterface: /Invoice/Tax
     if (tax != null) {
       String
           documentCurrency =
           zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
 
+      //ebInterface: /Invoice/Tax/VAT
       if (tax.getVAT() != null && tax.getVAT().getVATItems().size() > 0) {
 
+        //ebInterface: /Invoice/Tax/VAT/VATItem
         for (VATItem vATItems : tax.getVAT().getVATItems()) {
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/ApplicableTradeTax
           TradeTaxType tradeTaxType = new TradeTaxType();
-            zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement().withApplicableTradeTax(tradeTaxType);
+          zugferd.getSpecifiedSupplyChainTradeTransaction()
+              .getApplicableSupplyChainTradeSettlement().withApplicableTradeTax(tradeTaxType);
 
-          //eb:TaxedAmount
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:BasisAmount
+          //ebInterface: /Invoice/Tax/VAT/VATItem/TaxedAmount
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/ApplicableTradeTax/BasisAmount
           if (vATItems.getTaxedAmount() != null) {
             tradeTaxType.withBasisAmount(new AmountType().withValue(vATItems.getTaxedAmount())
                                              .withCurrencyID(documentCurrency));
           }
 
-          //eb:VATRate
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:ApplicablePercent
+          //ebInterface: /Invoice/Tax/VAT/VATItem/VATRate
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/ApplicableTradeTax/ApplicablePercent
           if (vATItems.getVATRate() != null) {
             tradeTaxType.withApplicablePercent(
                 new PercentType()
@@ -709,23 +782,23 @@ public class ZUGFeRDMapping extends Mapping {
           }
 
           if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:ExcemptionReason
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/ApplicableTradeTax/ExcemptionReason
             if (vATItems.getTaxExemption() != null) {
               String addCode = "";
 
-              //eb:TaxException//eb:TaxExemptionCode
+              //ebInterface: /Invoice/Tax/TaxException/TaxExemptionCode
               if (vATItems.getTaxExemption().getTaxExemptionCode() != null) {
                 addCode = vATItems.getTaxExemption().getTaxExemptionCode();
               }
 
-              //eb:TaxException
+              //ebInterface: /Invoice/Tax/TaxException
               tradeTaxType.withExemptionReason(
                   new TextType().withValue(addCode + " " + vATItems.getTaxExemption().getValue()));
             }
           }
 
-          //eb:Amount
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:CalculatedAmount
+          //ebInterface: /Invoice/Tax/VAT/VATItem/Amount
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/ApplicableTradeTax/CalculatedAmount
           if (vATItems.getAmount() != null) {
             tradeTaxType.withCalculatedAmount(
                 new AmountType().withValue(vATItems.getAmount())
@@ -733,13 +806,13 @@ public class ZUGFeRDMapping extends Mapping {
           }
 
           //Tax type - always VAT in this case
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:TypeCode
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/ApplicableTradeTax/TypeCode
           tradeTaxType.withTypeCode(new TaxTypeCodeType().withValue("VAT"));
         }
       }
 
-      //eb:OtherTax
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/?
+      //ebInterface: /Invoice/Tax/OtherTax
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/?
       if (tax.getOtherTaxes() != null && tax.getOtherTaxes().size() > 0) {
 
         SupplyChainTradeSettlementType
@@ -756,19 +829,19 @@ public class ZUGFeRDMapping extends Mapping {
           chargeIndicator = true;
 
           if (otherTax.getAmount() != null) {
-            //eb:Amount
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:ActualAmount
+            //ebInterface: /Invoice/Tax/OtherTax/Amount
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/ActualAmount
             amount = otherTax.getAmount();
           }
 
           if (otherTax.getComment() != null) {
-            //eb:Comment
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason
+            //ebInterface: /Invoice/Tax/OtherTax/Comment
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/Reason
             comment = otherTax.getComment();
           }
 
           //Create TradeAllowanceCharge and add it to ZUGFeRD
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge
           ascts.withSpecifiedTradeAllowanceCharge(
               getTradeAllowanceCharge(chargeIndicator, null, documentCurrency,
                                       null,
@@ -780,13 +853,12 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * Map the different reductions and surcharges in ebInterface to the respective fields in ZUGFeRD
-   * @param zugferd
-   * @param reductionAndSurchargeDetails
    */
   private void mapReductionAndSurchargeDetails(CrossIndustryDocumentType zugferd,
                                                ReductionAndSurchargeDetails reductionAndSurchargeDetails) {
     if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
         && reductionAndSurchargeDetails != null) {
+      //ebInterface: /Invoice/ReductionAndSurchargeDetails
       if (reductionAndSurchargeDetails.getReductionsAndSurchargesAndOtherVATableTaxes() != null
           && !reductionAndSurchargeDetails.getReductionsAndSurchargesAndOtherVATableTaxes()
           .isEmpty()) {
@@ -810,10 +882,11 @@ public class ZUGFeRDMapping extends Mapping {
           String comment = null;
 
           //Create TradeAllowanceCharge
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge
           TradeAllowanceChargeType stac;
 
           if (rSVItem instanceof OtherVATableTax) {
+            //ebInterface: /Invoice/ReductionAndSurchargeDetails/OtherVATableTax
             OtherVATableTax
                 oVatItem =
                 (OtherVATableTax) rSVItem;
@@ -822,32 +895,32 @@ public class ZUGFeRDMapping extends Mapping {
             chargeIndicator = true;
 
             if (oVatItem.getBaseAmount() != null) {
-              //eb:BaseAmount
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:BasisAmount
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/OtherVATableTax/BaseAmount
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/BasisAmount
               baseAmount = oVatItem.getBaseAmount();
             }
 
             if (oVatItem.getPercentage() != null) {
-              //eb:Percentage
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:CalculationPercent
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/OtherVATableTax/Percentage
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/CalculationPercent
               percentage = oVatItem.getPercentage();
             }
 
             if (oVatItem.getAmount() != null) {
-              //eb:Amount
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:ActualAmount
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/OtherVATableTax/Amount
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/ActualAmount
               amount = oVatItem.getAmount();
             }
 
             if (oVatItem.getComment() != null) {
-              //eb:TaxID
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/OtherVATableTax/TaxID
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/Reason
               comment = oVatItem.getComment() + "\n";
             }
 
             if (oVatItem.getComment() != null) {
-              //eb:Comment
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/OtherVATableTax/Comment
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/Reason
               comment += oVatItem.getComment();
             }
 
@@ -857,8 +930,8 @@ public class ZUGFeRDMapping extends Mapping {
                                         amount, comment.trim());
 
             if (oVatItem.getVATRate() != null) {
-              //eb:VATRate
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:CategoryTradeTax
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/OtherVATableTax/VATRate
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/CategoryTradeTax
               stac.withCategoryTradeTax(
                   new TradeTaxType().withTypeCode(new TaxTypeCodeType().withValue("VAT"))
                       .withCategoryCode(new TaxCategoryCodeType().withValue("S"))
@@ -866,39 +939,44 @@ public class ZUGFeRDMapping extends Mapping {
                           new PercentType().withValue(oVatItem.getVATRate().getValue())));
             }
           } else {
-            JAXBElement<? extends Serializable> jabxItem = (JAXBElement<? extends Serializable>) rSVItem;
+            //ebInterface: /Invoice/ReductionAndSurchargeDetails/Reduction
+            //and
+            //ebInterface: /Invoice/ReductionAndSurchargeDetails/Surcharge
+            JAXBElement<? extends Serializable>
+                jabxItem =
+                (JAXBElement<? extends Serializable>) rSVItem;
 
             ReductionAndSurchargeType
                 rsItem =
                 (ReductionAndSurchargeType) jabxItem.getValue();
 
-            //Surcharge (SurchargeListLineItem) => chargeIndicator: true
             //Reduction (ReductionListLineItem) => chargeIndicator: false
+            //Surcharge (SurchargeListLineItem) => chargeIndicator: true
             chargeIndicator =
                 jabxItem.getName().getLocalPart()
                     .equals("Surcharge");
 
             if (rsItem.getBaseAmount() != null) {
-              //eb:BaseAmount
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:BasisAmount
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/.../BaseAmount
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/BasisAmount
               baseAmount = rsItem.getBaseAmount();
             }
 
             if (rsItem.getPercentage() != null) {
-              //eb:Percentage
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:CalculationPercent
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/.../Percentage
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/CalculationPercent
               percentage = rsItem.getPercentage();
             }
 
             if (rsItem.getAmount() != null) {
-              //eb:Amount
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:ActualAmount
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/.../Amount
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/ActualAmount
               amount = rsItem.getAmount();
             }
 
             if (rsItem.getComment() != null) {
-              //eb:Comment
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/.../Comment
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/Reason
               comment = rsItem.getComment();
             }
 
@@ -908,8 +986,8 @@ public class ZUGFeRDMapping extends Mapping {
                                         amount, comment);
 
             if (rsItem.getVATRate() != null) {
-              //eb:VATRate
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:CategoryTradeTax
+              //ebInterface: /Invoice/ReductionAndSurchargeDetails/.../VATRate
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeAllowanceCharge/CategoryTradeTax
               stac.withCategoryTradeTax(
                   new TradeTaxType().withTypeCode(new TaxTypeCodeType().withValue("VAT"))
                       .withCategoryCode(new TaxCategoryCodeType().withValue("S"))
@@ -919,7 +997,7 @@ public class ZUGFeRDMapping extends Mapping {
           }
 
           //add SpecifiedTradeAllowanceCharge to ZUGFeRD
-          //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge
+          //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge
           ascts.withSpecifiedTradeAllowanceCharge(stac);
         }
       }
@@ -928,19 +1006,16 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * Map the details section of ebInterace, containing the different line items, to the correct
-   * fields in ZUGFeRD
-   * from: eb:Details
-   * to: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem
-   * @param zugferd
-   * @param details
+   * fields in ZUGFeRD from: ebInterface: Details to: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem
    */
   private void mapDetails(CrossIndustryDocumentType zugferd, Details details) {
+    //ebInterface: /Invoice/Details
     if (details.getItemLists() != null && details.getItemLists().size() > 0) {
       //TODO Elemente für Header und Footer nicht in ZUGFeRD verfügbar
-      //eb:HeaderDescription
-      //eb:ItemList/HeaderDescription
-      //eb:ItemList/FooterDescription
-      //eb:FooterDescription
+      //ebInterface: /Invoice/Details/HeaderDescription
+      //ebInterface: /Invoice/Details/ItemList/HeaderDescription
+      //ebInterface: /Invoice/Details/ItemList/FooterDescription
+      //ebInterface: /Invoice/Details/FooterDescription
 
       String
           documentCurrency =
@@ -953,24 +1028,24 @@ public class ZUGFeRDMapping extends Mapping {
 
       int iList = 0;
 
-      //loop all eb:ItemLists
+      //ebInterface: loop all /Invoice/Details/ItemList
       for (ItemList itemList : details.getItemLists()) {
         if (itemList.getListLineItems() != null && itemList.getListLineItems().size() > 0) {
           int iItems = 0;
 
-          //loop all eb:ListLineItems
+          //ebInterface: loop all /Invoice/Details/ItemLists/ListLineItem
           for (ListLineItem item : itemList.getListLineItems()) {
             //Create a SupplyChainTradeLineItem for a Detail
             SupplyChainTradeLineItemType sctli = new SupplyChainTradeLineItemType();
 
             //create a SpecifiedTradeProduct
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct
             TradeProductType stp = new TradeProductType();
             sctli.withSpecifiedTradeProduct(stp);
 
             if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-              //eb:PositionNumber
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:AssociatedDocumentLineDocument/ram:LineID
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/PositionNumber
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/AssociatedDocumentLineDocument/LineID
               if (item.getPositionNumber() != null) {
                 sctli.withAssociatedDocumentLineDocument(new DocumentLineDocumentType().withLineID(
                     new IDType().withValue(item.getPositionNumber().toString())));
@@ -983,7 +1058,7 @@ public class ZUGFeRDMapping extends Mapping {
               }
             }
 
-            //eb:Description
+            //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Description
             if (item.getDescriptions() != null && item.getDescriptions().size() > 0) {
               StringBuilder zugDesc = new StringBuilder();
 
@@ -1008,23 +1083,23 @@ public class ZUGFeRDMapping extends Mapping {
             }
 
             if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-              //eb:ArticleNumber
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ArticleNumber
               if (item.getArticleNumbers() != null && item.getArticleNumbers().size() > 0) {
                 int iArt = 0;
 
                 for (ArticleNumber art : item.getArticleNumbers()) {
                   if (art.getArticleNumberType().value().equals("GTIN")) {
                     //GTIN
-                    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:GlobalID
+                    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/GlobalID
                     stp.withGlobalID(new IDType().withValue(art.getContent()).withSchemeID("0160"));
                   } else if (art.getArticleNumberType().value()
                       .equals("InvoiceRecipientsArticleNumber")) {
                     //InvoiceRecipientsArticleNumber
-                    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:BuyerAssignedID
+                    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/BuyerAssignedID
                     stp.withBuyerAssignedID(new IDType().withValue(art.getContent()));
                   } else if (art.getArticleNumberType().value().equals("BillersArticleNumber")) {
                     //BillersArticleNumber
-                    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:SellerAssignedID
+                    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/SellerAssignedID
                     stp.withSellerAssignedID(new IDType().withValue(art.getContent()));
                   } else if (art.getArticleNumberType().value().equals("PZN")) {
                     //PZN
@@ -1043,19 +1118,20 @@ public class ZUGFeRDMapping extends Mapping {
             }
 
             //Create SupplyChainTradeDelivery and add it to ZUGFeRD
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery
             SupplyChainTradeDeliveryType ssctd = new SupplyChainTradeDeliveryType();
             sctli.withSpecifiedSupplyChainTradeDelivery(ssctd);
 
-            //eb:Quantity
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:BilledQuantity
+            //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Quantity
+            //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Quantity/@Unit
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/BilledQuantity
             if (item.getQuantity() != null) {
               ssctd.withBilledQuantity(new QuantityType().withValue(item.getQuantity().getValue())
                                            .withUnitCode(item.getQuantity().getUnit()));
             }
 
             //Create SpecifiedSupplyChainTradeAgreement and add it to ZUGFeRD
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement
             SupplyChainTradeAgreementType scta = new SupplyChainTradeAgreementType();
             sctli.withSpecifiedSupplyChainTradeAgreement(scta);
 
@@ -1065,11 +1141,12 @@ public class ZUGFeRDMapping extends Mapping {
                 TradePriceType npptp = new TradePriceType();
                 scta.withNetPriceProductTradePrice(npptp);
 
-                //eb:UnitPrice
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:NetPriceProductTradePrice
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/UnitPrice
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/NetPriceProductTradePrice
                 npptp.withChargeAmount(new AmountType().withValue(item.getUnitPrice().getValue())
                                            .withCurrencyID(documentCurrency));
 
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/UnitPrice/@BaseQuantity
                 if (item.getUnitPrice().getBaseQuantity() != null) {
                   npptp.withBasisQuantity(
                       new QuantityType().withValue(item.getUnitPrice().getBaseQuantity())
@@ -1079,7 +1156,7 @@ public class ZUGFeRDMapping extends Mapping {
             }
 
             //Create SpecifiedSupplyChainTradeSettlement and add it to ZUGFeRD
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement
             SupplyChainTradeSettlementType scts = new SupplyChainTradeSettlementType();
             sctli.withSpecifiedSupplyChainTradeSettlement(scts);
 
@@ -1088,36 +1165,36 @@ public class ZUGFeRDMapping extends Mapping {
               TradeTaxType att = new TradeTaxType();
               scts.withApplicableTradeTax(att);
 
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:TypeCode
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement/ApplicableTradeTax/TypeCode
               att.withTypeCode(new TaxTypeCodeType().withValue("VAT"));
 
               if (item.getTaxExemption() != null) {
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:ExemptionReason
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement/ApplicableTradeTax/ExemptionReason
                 att.withExemptionReason(
                     new TextType().withValue(item.getTaxExemption().getValue()));
 
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement/ApplicableTradeTax/CategoryCode
                 att.withCategoryCode(new TaxCategoryCodeType().withValue("E"));
 
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:ApplicablePercent
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement/ApplicableTradeTax/ApplicablePercent
                 att.withApplicablePercent(
                     new PercentType().withValue(new BigDecimal(0)));
               } else {
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement/ApplicableTradeTax/CategoryCode
                 att.withCategoryCode(new TaxCategoryCodeType().withValue("S"));
 
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement/ram:ApplicableTradeTax/ram:ApplicablePercent
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement/ApplicableTradeTax/ApplicablePercent
                 att.withApplicablePercent(
                     new PercentType().withValue(item.getVATRate().getValue()));
               }
             }
 
             //Create GrossPriceProductTradePrice and add it to ZUGFeRD
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice
             TradePriceType gpptp = new TradePriceType();
             scta.withGrossPriceProductTradePrice(gpptp);
 
-            //(eb:Quantity/nvl(eb:BaseQuantity, 1)*eb:UnitPrice)
+            //ebInterface: [/Invoice/Details/ItemLists/ListLineItem/] (Quantity/nvl(BaseQuantity, 1)*UnitPrice)
             BigDecimal quantity = item.getQuantity().getValue();
             BigDecimal baseQuantity;
             if (item.getUnitPrice().getBaseQuantity() != null) {
@@ -1126,7 +1203,7 @@ public class ZUGFeRDMapping extends Mapping {
               baseQuantity = new BigDecimal(1);
             }
             BigDecimal unitPrice = item.getUnitPrice().getValue();
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/ChargeAmount
             gpptp.withChargeAmount(
                 new AmountType().withValue(quantity.divide(baseQuantity).multiply(unitPrice))
                     .withCurrencyID(documentCurrency));
@@ -1134,7 +1211,7 @@ public class ZUGFeRDMapping extends Mapping {
             if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
 
               if (item.getDiscountFlag() != null) {
-                //eb:DiscountFlag
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/DiscountFlag
                 //TODO - not in ZUGFeRD
                 mLog.add(
                     "DiscountFlag not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1143,7 +1220,7 @@ public class ZUGFeRDMapping extends Mapping {
                     "???");
               }
 
-              //eb:ReductionAndSurchargeListLineItemDetails
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails
               if (item
                       .getReductionAndSurchargeListLineItemDetails() != null && item
                                                                                     .getReductionAndSurchargeListLineItemDetails()
@@ -1164,39 +1241,42 @@ public class ZUGFeRDMapping extends Mapping {
 
                   if (rSVItem.getName().getLocalPart().equals("ReductionListLineItem") || rSVItem
                       .getName().getLocalPart().equals("SurchargeListLineItem")) {
+                    //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/ReductionListLineItem
+                    //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/SurchargeListLineItem
                     ReductionAndSurchargeBaseType
                         rsItem =
                         (ReductionAndSurchargeBaseType) rSVItem.getValue();
 
-                    //Surcharge (SurchargeListLineItem) => chargeIndicator: true
                     //Reduction (ReductionListLineItem) => chargeIndicator: false
+                    //Surcharge (SurchargeListLineItem) => chargeIndicator: true
                     chargeIndicator =
                         rSVItem.getName().getLocalPart().equals("SurchargeListLineItem");
 
                     if (rsItem.getBaseAmount() != null) {
-                      //eb:BaseAmount
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:BasisAmount
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/.../BaseAmount
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/BasisAmount
                       baseAmount = rsItem.getBaseAmount();
                     }
 
                     if (rsItem.getPercentage() != null) {
-                      //eb:Percentage
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:CalculationPercent
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/.../Percentage
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/CalculationPercent
                       percentage = rsItem.getPercentage();
                     }
 
                     if (rsItem.getAmount() != null) {
-                      //eb:Amount
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:ActualAmount
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/.../Amount
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/ActualAmount
                       amount = rsItem.getAmount();
                     }
 
                     if (rsItem.getComment() != null) {
-                      //eb:Comment
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:Reason
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/.../Comment
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/Reason
                       comment = rsItem.getComment();
                     }
                   } else { //rSVItem.getName().getLocalPart().equals("OtherVATableTaxListLineItem")
+                    //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/OtherVATableTaxListLineItem
                     OtherVATableTaxBaseType
                         otherTaxItem =
                         (OtherVATableTaxBaseType) rSVItem.getValue();
@@ -1205,38 +1285,38 @@ public class ZUGFeRDMapping extends Mapping {
                     chargeIndicator = true;
 
                     if (otherTaxItem.getBaseAmount() != null) {
-                      //eb:BaseAmount
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:BasisAmount
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/OtherVATableTaxListLineItem/BaseAmount
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/BasisAmount
                       baseAmount = otherTaxItem.getBaseAmount();
                     }
 
                     if (otherTaxItem.getPercentage() != null) {
-                      //eb:Percentage
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:CalculationPercent
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/OtherVATableTaxListLineItem/Percentage
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/CalculationPercent
                       percentage = otherTaxItem.getPercentage();
                     }
 
                     if (otherTaxItem.getAmount() != null) {
-                      //eb:Amount
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:ActualAmount
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/OtherVATableTaxListLineItem/Amount
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/ActualAmount
                       amount = otherTaxItem.getAmount();
                     }
 
                     if (otherTaxItem.getTaxID() != null) {
-                      //eb:TaxID
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:Reason
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/OtherVATableTaxListLineItem/TaxID
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/Reason
                       comment = otherTaxItem.getTaxID() + "\n";
                     }
 
                     if (otherTaxItem.getComment() != null) {
-                      //eb:Comment
-                      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:Reason
+                      //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/OtherVATableTaxListLineItem/Comment
+                      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/Reason
                       comment += otherTaxItem.getComment();
                     }
                   }
 
                   //Create TradeAllowanceCharge and add it to ZUGFeRD
-                  //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge
+                  //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge
                   gpptp.withAppliedTradeAllowanceCharge(
                       getTradeAllowanceCharge(chargeIndicator, baseAmount, documentCurrency,
                                               percentage,
@@ -1245,23 +1325,23 @@ public class ZUGFeRDMapping extends Mapping {
               }
             }
 
-            //eb:Delivery
+            //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery
             if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
                 && item.getDelivery() != null) {
               //Create the necessary elements in ZUGFeRD
               TradePartyType stttp = new TradePartyType();
               ssctd.withShipToTradeParty(stttp);
 
-              //eb:DeliveryID
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:DeliveryNoteReferencedDocument/ram:ID
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/DeliveryID
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/DeliveryNoteReferencedDocument/ID
               ssctd.withDeliveryNoteReferencedDocument(new ReferencedDocumentType()
                                                            .withID(new IDType().withValue(
                                                                item.getDelivery()
                                                                    .getDeliveryID())));
 
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ActualDeliverySupplyChainEvent/OccurrenceDateTime/udt:DateTimeString
               if (item.getDelivery().getDate() != null) {
-                //eb:Delivery/Date
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Date
                 ssctd.withActualDeliverySupplyChainEvent(
                     new SupplyChainEventType().withOccurrenceDateTime(
                         new DateTimeType()
@@ -1269,7 +1349,7 @@ public class ZUGFeRDMapping extends Mapping {
                                 dateTimeFormatter.print(item.getDelivery().getDate())).withFormat(
                                 "102"))));
               } else if (item.getDelivery().getPeriod().getFromDate() != null) {
-                //eb:Delivery/Period/FromDate
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Period/FromDate
                 ssctd.withActualDeliverySupplyChainEvent(new SupplyChainEventType()
                                                              .withOccurrenceDateTime(
                                                                  new DateTimeType()
@@ -1285,6 +1365,7 @@ public class ZUGFeRDMapping extends Mapping {
                                                                                  "102"))));
               }
 
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address
               if (item.getDelivery().getAddress() != null) {
 
                 //Create the necessary elements in ZUGFeRD
@@ -1295,58 +1376,59 @@ public class ZUGFeRDMapping extends Mapping {
 
                 String partyName = "";
                 //Build the person name string
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/Salutation
                 if (!Strings.isNullOrEmpty(address.getSalutation())) {
                   partyName += address.getSalutation() + " ";
                 }
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/Name
                 if (!Strings.isNullOrEmpty(address.getName())) {
                   partyName += address.getName();
                 }
 
-                //eb:Salutation and Name
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:Name
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ShipToTradeParty/Name
                 stttp.withName(new TextType().withValue(partyName));
 
-                //eb:Street
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineOne
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/Street
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ShipToTradeParty/PostalTradeAddress/LineOne
                 stttp.getPostalTradeAddress()
                     .setLineOne(new TextType().withValue(address.getStreet()));
 
-                //eb:Town
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/Town
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ShipToTradeParty/PostalTradeAddress/CityName
                 stttp.getPostalTradeAddress()
                     .setCityName(new TextType().withValue(address.getTown()));
 
-                //eb:ZIP
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:PostcodeCode
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/ZIP
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ShipToTradeParty/PostalTradeAddress/PostcodeCode
                 stttp.getPostalTradeAddress().getPostcodeCode()
                     .add(new CodeType().withValue(address.getZIP()));
 
-                //eb:Country Code
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CountryID
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/Country/@CountryCode
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ShipToTradeParty/PostalTradeAddress/CountryID
                 stttp.getPostalTradeAddress().setCountryID(
                     new CountryIDType().withValue(address.getCountry().getCountryCode().value()));
 
-                //eb:Phone
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/Phone
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ShipToTradeParty/DefinedTradeContact/TelephoneUniversalCommunication/CompleteNumber
                 stttp.getDefinedTradeContact().get(0)
                     .withTelephoneUniversalCommunication(
                         new UniversalCommunicationType().withCompleteNumber(
                             new TextType().withValue(address.getPhone())));
 
-                //eb:Email
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:CompleteNumber
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/Email
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ShipToTradeParty/DefinedTradeContact/EmailURIUniversalCommunication/CompleteNumber
                 stttp.getDefinedTradeContact().get(0)
                     .withEmailURIUniversalCommunication(
                         new UniversalCommunicationType().withURIID(
                             new IDType().withValue(address.getEmail())));
 
-                //eb:Contact
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:PersonName
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/Contact
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery/ShipToTradeParty/DefinedTradeContact/PersonName
                 stttp.getDefinedTradeContact().get(0)
                     .setPersonName(new TextType().withValue(address.getContact()));
 
                 if (item.getDelivery().getAddress().getAddressExtensions() != null) {
-                  //eb:Address extension
+                  //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Address/AddressExtension
                   //TODO - not in ZUGFeRD
                   mLog.add(
                       "AddressExtensions not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1357,7 +1439,7 @@ public class ZUGFeRDMapping extends Mapping {
               }
 
               if (item.getDelivery().getDescription() != null) {
-                //eb:Description
+                //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Description
                 //TODO - no field in ZUGFeRD for that
                 mLog.add(
                     "Description not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1368,7 +1450,7 @@ public class ZUGFeRDMapping extends Mapping {
             }
 
             if (item.getBillersOrderReference() != null) {
-              //eb:BillersOrderReference
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/BillersOrderReference
               //TODO - no field in ZUGFeRD for that
               mLog.add(
                   "BillersOrderReference not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1377,41 +1459,46 @@ public class ZUGFeRDMapping extends Mapping {
                   "???");
             }
 
-            //eb:InvoiceRecipientsOrderReference
+            //ebInterface: /Invoice/Details/ItemLists/ListLineItem/InvoiceRecipientsOrderReference
             if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
                 && item.getInvoiceRecipientsOrderReference() != null) {
 
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/BuyerOrderReferencedDocument
               ReferencedDocumentType bor = new ReferencedDocumentType();
               scta.withBuyerOrderReferencedDocument(bor);
 
-              //eb:OrderID
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument/ram:OrderID
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/InvoiceRecipientsOrderReference/OrderID
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/BuyerOrderReferencedDocument/OrderID
               if (item.getInvoiceRecipientsOrderReference().getOrderID() != null) {
                 bor.withID(
                     new IDType().withValue(item.getInvoiceRecipientsOrderReference().getOrderID()));
               }
 
-              //eb:OrderPositionNumber
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument/ram:LineID
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/InvoiceRecipientsOrderReference/OrderPositionNumber
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/BuyerOrderReferencedDocument/LineID
               if (item.getInvoiceRecipientsOrderReference().getOrderPositionNumber() != null) {
                 bor.withLineID(
                     new IDType().withValue(
                         item.getInvoiceRecipientsOrderReference().getOrderPositionNumber()));
               }
 
-              //eb:ReferenceDate
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:BuyerOrderReferencedDocument/ram:IssueDateTime
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/InvoiceRecipientsOrderReference/ReferenceDate
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/BuyerOrderReferencedDocument/IssueDateTime
               if (item.getInvoiceRecipientsOrderReference().getReferenceDate() != null) {
                 bor.withIssueDateTime(issueDateTimeFormatter
                                           .print(
                                               item.getInvoiceRecipientsOrderReference()
                                                   .getReferenceDate()));
               }
+
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/InvoiceRecipientsOrderReference/Description
+              if (item.getInvoiceRecipientsOrderReference().getDescription() != null) {
+                //TODO
+              }
             }
 
-            //eb:AdditionalInformation
-            //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic
+            //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation
+            //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic
             if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
                 && item.getAdditionalInformation() != null) {
               AdditionalInformation ai = item.getAdditionalInformation();
@@ -1419,7 +1506,7 @@ public class ZUGFeRDMapping extends Mapping {
               String typeCode, description, unitCode, value;
               BigDecimal valueMeasure = null;
 
-              //ed:SerialNumber
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/SerialNumber
               if (ai.getSerialNumbers() != null && ai.getSerialNumbers().size() > 0) {
                 for (String sn : ai.getSerialNumbers()) {
                   typeCode = "SERIAL_NUMBER";
@@ -1434,7 +1521,7 @@ public class ZUGFeRDMapping extends Mapping {
                 }
               }
 
-              //ed:ChargeNumber
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/ChargeNumber
               if (ai.getChargeNumbers() != null && ai.getChargeNumbers().size() > 0) {
                 for (String ch : ai.getChargeNumbers()) {
                   typeCode = "LOT_NUMBER";
@@ -1449,7 +1536,7 @@ public class ZUGFeRDMapping extends Mapping {
                 }
               }
 
-              //ed:Classifications
+              //ebInterface: loop all /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/Classification
               if (ai.getClassifications() != null && ai.getClassifications().size() > 0) {
                 for (Classification cl : ai.getClassifications()) {
                   //TODO - Classifications can't be mapped to a typeCode, OTHER is not documented and a placeholder for now
@@ -1465,7 +1552,7 @@ public class ZUGFeRDMapping extends Mapping {
                 }
               }
 
-              //ed:AlternativeQuantity
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/AlternativeQuantity
               if (ai.getAlternativeQuantity() != null) {
                 //TODO - AlternativeQuantity can't be mapped to a typeCode, ALTERNATIVE_QUANTITY is not documented and a placeholder for now
                 typeCode = "ALTERNATIVE_QUANTITY";
@@ -1480,7 +1567,7 @@ public class ZUGFeRDMapping extends Mapping {
 
               }
 
-              //ed:Size
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/Size
               if (ai.getSize() != null) {
                 typeCode = "SIZE_TEXT";
                 description = "Größenbezeichnung";
@@ -1494,7 +1581,7 @@ public class ZUGFeRDMapping extends Mapping {
 
               }
 
-              //ed:Weight
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/Weight
               if (ai.getWeight() != null) {
                 typeCode = "WEIGHT_NET";
                 description = "Netto-Gewicht";
@@ -1512,7 +1599,7 @@ public class ZUGFeRDMapping extends Mapping {
 
               }
 
-              //ed:Boxes
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/Boxes
               if (ai.getColor() != null) {
                 //TODO - Boxes can't be mapped to a typeCode, BOXES_QUANTITY is not documented and a placeholder for now
                 typeCode = "BOXES_QUANTITY";
@@ -1527,7 +1614,7 @@ public class ZUGFeRDMapping extends Mapping {
 
               }
 
-              //ed:Color
+              //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/Color
               if (ai.getColor() != null) {
                 typeCode = "COLOR_TEXT";
                 description = "Farbe als Text";
@@ -1544,8 +1631,8 @@ public class ZUGFeRDMapping extends Mapping {
 
             if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
                 && item.getLineItemAmount() != null) {
-              //eb:LineItemAmount
-              //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:LineTotalAmount
+              //ebInterface: ebInterface: /Invoice/Details/ItemLists/ListLineItem/LineItemAmount
+              //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/LineTotalAmount
               scts.withSpecifiedTradeSettlementMonetarySummation(
                   new TradeSettlementMonetarySummationType().withLineTotalAmount(
                       new AmountType().withValue(item.getLineItemAmount())
@@ -1577,7 +1664,7 @@ public class ZUGFeRDMapping extends Mapping {
                   }
                 }
 
-                //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem[/ram:SpecifiedSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:TotalAllowanceChargeAmount
+                //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem[/SpecifiedSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/TotalAllowanceChargeAmount
                 scts.getSpecifiedTradeSettlementMonetarySummation().withTotalAllowanceChargeAmount(
                     new AmountType().withValue(sum).withCurrencyID(documentCurrency));
               }
@@ -1587,7 +1674,7 @@ public class ZUGFeRDMapping extends Mapping {
                 && item.getListLineItemExtension().getListLineItemExtension() != null &&
                 item.getListLineItemExtension().getListLineItemExtension()
                     .getBeneficiarySocialInsuranceNumber() != null) {
-              //eb:ListLineItemExtension//eb:ListLineItemExtension//eb:BeneficiarySocialInsuranceNumber
+              //ebInterface: ebInterface: /Invoice/Details/ItemLists/ListLineItem/ListLineItemExtension/ListLineItemExtension/BeneficiarySocialInsuranceNumber
               //TODO - not in ZUGFeRD
               mLog.add(
                   "BeneficiarySocialInsuranceNumber not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1621,8 +1708,8 @@ public class ZUGFeRDMapping extends Mapping {
     zugferd.getSpecifiedExchangedDocumentContext().withGuidelineSpecifiedDocumentContextParameter(
         new DocumentContextParameterType().withID(new IDType().withValue(zugFeRDType)));
 
+    //ebInterface: /Invoice/@GeneratingSystem
     if (invoice.getGeneratingSystem() != null) {
-      //eb:GeneratingSystem
       //TODO - no field in ZUGFeRD for that
       mLog.add(
           "GeneratingSystem not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1630,24 +1717,24 @@ public class ZUGFeRDMapping extends Mapping {
           "???");
     }
 
-    //eb:Document type
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:Name
+    //ebInterface: ebInterface: /Invoice/@DocumentType
+    //CrossIndustryDocument/HeaderExchangedDocument/Name
     String documentType = getDocumentType(invoice);
     zugferd.getHeaderExchangedDocument().withName(new TextType().withValue(documentType));
 
-    //eb:Document type code
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:TypeCode
+    //ebInterface: Document type code
+    //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/TypeCode
     String typeCode = getDocumentTypeCode(invoice);
     zugferd.getHeaderExchangedDocument().withTypeCode(new DocumentCodeType().withValue(typeCode));
 
-    //eb:Currency
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:InvoiceCurrencyCode
+    //ebInterface: /Invoice/@InvoiceCurrency
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/InvoiceCurrencyCode
     String documentCurrency = invoice.getInvoiceCurrency().value();
     zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
         .withInvoiceCurrencyCode(new CodeType().withValue(documentCurrency));
 
+    //ebInterface: /Invoice/@ManualProcessing
     if (invoice.getManualProcessing() != null) {
-      //eb:ManualProcessing
       //TODO - no field in ZUGFeRD for that
       mLog.add(
           "ManualProcessing not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1655,8 +1742,8 @@ public class ZUGFeRDMapping extends Mapping {
           "???");
     }
 
+    //ebInterface: /Invoice/@DocumentTitle
     if (invoice.getDocumentTitle() != null) {
-      //eb:DocumentTitle
       //TODO - no field in ZUGFeRD for that
       mLog.add(
           "DocumentTitle not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1664,31 +1751,31 @@ public class ZUGFeRDMapping extends Mapping {
           "???");
     }
 
+    //ebInterface: /Invoice/@Language
+    //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/LanguageID
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
-      //eb:Language
-      //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:LanguageID
       //Attention: convert from ISO639-2 to ISO639-1!
       zugferd.getHeaderExchangedDocument().getLanguageID()
           .add(new IDType()
                    .withValue(ISO639Util.convertISO639_2ToISO639_1(invoice.getLanguage().value())));
     }
 
+    //ebInterface: /Invoice/@IsDuplicate
+    //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/CopyIndicator
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
-      //eb:IsDuplicate
-      //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:CopyIndicator
       if (BooleanUtils.isTrue(invoice.getIsDuplicate())) {
         zugferd.getHeaderExchangedDocument()
             .withCopyIndicator(new IndicatorType().withIndicator(Boolean.TRUE));
       }
 
     }
-    //eb:Invoice number
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:ID
+    //ebInterface: /Invoice/InvoiceNumber
+    //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/ID
     zugferd.getHeaderExchangedDocument().withID(
         new IDType().withValue(invoice.getInvoiceNumber()));
 
-    //eb:Invoice date
-    //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:IssueDateTime
+    //ebInterface: /Invoice/InvoiceDate
+    //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/IssueDateTime
     zugferd.getHeaderExchangedDocument().withIssueDateTime(new DateTimeType().withDateTimeString(
         new DateTimeType.DateTimeString().withFormat("102")
             .withValue(dateTimeFormatter.print(invoice.getInvoiceDate()))));
@@ -1699,8 +1786,8 @@ public class ZUGFeRDMapping extends Mapping {
    */
   private void mapSignature(CrossIndustryDocumentType zugferd, Signature signature) {
     //TODO not supported in ZUGFeRD
+    //ebInterface: /Invoice/Signature
     if (signature != null) {
-      //eb:Signature
       //TODO - no field in ZUGFeRD for that
       mLog.add(
           "Signature not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1710,12 +1797,13 @@ public class ZUGFeRDMapping extends Mapping {
   }
 
   /**
-   * Map the ordering party Target in ZUGFeRD: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ProductEndUserTradeParty
+   * Map the ordering party Target in ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/ProductEndUserTradeParty
    */
   private void mapOrderingParty(CrossIndustryDocumentType zugferd, OrderingParty orderingParty) {
+    //ebInterface: /Invoice/OrderingParty
     if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
       if (orderingParty == null) {
-        LOG.debug("No biller element specified in ebInterface - continuing.");
+        LOG.debug("No ordering party element specified in ebInterface - continuing.");
         return;
       }
 
@@ -1726,11 +1814,11 @@ public class ZUGFeRDMapping extends Mapping {
           getSupplyChainTradeAgreement(zugferd);
       supplyChainTradeAgreementType.withProductEndUserTradeParty(productEndUserTradeParty);
 
-      //eb:VATIdentification
+      //ebInterface: /Invoice/OrderingParty/VATIdentification
       productEndUserTradeParty.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(
           new IDType().withValue(orderingParty.getVATIdentificationNumber()).withSchemeID("VA")));
 
-      //eb:FurtherIdentification
+      //ebInterface: /Invoice/OrderingParty/FurtherIdentification
       if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
           && orderingParty.getFurtherIdentifications() != null
           && orderingParty.getFurtherIdentifications().size() > 0) {
@@ -1742,21 +1830,24 @@ public class ZUGFeRDMapping extends Mapping {
           if (i == 0) {
             productEndUserTradeParty
                 .withID(new IDType().withValue(furtherIdentification.getValue()));
+            //ebInterface: /Invoice/OrderingParty/FurtherIdentification/@IdentificationType
             mLog.add(
-                "IdentificationType '" + furtherIdentification.getIdentificationType() + "' not mapped to ZUGFeRD: Attribute @schemeID marked as not used in the given context",
-                "/Invoice/OrderingParty/FurtherIdentification["+i+"]",
-                "/rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ProductEndUserTradeParty/ram:ID");
+                "IdentificationType '" + furtherIdentification.getIdentificationType()
+                + "' not mapped to ZUGFeRD: Attribute @schemeID marked as not used in the given context",
+                "/Invoice/OrderingParty/FurtherIdentification[" + i + "]",
+                "/CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/ProductEndUserTradeParty/ID");
           } else {
             mLog.add(
-                "FurtherIdentification '" + furtherIdentification.getValue() + "'not mapped to ZUGFeRD: only 1 element ID allowed",
-                "/Invoice/OrderingParty/FurtherIdentification["+i+"]",
-                "/rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:ProductEndUserTradeParty/ram:ID");
+                "FurtherIdentification '" + furtherIdentification.getValue()
+                + "' not mapped to ZUGFeRD: only 1 element ID allowed",
+                "/Invoice/OrderingParty/FurtherIdentification[" + i + "]",
+                "/CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/ProductEndUserTradeParty/ID");
           }
           i++;
         }
 
-        //eb:OrderingParty/Address/Addressidentifier/@AddressIdentifierType=(GLN, DUNS)
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ProductEndUserTradeParty/GlobalID
+        //ebInterface: /Invoice/OrderingParty/Address/AddressIdentifier/@AddressIdentifierType=(GLN, DUNS)
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/ProductEndUserTradeParty/GlobalID
         if (orderingParty.getAddress().getAddressIdentifiers().get(0) != null) {
           String schema = null;
           if (orderingParty.getAddress().getAddressIdentifiers().get(0).getAddressIdentifierType()
@@ -1776,9 +1867,8 @@ public class ZUGFeRDMapping extends Mapping {
         }
       }
 
-
       if (orderingParty.getOrderReference() != null) {
-        //OrderReference
+        //ebInterface: /Invoice/OrderingParty/OrderReference
         //TODO
         mLog.add(
             "OrderReference not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1786,7 +1876,14 @@ public class ZUGFeRDMapping extends Mapping {
             "???");
       }
 
-      //eb:Address
+      //ebInterface: /Invoice/OrderingParty/Address
+      //ebInterface: /Invoice/OrderingParty/Address/Street
+      //ebInterface: /Invoice/OrderingParty/Address/POBox
+      //ebInterface: /Invoice/OrderingParty/Address/Name
+      //ebInterface: /Invoice/OrderingParty/Address/ZIP
+      //ebInterface: /Invoice/OrderingParty/Address/Contact
+      //ebInterface: /Invoice/OrderingParty/Address/Town
+      //ebInterface: /Invoice/OrderingParty/Address/CountryCode
       String lineOne = "";
       if (orderingParty.getAddress().getStreet() != null) {
         lineOne = orderingParty.getAddress().getStreet();
@@ -1808,12 +1905,11 @@ public class ZUGFeRDMapping extends Mapping {
               .withCountryID(new CountryIDType().withValue(
                   orderingParty.getAddress().getCountry().getCountryCode().value())));
 
-
       mLog.add(
           "BillersInvoiceRecipientID not mapped to ZUGFeRD: no proper element in ZUGFeRD",
           "/Invoice/OrderingParty/BillersInvoiceRecipientID",
           "???");
-      /*//eb:BillersInvoiceRecipientID
+      /*//ebInterface: /Invoice/OrderingParty/BillersInvoiceRecipientID
       if (!Strings.isNullOrEmpty(orderingParty.getBillersOrderingPartyID())) {
         productEndUserTradeParty.withID(
             new IDType().withValue(orderingParty.getBillersOrderingPartyID()).withSchemeID(
@@ -1823,10 +1919,11 @@ public class ZUGFeRDMapping extends Mapping {
   }
 
   /**
-   * Map the invoice recipient Target in ZUGFeRD: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerTradeParty
+   * Map the invoice recipient Target in ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/BuyerTradeParty
    */
   private void mapInvoiceRecipient(CrossIndustryDocumentType zugferd,
                                    InvoiceRecipient invoiceRecipient) {
+    //ebInterface: /Invoice/InvoiceRecipient
 
     if (invoiceRecipient == null) {
       LOG.debug("No biller element specified in ebInterface - continuing.");
@@ -1840,11 +1937,11 @@ public class ZUGFeRDMapping extends Mapping {
         getSupplyChainTradeAgreement(zugferd);
     supplyChainTradeAgreementType.withBuyerTradeParty(invoiceRecipientTradePartyType);
 
-    //eb:VATIdentification
+    //ebInterface: /Invoice/InvoiceRecipient/VATIdentification
     invoiceRecipientTradePartyType.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(
         new IDType().withValue(invoiceRecipient.getVATIdentificationNumber()).withSchemeID("VA")));
 
-    //eb:FurtherIdentification
+    //ebInterface: /Invoice/InvoiceRecipient/FurtherIdentification
     if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
         && invoiceRecipient.getFurtherIdentifications() != null
         && invoiceRecipient.getFurtherIdentifications().size() > 0) {
@@ -1856,23 +1953,24 @@ public class ZUGFeRDMapping extends Mapping {
         if (i == 0) {
           invoiceRecipientTradePartyType
               .withID(new IDType().withValue(furtherIdentification.getValue()));
+          //ebInterface: /Invoice/InvoiceRecipient/FurtherIdentification/@IdentificationType
           mLog.add(
               "IdentificationType '" + furtherIdentification.getIdentificationType()
               + "' not mapped to ZUGFeRD: Attribute @schemeID marked as not used in the given context",
               "/Invoice/InvoiceRecipient/FurtherIdentification[" + i + "]",
-              "/rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerTradeParty/ram:ID");
+              "/CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/BuyerTradeParty/ID");
         } else {
           mLog.add(
               "FurtherIdentification '" + furtherIdentification.getValue()
-              + "'not mapped to ZUGFeRD: only 1 element ID allowed",
+              + "' not mapped to ZUGFeRD: only 1 element ID allowed",
               "/Invoice/InvoiceRecipient/FurtherIdentification[" + i + "]",
-              "/rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerTradeParty/ram:ID");
+              "/CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/BuyerTradeParty/ID");
         }
         i++;
       }
 
-      //eb:InvoiceRecipient/Address/Addressidentifier/@AddressIdentifierType=(GLN, DUNS)
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/BuyerTradeParty/GlobalID
+      //ebInterface: /Invoice/InvoiceRecipient//Address/AddressIdentifier/@AddressIdentifierType=(GLN, DUNS)
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/BuyerTradeParty/GlobalID
       if (invoiceRecipient.getAddress().getAddressIdentifiers().get(0) != null) {
         String schema = null;
         if (invoiceRecipient.getAddress().getAddressIdentifiers().get(0).getAddressIdentifierType()
@@ -1893,7 +1991,7 @@ public class ZUGFeRDMapping extends Mapping {
     }
 
     if (invoiceRecipient.getOrderReference() != null) {
-      //OrderReference
+      //ebInterface: /Invoice/InvoiceRecipient/OrderReference
       //TODO
       mLog.add(
           "OrderReference not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1901,7 +1999,14 @@ public class ZUGFeRDMapping extends Mapping {
           "???");
     }
 
-    //eb:Address
+    //ebInterface: /Invoice/InvoiceRecipient/Address
+    //ebInterface: /Invoice/InvoiceRecipient/Address/Street
+    //ebInterface: /Invoice/InvoiceRecipient/Address/POBox
+    //ebInterface: /Invoice/InvoiceRecipient/Address/Name
+    //ebInterface: /Invoice/InvoiceRecipient/Address/ZIP
+    //ebInterface: /Invoice/InvoiceRecipient/Address/Contact
+    //ebInterface: /Invoice/InvoiceRecipient/Address/Town
+    //ebInterface: /Invoice/InvoiceRecipient/Address/CountryCode
     String lineOne = "";
     if (invoiceRecipient.getAddress().getStreet() != null) {
       lineOne = invoiceRecipient.getAddress().getStreet();
@@ -1930,7 +2035,7 @@ public class ZUGFeRDMapping extends Mapping {
           "???");
       //TODO
       /*
-      //eb:BillersInvoiceRecipientID
+      //ebInterface: /Invoice/InvoiceRecipient/BillersInvoiceRecipientID
       if (!Strings.isNullOrEmpty(invoiceRecipient.getBillersInvoiceRecipientID())) {
         invoiceRecipientTradePartyType.withID(
             new IDType().withValue(invoiceRecipient.getBillersInvoiceRecipientID()).withSchemeID(
@@ -1940,7 +2045,7 @@ public class ZUGFeRDMapping extends Mapping {
     }
 
     if (invoiceRecipient.getAccountingArea() != null) {
-      //eb:AccountingArea
+      //ebInterface: /Invoice/InvoiceRecipient/AccountingArea
       //TODO - no respective field
       mLog.add(
           "AccountingArea not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1949,7 +2054,7 @@ public class ZUGFeRDMapping extends Mapping {
     }
 
     if (invoiceRecipient.getSubOrganizationID() != null) {
-      //eb:SubOrganizationID
+      //ebInterface: /Invoice/InvoiceRecipient/SubOrganizationID
       //TODO - no respective field
       mLog.add(
           "SubOrganizationID not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -1959,9 +2064,10 @@ public class ZUGFeRDMapping extends Mapping {
   }
 
   /**
-   * Map the biller Target in ZUGFeRD: CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:SellerTradeParty
+   * Map the biller Target in ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/SellerTradeParty
    */
   private void mapBiller(CrossIndustryDocumentType zugferd, Biller biller) {
+    //ebInterface: /Invoice/Biller
     if (biller == null) {
       LOG.debug("No blller element specified in ebInterface - continuing.");
       return;
@@ -1970,17 +2076,17 @@ public class ZUGFeRDMapping extends Mapping {
     SupplyChainTradeAgreementType
         supplyChainTradeAgreementType =
         getSupplyChainTradeAgreement(zugferd);
-    //CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty
+    //CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/SellerTradeParty
     TradePartyType sellerTradePartyType = new TradePartyType();
     supplyChainTradeAgreementType.withSellerTradeParty(sellerTradePartyType);
 
-    //eb:VATIdentification
+    //ebInterface: /Invoice/Biller/VATIdentification
     sellerTradePartyType.withSpecifiedTaxRegistration(new TaxRegistrationType().withID(
         new IDType().withValue(biller.getVATIdentificationNumber()).withSchemeID("VA")));
 
     if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-      //eb:Biller/Address/Addressidentifier/@AddressIdentifierType
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty/GlobalID
+      //ebInterface: /Invoice/Biller/Address/AddressIdentifier/@AddressIdentifierType
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/SellerTradeParty/GlobalID
       if (biller.getAddress().getAddressIdentifiers().get(0) != null) {
         String schema = null;
         if (biller.getAddress().getAddressIdentifiers().get(0).getAddressIdentifierType()
@@ -1996,15 +2102,23 @@ public class ZUGFeRDMapping extends Mapping {
                   .withSchemeID(schema));
         }
 
-        //eb:OrderReference
-        //CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/BuyerReference
+        //ebInterface: /Invoice/Biller/OrderReference
+        //CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/BuyerReference
         if (biller.getOrderReference().getOrderID() != null) {
           supplyChainTradeAgreementType
-              .withBuyerReference(new TextType().withValue(biller.getOrderReference().getOrderID()));
+              .withBuyerReference(
+                  new TextType().withValue(biller.getOrderReference().getOrderID()));
         }
       }
 
-      //eb:Address
+      //ebInterface: /Invoice/Biller/Address
+      //ebInterface: /Invoice/Biller/Address/Street
+      //ebInterface: /Invoice/Biller/Address/POBox
+      //ebInterface: /Invoice/Biller/Address/Name
+      //ebInterface: /Invoice/Biller/Address/ZIP
+      //ebInterface: /Invoice/Biller/Address/Contact
+      //ebInterface: /Invoice/Biller/Address/Town
+      //ebInterface: /Invoice/Biller/Address/CountryCode
       String lineOne = "";
       if (biller.getAddress().getStreet() != null) {
         lineOne = biller.getAddress().getStreet();
@@ -2023,20 +2137,29 @@ public class ZUGFeRDMapping extends Mapping {
                   biller.getAddress().getCountry().getCountryCode().value())));
     }
 
+    //ebInterface: /Invoice/Biller/InvoiceRecipientsBillerID
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/SellerTradeParty/ID
     if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)) {
-      //eb:Biller/InvoiceRecipientsBillerID
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/SellerTradeParty/ID
       if (biller.getInvoiceRecipientsBillerID() != null) {
         sellerTradePartyType.withID(new IDType().withValue(biller.getInvoiceRecipientsBillerID()));
       }
     }
+
+    //ebInterface: /Invoice/Biller/BillerExtension/BillerExtension/BillersContractPartnerNumber
+    if (biller.getBillerExtension() != null
+        && biller.getBillerExtension().getBillerExtension() != null
+        && biller.getBillerExtension().getBillerExtension().getBillersContractPartnerNumber()
+           != null) {
+      //TODO
+    }
   }
 
   /**
-   * Map the details of related documents Target in ZUGFeRD: rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument
+   * Map the details of related documents Target in ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument
    */
   private void mapRelatedDocuments(CrossIndustryDocumentType zugferd,
                                    List<RelatedDocument> relatedDocuments) {
+    //ebInterface: /Invoice/RelatedDocuments
     if (Iterables.isEmpty(relatedDocuments)) {
       LOG.debug("No related documents specified in ebInterface - continuing");
       return;
@@ -2056,27 +2179,27 @@ public class ZUGFeRDMapping extends Mapping {
         ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
         supplyChainTradeAgreementType.getAdditionalReferencedDocument().add(referencedDocumentType);
 
-        //eb:InvoiceNumber
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:ID
+        //ebInterface: /Invoice/RelatedDocument/InvoiceNumber
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/ID
         referencedDocumentType.withID(new IDType().withValue(relatedDocument.getInvoiceNumber()));
 
-        //eb:InvoiceDate
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:IssueDateTime
+        //ebInterface: /Invoice/RelatedDocument/InvoiceDate
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/IssueDateTime
         referencedDocumentType.withIssueDateTime(
             issueDateTimeFormatter.print(relatedDocument.getInvoiceDate()));
 
-        //eb:Document type
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:TypeCode
+        //ebInterface: /Invoice/RelatedDocument/DocumentType
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/TypeCode
         //OI = Reference number identifying a previously issued invoice. (http://www.unece.org/trade/untdid/i98a/uncl/uncl1153.htm)
         referencedDocumentType.withTypeCode(
             new DocumentCodeType().withValue("OI"));
 
         if (relatedDocument.getComment() != null) {
-          //eb:Comment
+          //ebInterface: /Invoice/RelatedDocument/Comment
           //TODO - not really an element in ZUGFeRD which fits here...
           mLog.add(
               "OrderReference not mapped to ZUGFeRD: no proper element in ZUGFeRD",
-              "/Invoice/RelatedDocument["+i+"]/Comment",
+              "/Invoice/RelatedDocument[" + i + "]/Comment",
               "???");
         }
       } else {
@@ -2084,13 +2207,17 @@ public class ZUGFeRDMapping extends Mapping {
 
         text.append("Zugehörige Rechnung:\n");
 
+        //ebInterface: /Invoice/RelatedDocument/InvoiceNumber
         if (relatedDocument.getInvoiceNumber() != null) {
           text.append(relatedDocument.getInvoiceNumber());
         }
 
+        //ebInterface: /Invoice/RelatedDocument/InvoiceDate
         if (relatedDocument.getInvoiceDate() != null) {
           text.append(dateTimeFormatter.print(relatedDocument.getInvoiceDate())).append("\n");
         }
+
+        //ebInterface: /Invoice/RelatedDocument/Comment
         if (relatedDocument.getComment() != null) {
           text.append(relatedDocument.getComment());
         }
@@ -2108,7 +2235,7 @@ public class ZUGFeRDMapping extends Mapping {
    */
   private void mapCancelledOriginalDocument(CrossIndustryDocumentType zugferd,
                                             CancelledOriginalDocument cancelledOriginalDocument) {
-
+    //ebInterface: /Invoice/CancelledOriginalDocument
     if (cancelledOriginalDocument == null) {
       LOG.debug("No cancelled original document specified in ebInterface - continuing");
       return;
@@ -2123,25 +2250,25 @@ public class ZUGFeRDMapping extends Mapping {
       ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
       supplyChainTradeAgreementType.getAdditionalReferencedDocument().add(referencedDocumentType);
 
-      //eb:InvoiceNumber
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:ID
+      //ebInterface: /Invoice/CancelledOriginalDocument/InvoiceNumber
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/ID
       referencedDocumentType
           .withID(new IDType().withValue(cancelledOriginalDocument.getInvoiceNumber()));
 
-      //eb:InvoiceDate
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:IssueDateTime
+      //ebInterface: /Invoice/CancelledOriginalDocument/InvoiceDate
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/IssueDateTime
       referencedDocumentType.withIssueDateTime(
           issueDateTimeFormatter.print(cancelledOriginalDocument.getInvoiceDate()));
 
-      //eb:Document type
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:AdditionalReferencedDocument/ram:TypeCode
+      //ebInterface: /Invoice/CancelledOriginalDocument/DocumentType
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/TypeCode
       //ACW = Reference number assigned to the message which was previously issued (e.g. in the case of a cancellation,
       //      the primary reference of the message to be cancelled will be quoted in this element). (http://www.unece.org/trade/untdid/i98a/uncl/uncl1153.htm)
       referencedDocumentType.withTypeCode(
           new DocumentCodeType().withValue("ACW"));
 
       if (cancelledOriginalDocument.getComment() != null) {
-        //eb:Comment
+        //ebInterface: /Invoice/CancelledOriginalDocument/Comment
         //TODO - not really an element in ZUGFeRD which fits here...
         mLog.add(
             "CancelledOriginalDocument not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -2154,14 +2281,18 @@ public class ZUGFeRDMapping extends Mapping {
 
       text.append("Stornierte Rechnung:\n");
 
+      //ebInterface: /Invoice/CancelledOriginalDocument/InvoiceNumber
       if (cancelledOriginalDocument.getInvoiceNumber() != null) {
         text.append(cancelledOriginalDocument.getInvoiceNumber());
       }
 
+      //ebInterface: /Invoice/CancelledOriginalDocument/InvoiceDate
       if (cancelledOriginalDocument.getInvoiceDate() != null) {
         text.append(dateTimeFormatter.print(cancelledOriginalDocument.getInvoiceDate()))
             .append("\n");
       }
+
+      //ebInterface: /Invoice/CancelledOriginalDocument/Comment
       if (cancelledOriginalDocument.getComment() != null) {
         text.append(cancelledOriginalDocument.getComment());
       }
@@ -2173,10 +2304,10 @@ public class ZUGFeRDMapping extends Mapping {
 
   /**
    * Map the details of an ebInterface delivery element Target in ZUGFeRD:
-   * rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty
+   * /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty
    */
   private void mapDelivery(CrossIndustryDocumentType zugferd, Delivery delivery) {
-
+    //ebInterface: /Invoice/Delivery
     if (delivery == null) {
       LOG.debug("No delivery element specified in ebInterface - continuing.");
       return;
@@ -2188,24 +2319,24 @@ public class ZUGFeRDMapping extends Mapping {
 
     if (!MappingFactory.MappingType.ZUGFeRD_BASIC_1p0.equals(mappingType)
         && delivery.getDeliveryID() != null) {
-      //eb:DeliveryID
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:DespatchAdviceReferencedDocument/ram:ID
+      //ebInterface: /Invoice/Delivery/DeliveryID
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/DespatchAdviceReferencedDocument/ID
       zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
           .withDeliveryNoteReferencedDocument(
               new ReferencedDocumentType()
                   .withID(new IDType().withValue(delivery.getDeliveryID())));
     }
 
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ActualDeliverySupplyChainEvent/OccurrenceDateTime/udt:DateTimeString
     if (delivery.getDate() != null) {
-      //eb:Delivery/Date
+      //ebInterface: /Invoice/Delivery/Date
       zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
           .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
               new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
                   dateTimeFormatter.print(delivery.getDate())).withFormat(
                   "102"))));
-    }else if (delivery.getPeriod().getFromDate() != null){
-      //eb:Delivery/Period/FromDate
+    } else if (delivery.getPeriod().getFromDate() != null) {
+      //ebInterface: /Invoice/Delivery/Period/FromDate
       zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
           .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
               new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
@@ -2214,7 +2345,6 @@ public class ZUGFeRDMapping extends Mapping {
     }
 
     if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
-      //Process address details, in case there's one
       if (delivery.getAddress() != null) {
 
         //Create the necessary elements in ZUGFeRD
@@ -2223,70 +2353,72 @@ public class ZUGFeRDMapping extends Mapping {
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().withPostalTradeAddress(new TradeAddressType());
 
+        //ebInterface: /Invoice/Delivery/Address
         Address address = delivery.getAddress();
 
         String partyName = "";
         //Build the person name string
+        //ebInterface: /Invoice/Delivery/Address/Salutation
         if (!Strings.isNullOrEmpty(address.getSalutation())) {
           partyName += address.getSalutation() + " ";
         }
+        //ebInterface: /Invoice/Delivery/Address/Name
         if (!Strings.isNullOrEmpty(address.getName())) {
           partyName += address.getName();
         }
 
-        //eb:Salutation and Name
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:Name
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty/Name
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().withName(new TextType().withValue(partyName));
 
-        //eb:Street
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineOne
+        //ebInterface: /Invoice/Delivery/Address/Street
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty/PostalTradeAddress/LineOne
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().getPostalTradeAddress()
             .setLineOne(new TextType().withValue(address.getStreet()));
 
-        //eb:Town
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName
+        //ebInterface: /Invoice/Delivery/Address/Town
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty/PostalTradeAddress/CityName
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().getPostalTradeAddress()
             .setCityName(new TextType().withValue(address.getTown()));
 
-        //eb:ZIP
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:PostcodeCode
+        //ebInterface: /Invoice/Delivery/Address/ZIP
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty/PostalTradeAddress/PostcodeCode
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().getPostalTradeAddress().getPostcodeCode()
             .add(new CodeType().withValue(address.getZIP()));
 
-        //eb:Country Code
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CountryID
+        //ebInterface: /Invoice/Delivery/Address/CountryCode
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty/PostalTradeAddress/CountryID
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().getPostalTradeAddress().setCountryID(
             new CountryIDType().withValue(address.getCountry().getCountryCode().value()));
 
-        //eb:Phone
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber
+        //ebInterface: /Invoice/Delivery/Address/Phone
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty/DefinedTradeContact/TelephoneUniversalCommunication/CompleteNumber
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().getDefinedTradeContact().get(0)
             .withTelephoneUniversalCommunication(
                 new UniversalCommunicationType().withCompleteNumber(
                     new TextType().withValue(address.getPhone())));
 
-        //eb:Email
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:CompleteNumber
+        //ebInterface: /Invoice/Delivery/Address/Email
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty/DefinedTradeContact/EmailURIUniversalCommunication/CompleteNumber
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().getDefinedTradeContact().get(0)
             .withEmailURIUniversalCommunication(
                 new UniversalCommunicationType().withURIID(
                     new IDType().withValue(address.getEmail())));
 
-        //eb:Contact
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeDelivery/ram:ShipToTradeParty/ram:DefinedTradeContact/ram:PersonName
+        //ebInterface: /Invoice/Delivery/Address/Contact
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty/DefinedTradeContact/PersonName
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
             .getShipToTradeParty().getDefinedTradeContact().get(0)
             .setPersonName(new TextType().withValue(address.getContact()));
 
         if (address.getAddressExtensions() != null) {
-          //eb:Address extension
+          //ebInterface: /Invoice/Delivery/Address/AddressExtension
           //TODO - no field in ZUGFeRD for that
           mLog.add(
               "AddressExtensions not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -2297,7 +2429,7 @@ public class ZUGFeRDMapping extends Mapping {
     }
 
     if (delivery.getDescription() != null) {
-      //eb:Description
+      //ebInterface: /Invoice/Delivery/Description
       //TODO - no field in ZUGFeRD for that
       mLog.add(
           "Description not mapped to ZUGFeRD: no proper element in ZUGFeRD",
@@ -2398,20 +2530,23 @@ public class ZUGFeRDMapping extends Mapping {
 
   }
 
-  private TradeAllowanceChargeType getTradeAllowanceCharge (boolean chargeIndicator, BigDecimal baseAmount, String documentCurrency, BigDecimal percentage,
-                                                                BigDecimal amount, String comment) {
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge
+  private TradeAllowanceChargeType getTradeAllowanceCharge(boolean chargeIndicator,
+                                                           BigDecimal baseAmount,
+                                                           String documentCurrency,
+                                                           BigDecimal percentage,
+                                                           BigDecimal amount, String comment) {
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge
     TradeAllowanceChargeType atac = new TradeAllowanceChargeType();
 
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:ChargeIndicator
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/ChargeIndicator
     //surcharge: true
     //reduction: false
     atac.withChargeIndicator(new IndicatorType().withIndicator(chargeIndicator));
 
     if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)) {
       if (baseAmount != null) {
-        //eb:BaseAmount
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:BasisAmount
+        //ebInterface: .../BaseAmount
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/BasisAmount
         atac.withBasisAmount(
             new AmountType().withValue(baseAmount)
                 .withCurrencyID(
@@ -2419,59 +2554,63 @@ public class ZUGFeRDMapping extends Mapping {
       }
 
       if (percentage != null) {
-        //eb:Percentage
-        //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:CalculationPercent
+        //ebInterface: .../Percentage
+        //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/CalculationPercent
         atac.withCalculationPercent(
             new PercentType().withValue(percentage));
       }
     }
 
     if (amount != null) {
-      //eb:Amount
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:ActualAmount
+      //ebInterface: .../Amount
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/ActualAmount
       atac.withActualAmount(new AmountType().withValue(amount)
                                 .withCurrencyID(
                                     documentCurrency));
     }
 
     if (comment != null) {
-      //eb:Comment
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedSupplyChainTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:Reason
+      //ebInterface: .../Comment
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/Reason
       atac.withReason(new TextType().withValue(comment));
     }
 
     return atac;
   }
 
-  private ProductCharacteristicType getApplicableProductCharacteristic (String typeCode, String description, BigDecimal valueMeasure, String unitCode, String value){
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic
+  private ProductCharacteristicType getApplicableProductCharacteristic(String typeCode,
+                                                                       String description,
+                                                                       BigDecimal valueMeasure,
+                                                                       String unitCode,
+                                                                       String value) {
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic
     ProductCharacteristicType pc = new ProductCharacteristicType();
 
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:TypeCode
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic/TypeCode
     if (typeCode != null) {
       pc.withTypeCode(new CodeType().withValue(typeCode));
     }
 
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:Description
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic/Description
     if (description != null) {
       pc.withDescription(new TextType().withValue(description));
     }
 
     if (valueMeasure != null) {
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:ValueMeasure
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic/ValueMeasure
       MeasureType m = new MeasureType();
 
       m.withValue(valueMeasure);
 
-      //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:ValueMeasure/ram:unitCode
-      if (unitCode != null){
+      //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic/ValueMeasure/unitCode
+      if (unitCode != null) {
         m.withUnitCode(unitCode);
       }
 
       pc.withValueMeasure(m);
     }
 
-    //rsm:CrossIndustryDocument/rsm:SpecifiedSupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:Value
+    //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic/Value
     if (value != null) {
       pc.withValue(new TextType().withValue(value));
     }
