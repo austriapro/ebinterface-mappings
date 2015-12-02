@@ -2,7 +2,6 @@ package at.austriapro.mappings.zugferd;
 
 import at.austriapro.mappings.ebinterface.generated.*;
 import at.austriapro.mappings.zugferd.generated.*;
-import at.austriapro.utils.ISO639ConversionUtil;
 
 import com.google.common.base.Strings;
 
@@ -27,6 +26,7 @@ import at.austriapro.Mapping;
 import at.austriapro.MappingException;
 import at.austriapro.MappingFactory;
 import at.austriapro.utils.DocumentTypeUtils;
+import at.austriapro.utils.ISO639Util;
 
 /**
  * Performs mappings from/to ZUGFeRD
@@ -1667,8 +1667,10 @@ public class ZUGFeRDMapping extends Mapping {
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
       //eb:Language
       //rsm:CrossIndustryDocument/rsm:HeaderExchangedDocument/ram:LanguageID
+      //Attention: convert from ISO639-2 to ISO639-1!
       zugferd.getHeaderExchangedDocument().getLanguageID()
-          .add(new IDType().withValue(invoice.getLanguage().value()));
+          .add(new IDType()
+                   .withValue(ISO639Util.convertISO639_2ToISO639_1(invoice.getLanguage().value())));
     }
 
     if (MappingFactory.MappingType.ZUGFeRD_COMFORT_1p0.equals(mappingType)) {
