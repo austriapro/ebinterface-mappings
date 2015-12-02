@@ -5,7 +5,7 @@ import com.google.common.collect.HashBiMap;
 /**
  * Created by Paul on 10.09.2015.
  */
-public class ISO639ConversionUtil {
+public class ISO639Util {
     final static String NULL = null;
 
     final static String AAR = "AAR";
