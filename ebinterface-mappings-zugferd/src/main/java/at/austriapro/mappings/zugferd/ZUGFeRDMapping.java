@@ -1836,7 +1836,7 @@ public class ZUGFeRDMapping extends Mapping {
                 if (MappingFactory.MappingType.ZUGFeRD_EXTENDED_1p0.equals(mappingType)
                     && gpptp.getAppliedTradeAllowanceCharge() != null
                     && gpptp.getAppliedTradeAllowanceCharge().size() > 0) {
-                  BigDecimal sum = new BigDecimal(0);
+                  BigDecimal sum = BigDecimal.ZERO;
 
                   for (TradeAllowanceChargeType ch : gpptp.getAppliedTradeAllowanceCharge()) {
                     BigDecimal am;
@@ -1852,10 +1852,12 @@ public class ZUGFeRDMapping extends Mapping {
                       am = null;
                     }
 
-                    if (am != null && ch.getChargeIndicator().getIndicator()) {
-                      sum = sum.subtract(am);
-                    } else {
-                      sum = sum.add(am);
+                    if (am != null) {
+                      if (ch.getChargeIndicator().getIndicator()) {
+                        sum = sum.subtract(am);
+                      } else {
+                        sum = sum.add(am);
+                      }
                     }
                   }
 
