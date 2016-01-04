@@ -14,7 +14,8 @@ public class MappingLogEntry {
     this.message = message;
   }
 
-  public MappingLogEntry(String message, String source, String destination, MappingLogLevel logLevel) {
+  public MappingLogEntry(String message, String source, String destination,
+                         MappingLogLevel logLevel) {
     this(message, source, destination);
     this.logLevel = logLevel;
   }

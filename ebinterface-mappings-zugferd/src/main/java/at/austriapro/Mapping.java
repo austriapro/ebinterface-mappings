@@ -4,6 +4,7 @@ package at.austriapro;
  * Common interface, shared among all mappings implemented by AUSTRIAPro
  */
 public abstract class Mapping {
+
   public MappingLog mLog = new MappingLog(MappingLogLevel.WARNING);
 
   /**

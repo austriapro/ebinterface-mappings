@@ -272,8 +272,10 @@ public class ZUGFeRDMapping extends Mapping {
         //ebInterface: /Invoice/PresentationDetails/SuppressZero
         //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/IncludedNote
         zugferd.getHeaderExchangedDocument().withIncludedNote(
-            new NoteType().withContentCode(new CodeType().withValue("PresentationDetails/SuppressZero"))
-                .withContent(new TextType().withValue(presentationDetails.getSuppressZero() ? "true" : "false")));
+            new NoteType()
+                .withContentCode(new CodeType().withValue("PresentationDetails/SuppressZero"))
+                .withContent(new TextType().withValue(
+                    presentationDetails.getSuppressZero() ? "true" : "false")));
         mLog.add(
             "PresentationDetails/SuppressZero does not exist in ZUGFeRD, mapped to IncludedNote",
             "/Invoice/PresentationDetails/SuppressZero",
@@ -482,7 +484,8 @@ public class ZUGFeRDMapping extends Mapping {
           //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/IncludedNote
           zugferd.getHeaderExchangedDocument().withIncludedNote(
               new NoteType().withContentCode(new CodeType().withValue("SEPADirectDebit/Type"))
-                  .withContent(new TextType().withValue(paymentMethod.getSEPADirectDebit().getType().value())));
+                  .withContent(new TextType().withValue(
+                      paymentMethod.getSEPADirectDebit().getType().value())));
           mLog.add(
               "SEPADirectDebit/Typec does not exist in ZUGFeRD, mapped to IncludedNote",
               "/Invoice/PaymentMethod/SEPADirectDebit/Type",
@@ -493,8 +496,10 @@ public class ZUGFeRDMapping extends Mapping {
           //ebInterface: /Invoice/PaymentMethod/SEPADirectDebit/BankAccountOwner
           //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/IncludedNote
           zugferd.getHeaderExchangedDocument().withIncludedNote(
-              new NoteType().withContentCode(new CodeType().withValue("SEPADirectDebit/BankAccountOwner"))
-                  .withContent(new TextType().withValue(paymentMethod.getSEPADirectDebit().getType().value())));
+              new NoteType()
+                  .withContentCode(new CodeType().withValue("SEPADirectDebit/BankAccountOwner"))
+                  .withContent(new TextType().withValue(
+                      paymentMethod.getSEPADirectDebit().getType().value())));
           mLog.add(
               "SEPADirectDebit/BankAccountOwner does not exist in ZUGFeRD, mapped to IncludedNote",
               "/Invoice/PaymentMethod/SEPADirectDebit/BankAccountOwner",
@@ -1115,8 +1120,10 @@ public class ZUGFeRDMapping extends Mapping {
           if (itemList.getHeaderDescription() != null) {
             //ebInterface: /Invoice/Detail/ItemList/HeaderDescription
             //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/AssociatedDocumentLineDocument/IncludedNote
-            listHeaderDescription = new NoteType().withContentCode(new CodeType().withValue("ItemList/HeaderDescription"))
-                .withContent(new TextType().withValue(itemList.getHeaderDescription()));
+            listHeaderDescription =
+                new NoteType()
+                    .withContentCode(new CodeType().withValue("ItemList/HeaderDescription"))
+                    .withContent(new TextType().withValue(itemList.getHeaderDescription()));
             mLog.add(
                 "Detail/ItemList/HeaderDescription does not exist in ZUGFeRD, mapped to IncludedNote",
                 "/Invoice/Detail/ItemList/HeaderDescription",
@@ -1126,8 +1133,10 @@ public class ZUGFeRDMapping extends Mapping {
           if (itemList.getFooterDescription() != null) {
             //ebInterface: /Invoice/Detail/ItemList/FooterDescription
             //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/AssociatedDocumentLineDocument/IncludedNote
-            listFooterDescription = new NoteType().withContentCode(new CodeType().withValue("ItemList/FooterDescription"))
-                .withContent(new TextType().withValue(itemList.getFooterDescription()));
+            listFooterDescription =
+                new NoteType()
+                    .withContentCode(new CodeType().withValue("ItemList/FooterDescription"))
+                    .withContent(new TextType().withValue(itemList.getFooterDescription()));
             mLog.add(
                 "Detail/ItemList/FooterDescription does not exist in ZUGFeRD, mapped to IncludedNote",
                 "/Invoice/Detail/ItemList/FooterDescription",
@@ -1153,11 +1162,11 @@ public class ZUGFeRDMapping extends Mapping {
               sctli.withAssociatedDocumentLineDocument(adld);
 
               //Add listHeaderDescription
-              if (listHeaderDescription != null){
+              if (listHeaderDescription != null) {
                 adld.withIncludedNote(listHeaderDescription);
               }
               //Add listHeaderDescription
-              if (listFooterDescription != null){
+              if (listFooterDescription != null) {
                 adld.withIncludedNote(listFooterDescription);
               }
 
@@ -1940,7 +1949,8 @@ public class ZUGFeRDMapping extends Mapping {
     if (invoice.getManualProcessing() != null) {
       zugferd.getHeaderExchangedDocument().withIncludedNote(
           new NoteType().withContentCode(new CodeType().withValue("SEPADirectDebit/Type"))
-              .withContent(new TextType().withValue(invoice.getManualProcessing() ? "true" : "false")));
+              .withContent(
+                  new TextType().withValue(invoice.getManualProcessing() ? "true" : "false")));
       mLog.add(
           "ManualProcessing does not exist in ZUGFeRD, mapped to IncludedNote",
           "/Invoice/ManualProcessing",
@@ -2576,7 +2586,8 @@ public class ZUGFeRDMapping extends Mapping {
               new CodeType().withValue("BillersContractPartnerNumber"))
               .withContent(
                   new TextType()
-                      .withValue(biller.getBillerExtension().getBillerExtension().getBillersContractPartnerNumber())));
+                      .withValue(biller.getBillerExtension().getBillerExtension()
+                                     .getBillersContractPartnerNumber())));
       mLog.add(
           "BillersContractPartnerNumber does not exist in ZUGFeRD, mapped to IncludedNote",
           "/Invoice/Biller/BillerExtension/BillerExtension/BillersContractPartnerNumber",
