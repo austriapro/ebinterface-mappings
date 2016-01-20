@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:Invoice ns2:DocumentTitle="RE1001010" ns2:DocumentType="Invoice" ns2:GeneratingSystem="AUSTRIAPRO.ebInterface.Formular" ns2:InvoiceCurrency="EUR" ns2:Language="deu" ns2:ManualProcessing="false" xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:ns2="http://www.ebinterface.at/schema/4p1/" xmlns:ns3="http://www.ebinterface.at/schema/4p1/extensions/sv" xmlns:ns4="http://www.ebinterface.at/schema/4p1/extensions/ext">
+	<ns2:InvoiceNumber>RE1001010</ns2:InvoiceNumber>
+	<ns2:InvoiceDate>2015-12-27</ns2:InvoiceDate>
+	<ns2:Delivery>
+		<ns2:Period>
+			<ns2:FromDate>2016-01-12</ns2:FromDate>
+			<ns2:ToDate>2016-01-23</ns2:ToDate>
+		</ns2:Period>
+		<ns2:Address>
+			<ns2:Name>Packstation GmbH</ns2:Name>
+			<ns2:Street>Packstrasse 12</ns2:Street>
+			<ns2:Town>Wien</ns2:Town>
+			<ns2:ZIP>1120</ns2:ZIP>
+			<ns2:Country>AT</ns2:Country>
+			<ns2:Contact/>
+		</ns2:Address>
+	</ns2:Delivery>
+	<ns2:Biller>
+		<ns2:VATIdentificationNumber>UID412563</ns2:VATIdentificationNumber>
+		<ns2:FurtherIdentification ns2:IdentificationType="FN">FBNR1252</ns2:FurtherIdentification>
+		<ns2:FurtherIdentification ns2:IdentificationType="FS">Wien</ns2:FurtherIdentification>
+		<ns2:FurtherIdentification ns2:IdentificationType="FBG">Wien</ns2:FurtherIdentification>
+		<ns2:Address>
+			<ns2:AddressIdentifier ns2:AddressIdentifierType="GLN">GLN00010</ns2:AddressIdentifier>
+			<ns2:AddressIdentifier ns2:AddressIdentifierType="DUNS">DUNS102010</ns2:AddressIdentifier>
+			<ns2:Name>Rechnungssteller GmbH</ns2:Name>
+			<ns2:Street>Rechnungsstellerstrasse 25</ns2:Street>
+			<ns2:Town>Wien</ns2:Town>
+			<ns2:ZIP>1020</ns2:ZIP>
+			<ns2:Country>AT</ns2:Country>
+			<ns2:Phone>0043123123123</ns2:Phone>
+			<ns2:Email>office@rechnungssteller.at</ns2:Email>
+			<ns2:Contact>Frau Kontakt </ns2:Contact>
+		</ns2:Address>
+		<ns2:InvoiceRecipientsBillerID>LF12345</ns2:InvoiceRecipientsBillerID>
+	</ns2:Biller>
+	<ns2:InvoiceRecipient>
+		<ns2:VATIdentificationNumber>00000000</ns2:VATIdentificationNumber>
+		<ns2:Address>
+			<ns2:Name>Rechnungsempfänger GmbH</ns2:Name>
+			<ns2:Street>Rechnungsempfänger 63</ns2:Street>
+			<ns2:Town>Wien</ns2:Town>
+			<ns2:ZIP>1160</ns2:ZIP>
+			<ns2:Country>AT</ns2:Country>
+			<ns2:Email>office@rechnungsempfaenger.at</ns2:Email>
+			<ns2:Contact/>
+		</ns2:Address>
+	</ns2:InvoiceRecipient>
+	<ns2:Details>
+		<ns2:ItemList>
+			<ns2:HeaderDescription>Maximum</ns2:HeaderDescription>
+			<ns2:ListLineItem>
+				<ns2:PositionNumber>10</ns2:PositionNumber>
+				<ns2:Description>Testartikel</ns2:Description>
+				<ns2:Quantity ns2:Unit="NPR">10</ns2:Quantity>
+				<ns2:UnitPrice ns2:BaseQuantity="1">5.00000</ns2:UnitPrice>
+				<ns2:VATRate>20</ns2:VATRate>
+				<ns2:DiscountFlag>true</ns2:DiscountFlag>
+				<ns2:ReductionAndSurchargeListLineItemDetails>
+					<ns2:SurchargeListLineItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:ReductionAndSurchargeType">
+						<ns2:BaseAmount>50.00</ns2:BaseAmount>
+						<ns2:Amount>0.00</ns2:Amount>
+						<ns2:VATRate>20</ns2:VATRate>
+					</ns2:SurchargeListLineItem>
+				</ns2:ReductionAndSurchargeListLineItemDetails>
+				<ns2:AdditionalInformation/>
+				<ns2:LineItemAmount>60.0000</ns2:LineItemAmount>
+			</ns2:ListLineItem>
+			<ns2:ListLineItem>
+				<ns2:PositionNumber>2</ns2:PositionNumber>
+				<ns2:Description>Verpackung</ns2:Description>
+				<ns2:Quantity ns2:Unit="NPR">17</ns2:Quantity>
+				<ns2:UnitPrice ns2:BaseQuantity="1">10.00000</ns2:UnitPrice>
+				<ns2:VATRate>0</ns2:VATRate>
+				<ns2:DiscountFlag>true</ns2:DiscountFlag>
+				<ns2:ReductionAndSurchargeListLineItemDetails>
+					<ns2:ReductionListLineItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:ReductionAndSurchargeType">
+						<ns2:BaseAmount>170.00</ns2:BaseAmount>
+						<ns2:Amount>-20</ns2:Amount>
+						<ns2:Comment>Großbestellung</ns2:Comment>
+						<ns2:VATRate>0</ns2:VATRate>
+					</ns2:ReductionListLineItem>
+				</ns2:ReductionAndSurchargeListLineItemDetails>
+				<ns2:AdditionalInformation/>
+				<ns2:LineItemAmount>150</ns2:LineItemAmount>
+			</ns2:ListLineItem>
+		</ns2:ItemList>
+	</ns2:Details>
+	<ns2:Tax>
+		<ns2:VAT>
+			<ns2:VATItem>
+				<ns2:TaxedAmount>150.00</ns2:TaxedAmount>
+				<ns2:VATRate>0</ns2:VATRate>
+				<ns2:Amount>0.00</ns2:Amount>
+			</ns2:VATItem>
+			<ns2:VATItem>
+				<ns2:TaxedAmount>50.00</ns2:TaxedAmount>
+				<ns2:VATRate>20</ns2:VATRate>
+				<ns2:Amount>10.00</ns2:Amount>
+			</ns2:VATItem>
+		</ns2:VAT>
+	</ns2:Tax>
+	<ns2:TotalGrossAmount>210</ns2:TotalGrossAmount>
+	<ns2:PayableAmount>210</ns2:PayableAmount>
+	<ns2:PaymentMethod>
+		<ns2:UniversalBankTransaction>
+			<ns2:BeneficiaryAccount>
+				<ns2:BIC>HJNHJNHS</ns2:BIC>
+				<ns2:IBAN>AS01201201</ns2:IBAN>
+				<ns2:BankAccountOwner>Rechnungsempfänger</ns2:BankAccountOwner>
+			</ns2:BeneficiaryAccount>
+			<ns2:PaymentReference>1001010</ns2:PaymentReference>
+		</ns2:UniversalBankTransaction>
+	</ns2:PaymentMethod>
+	<ns2:PaymentConditions>
+		<ns2:DueDate>2016-01-26</ns2:DueDate>
+		<ns2:Discount>
+			<ns2:PaymentDate>2016-01-11</ns2:PaymentDate>
+			<ns2:BaseAmount>210</ns2:BaseAmount>
+			<ns2:Percentage>10</ns2:Percentage>
+			<ns2:Amount>21.00</ns2:Amount>
+		</ns2:Discount>
+		<ns2:Discount>
+			<ns2:PaymentDate>2016-01-01</ns2:PaymentDate>
+			<ns2:BaseAmount>210</ns2:BaseAmount>
+			<ns2:Percentage>20</ns2:Percentage>
+			<ns2:Amount>42.00</ns2:Amount>
+		</ns2:Discount>
+		<ns2:Comment>Bitte pünktlich zahlen</ns2:Comment>
+	</ns2:PaymentConditions>
+</ns2:Invoice>

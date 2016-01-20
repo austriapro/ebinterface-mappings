@@ -13,7 +13,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import at.austriapro.MappingException;
-import at.austriapro.mappings.ebinterface.generated.Invoice;
+import at.austriapro.MappingFactory;
+import at.austriapro.UnmarshalException;
 import at.austriapro.mappings.zugferd.generated.CrossIndustryDocumentType;
 import at.austriapro.mappings.zugferd.generated.ObjectFactory;
 
@@ -25,8 +26,11 @@ public class DocumentTypeUtils {
 
   private static final Logger LOG = LoggerFactory.getLogger(DocumentTypeUtils.class.getName());
 
-  static JAXBContext ebInterfaceContext;
-  static Unmarshaller ebInterfaceUnmarshaller;
+  static JAXBContext ebInterfaceContext4p2;
+  static Unmarshaller ebInterfaceUnmarshaller4p2;
+
+  static JAXBContext ebInterfaceContext4p1;
+  static Unmarshaller ebInterfaceUnmarshaller4p1;
 
   static JAXBContext zugferdContext;
   static Unmarshaller zugferdUnmarshaller;
@@ -34,8 +38,13 @@ public class DocumentTypeUtils {
 
   static {
     try {
-      ebInterfaceContext = JAXBContext.newInstance(Invoice.class);
-      ebInterfaceUnmarshaller = ebInterfaceContext.createUnmarshaller();
+      ebInterfaceContext4p1 =
+          JAXBContext.newInstance(at.austriapro.mappings.ebinterface4p1.generated.Invoice.class);
+      ebInterfaceUnmarshaller4p1 = ebInterfaceContext4p1.createUnmarshaller();
+
+      ebInterfaceContext4p2 =
+          JAXBContext.newInstance(at.austriapro.mappings.ebinterface4p2.generated.Invoice.class);
+      ebInterfaceUnmarshaller4p2 = ebInterfaceContext4p2.createUnmarshaller();
 
       zugferdContext = JAXBContext.newInstance(CrossIndustryDocumentType.class);
       zugferdUnmarshaller = zugferdContext.createUnmarshaller();
@@ -47,22 +56,57 @@ public class DocumentTypeUtils {
     }
   }
 
+  public static MappingFactory.EbInterfaceMappingType getEbInterfaceType (String input) throws MappingException{
+    MappingFactory.EbInterfaceMappingType ebType;
 
-  /**
-   * Parses the given ebInterface input XML string and creates a JAX-B object
-   */
-  public static Invoice parseebInterface(String input) throws MappingException {
-
-    StringReader reader = new StringReader(input);
-    Invoice ebInterface = null;
-    try {
-      ebInterface = (Invoice) ebInterfaceUnmarshaller.unmarshal(reader);
-    } catch (JAXBException e) {
-      throw new MappingException("Unable to retrieve JAX-B object for ebInterface XML string.");
+    try{
+      at.austriapro.mappings.ebinterface4p1.generated.Invoice inv = parseebInterface4p1(input);
+      return MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1;
+    }catch(UnmarshalException ue){
+      try{
+        at.austriapro.mappings.ebinterface4p2.generated.Invoice inv = parseebInterface4p2(input);
+        return MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2;
+      }catch(UnmarshalException uex){
+        throw new MappingException("Unable to retrieve ebInterface version for ebInterface XML string.");
+      }
     }
-    return ebInterface;
   }
 
+  /**
+   * Parses the given ebInterface input XML string and creates a JAX-B object (ebInterface4p1)
+   */
+  public static at.austriapro.mappings.ebinterface4p1.generated.Invoice parseebInterface4p1(
+      String input) throws UnmarshalException {
+
+    StringReader reader = new StringReader(input);
+    at.austriapro.mappings.ebinterface4p1.generated.Invoice ebInterface4p1 = null;
+    try {
+      ebInterface4p1 =
+          (at.austriapro.mappings.ebinterface4p1.generated.Invoice) ebInterfaceUnmarshaller4p1
+              .unmarshal(reader);
+    } catch (JAXBException e) {
+      throw new UnmarshalException("Unable to retrieve JAX-B object (ebInterface4p1) for ebInterface XML string.");
+    }
+    return ebInterface4p1;
+  }
+
+  /**
+   * Parses the given ebInterface input XML string and creates a JAX-B object (ebInterface4p2)
+   */
+  public static at.austriapro.mappings.ebinterface4p2.generated.Invoice parseebInterface4p2(
+      String input) throws UnmarshalException {
+
+    StringReader reader = new StringReader(input);
+    at.austriapro.mappings.ebinterface4p2.generated.Invoice ebInterface4p2 = null;
+    try {
+      ebInterface4p2 =
+          (at.austriapro.mappings.ebinterface4p2.generated.Invoice) ebInterfaceUnmarshaller4p2
+              .unmarshal(reader);
+    } catch (JAXBException e) {
+      throw new UnmarshalException("Unable to retrieve JAX-B object (ebInterface4p2) for ebInterface XML string.");
+    }
+    return ebInterface4p2;
+  }
 
   /**
    * Parse the given ZUGFeRD input XML string and creates a JAX-B object
@@ -76,9 +120,7 @@ public class DocumentTypeUtils {
       throw new MappingException("Unable to retrieve JAX-B object for ZUGFeRD XML string.");
     }
     return zugferd;
-
   }
-
 
   /**
    * Write the ZUGFeRD JAX-B object to a byte array
@@ -96,6 +138,5 @@ public class DocumentTypeUtils {
 
     return sw.toString().getBytes();
   }
-
 
 }
