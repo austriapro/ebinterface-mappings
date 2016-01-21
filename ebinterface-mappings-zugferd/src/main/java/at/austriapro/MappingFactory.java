@@ -2,37 +2,36 @@ package at.austriapro;
 
 import java.util.EnumSet;
 
-import at.austriapro.mappings.zugferd.ZUGFeRDMapping;
+import at.austriapro.mappings.zugferd.ZUGFeRDMappingFromEbInterface4p1;
+import at.austriapro.mappings.zugferd.ZUGFeRDMappingFromEbInterface4p2;
 
 /**
  * Creates a Mapping of a given type
  */
 public class MappingFactory {
 
-
   //The currently supported mapping types
-  public enum MappingType {
+  public enum ZugferdMappingType {
     ZUGFeRD_BASIC_1p0, ZUGFeRD_COMFORT_1p0, ZUGFeRD_EXTENDED_1p0, UBL, GS1XML, FATTURAPA
-  }
+  };
 
-  ;
+  public enum EbInterfaceMappingType {
+    EBINTERFACE_4p1, EBINTERFACE_4p2
+  };
 
   //Aggregation of all ZUGFeRD sub types
-  private EnumSet<MappingType>
+  private EnumSet<ZugferdMappingType>
       ZUGFeRDTYPES =
-      EnumSet.of(MappingType.ZUGFeRD_BASIC_1p0, MappingType.ZUGFeRD_COMFORT_1p0,
-                 MappingType.ZUGFeRD_EXTENDED_1p0);
-
-  //References for singleton
-  private static Mapping zUGFeRDMapping;
+      EnumSet.of(ZugferdMappingType.ZUGFeRD_BASIC_1p0, ZugferdMappingType.ZUGFeRD_COMFORT_1p0,
+                 ZugferdMappingType.ZUGFeRD_EXTENDED_1p0);
 
   /**
    * Create a mapper of the given type
    */
-  public Mapping getMapper(MappingType mappingType) {
+  public Mapping getMapper(ZugferdMappingType zugferdMappingType, EbInterfaceMappingType ebInterfaceMappingType) {
 
-    if (ZUGFeRDTYPES.contains(mappingType)) {
-      return createZUGFeRDMapper(mappingType);
+    if (ZUGFeRDTYPES.contains(zugferdMappingType)) {
+      return createZUGFeRDMapper(zugferdMappingType, ebInterfaceMappingType);
     } else {
       throw new UnsupportedOperationException(
           "Unable to create mapper. Only ZUGFeRD supported at the moment.");
@@ -40,13 +39,16 @@ public class MappingFactory {
 
   }
 
-
   /**
    * Create a ZUGFeRD mapper
    */
-  private Mapping createZUGFeRDMapper(MappingType mappingType) {
-    if (zUGFeRDMapping == null) {
-      zUGFeRDMapping = new ZUGFeRDMapping(mappingType);
+  private Mapping createZUGFeRDMapper(ZugferdMappingType zugferdMappingType, EbInterfaceMappingType ebInterfaceMappingType) {
+    Mapping zUGFeRDMapping;
+
+    if (ebInterfaceMappingType == EbInterfaceMappingType.EBINTERFACE_4p1) {
+      zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p1(zugferdMappingType);
+    }else /*if (ebInterfaceMappingType == EbInterfaceMappingType.EBINTERFACE_4p2)*/ {
+      zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p2(zugferdMappingType);
     }
     return zUGFeRDMapping;
   }

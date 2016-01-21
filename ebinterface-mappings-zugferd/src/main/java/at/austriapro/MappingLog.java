@@ -26,7 +26,17 @@ public class MappingLog {
     StringBuilder log = new StringBuilder();
 
     for (MappingLogEntry logEntry : logEntries) {
-      log.append(logEntry.toString() + "\n");
+      log.append(logEntry.toString() + "\n\n");
+    }
+
+    return log.toString();
+  }
+
+  public String toHTML() {
+    StringBuilder log = new StringBuilder();
+
+    for (MappingLogEntry logEntry : logEntries) {
+      log.append("<p>" + logEntry.toHTML() + "</p>");
     }
 
     return log.toString();

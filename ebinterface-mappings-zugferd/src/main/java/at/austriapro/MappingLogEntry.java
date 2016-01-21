@@ -61,4 +61,13 @@ public class MappingLogEntry {
     return text.toString();
   }
 
+  public String toHTML() {
+    StringBuilder text = new StringBuilder();
+
+    text.append(logLevel.toString()).append(": ").append(message).append("<br/>").append("source: ")
+        .append(source).append("<br/>").append("destination: ").append(destination);
+
+    return text.toString();
+  }
+
 }

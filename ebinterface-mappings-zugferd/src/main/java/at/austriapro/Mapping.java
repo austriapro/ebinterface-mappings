@@ -11,9 +11,13 @@ public abstract class Mapping {
    * Performs a mapping from ebInterface to a given target format, specified by the implementing
    * class
    */
-  public abstract byte[] mapFromebInterface(String ebinterface) throws MappingException;
+  public abstract byte[] mapFromebInterface(String ebinterface) throws MappingException, UnmarshalException;
 
   public String getMappingLog() {
     return mLog.toString();
+  }
+
+  public String getMappingLogHTML() {
+    return mLog.toHTML();
   }
 }
