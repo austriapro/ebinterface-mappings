@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 import at.austriapro.mappings.zugferd.ZUGFeRDMappingFromEbInterface4p1;
 import at.austriapro.mappings.zugferd.ZUGFeRDMappingFromEbInterface4p2;
+import at.austriapro.mappings.zugferd.ZUGFeRDMappingFromEbInterface4p3;
 
 /**
  * Creates a Mapping of a given type
@@ -16,7 +17,7 @@ public class MappingFactory {
   };
 
   public enum EbInterfaceMappingType {
-    EBINTERFACE_4p1, EBINTERFACE_4p2
+    EBINTERFACE_4p1, EBINTERFACE_4p2, EBINTERFACE_4p3
   };
 
   //Aggregation of all ZUGFeRD sub types
@@ -47,8 +48,11 @@ public class MappingFactory {
 
     if (ebInterfaceMappingType == EbInterfaceMappingType.EBINTERFACE_4p1) {
       zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p1(zugferdMappingType);
-    }else /*if (ebInterfaceMappingType == EbInterfaceMappingType.EBINTERFACE_4p2)*/ {
+    }else if (ebInterfaceMappingType == EbInterfaceMappingType.EBINTERFACE_4p2) {
       zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p2(zugferdMappingType);
+    }
+    else {
+      zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p3(zugferdMappingType);
     }
     return zUGFeRDMapping;
   }

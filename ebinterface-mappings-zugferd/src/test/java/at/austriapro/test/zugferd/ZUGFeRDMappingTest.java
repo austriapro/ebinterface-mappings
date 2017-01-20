@@ -82,6 +82,7 @@ public class ZUGFeRDMappingTest {
     assert(testMapping("/ebinterface/rechnung_ebI_4.1_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
     assert(testMapping("/ebinterface/rechnung_ebI_4.2_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
     assert(testMapping("/ebinterface/rechnung_ebI_4.2_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
+    assert(testMapping("/ebinterface/rechnung_ebI_4.3_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
   }
 
   @Test
@@ -90,6 +91,7 @@ public class ZUGFeRDMappingTest {
     assert(testMapping("/ebinterface/rechnung_ebI_4.1_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
     assert(testMapping("/ebinterface/rechnung_ebI_4.2_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
     assert(testMapping("/ebinterface/rechnung_ebI_4.2_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
+    assert(testMapping("/ebinterface/rechnung_ebI_4.3_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
   }
 
   @Test
@@ -98,6 +100,7 @@ public class ZUGFeRDMappingTest {
     assert (testMapping("/ebinterface/rechnung_ebI_4.1_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
     assert (testMapping("/ebinterface/rechnung_ebI_4.2_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
     assert (testMapping("/ebinterface/rechnung_ebI_4.2_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
+    assert (testMapping("/ebinterface/rechnung_ebI_4.3_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
   }
 
   public boolean testMapping (String ebInterfacePath, MappingFactory.ZugferdMappingType level) {
@@ -135,17 +138,24 @@ public class ZUGFeRDMappingTest {
 
       if (ebType == MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1) {
         ebTypeText = "4.1";
-      }else /*if (ebType == MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2)*/ {
+      }else if (ebType == MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2) {
         ebTypeText = "4.2";
       }
+      else {
+        ebTypeText = "4.3";
+      }
 
-      LOG.info("ebInterface4p1 input version: ebInterface {}", ebTypeText);
+      LOG.info("ebInterface input version: ebInterface {}", ebTypeText);
 
       MappingFactory mf = new MappingFactory();
       Mapping zugFeRDMapping = mf.getMapper(level, ebType);
 
       //Map to ZUGFeRD Basic
       String zugferd = new String(zugFeRDMapping.mapFromebInterface(ebInterfaceXML));
+
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(zugferd);
+      }
 
       SAXSource saxSource = new SAXSource(new InputSource(
           new ByteArrayInputStream(zugferd.getBytes("UTF-8"))));

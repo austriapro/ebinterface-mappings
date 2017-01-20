@@ -33,7 +33,7 @@
            expected in the underlying XSD at the moment. Furthermore the Travis CI is not really
            able to deal with the generate-sources Maven phase and the referenced Schema files.
 -->
-        <!--
+
         <plugin>
             <artifactId>maven-resources-plugin</artifactId>
             <version>2.7</version>
@@ -57,6 +57,7 @@
                 </executions>
             </plugin>
 
+        <!--
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-xjc-plugin</artifactId>
@@ -86,6 +87,23 @@
                                         <extensionArg>-Xfluent-api</extensionArg>
                                     </extensionArgs>
                                 </xsdOption>
+
+                                <xsdOption>
+                                    <xsd>${project.build.outputDirectory}/ebInterface4p3/Invoice.xsd
+                                    </xsd>
+                                    <bindingFile>
+                                        ${project.build.outputDirectory}/ebInterface4p3/bindings.xjb
+                                    </bindingFile>
+                                    <catalog>${project.build.outputDirectory}/catalog/catalog.xml
+                                    </catalog>
+                                    <packagename>at.austriapro.mappings.ebinterface4p3.generated
+                                    </packagename>
+                                    <extension>true</extension>
+                                    <extensionArgs>
+                                        <extensionArg>-Xfluent-api</extensionArg>
+                                    </extensionArgs>
+                                </xsdOption>
+
                                 <xsdOption>
                                     <xsd>${project.build.outputDirectory}/ebInterface4p2/Invoice.xsd
                                     </xsd>
@@ -102,21 +120,21 @@
                                     </extensionArgs>
                                 </xsdOption>
 
-                        <xsdOption>
-                            <xsd>${project.build.outputDirectory}/ebInterface4p1/Invoice.xsd
-                            </xsd>
-                            <bindingFile>
-                                ${project.build.outputDirectory}/ebInterface4p1/bindings.xjb
-                            </bindingFile>
-                            <catalog>${project.build.outputDirectory}/catalog/catalog.xml
-                            </catalog>
-                            <packagename>at.austriapro.mappings.ebinterface4p1.generated
-                            </packagename>
-                            <extension>true</extension>
-                            <extensionArgs>
-                                <extensionArg>-Xfluent-api</extensionArg>
-                            </extensionArgs>
-                        </xsdOption>
+                                <xsdOption>
+                                    <xsd>${project.build.outputDirectory}/ebInterface4p1/Invoice.xsd
+                                    </xsd>
+                                    <bindingFile>
+                                        ${project.build.outputDirectory}/ebInterface4p1/bindings.xjb
+                                    </bindingFile>
+                                    <catalog>${project.build.outputDirectory}/catalog/catalog.xml
+                                    </catalog>
+                                    <packagename>at.austriapro.mappings.ebinterface4p1.generated
+                                    </packagename>
+                                    <extension>true</extension>
+                                    <extensionArgs>
+                                        <extensionArg>-Xfluent-api</extensionArg>
+                                    </extensionArgs>
+                                </xsdOption>
                             </xsdOptions>
                         </configuration>
                     </execution>
@@ -129,7 +147,8 @@
                     </dependency>
                 </dependencies>
             </plugin>
--->
+        -->
+
         </plugins>
     </build>
 </project>
