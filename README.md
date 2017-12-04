@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/austriapro/ebinterface-mappings.svg?branch=master)](https://travis-ci.org/austriapro/ebinterface-mappings)
 
-#ebInterface Mappings
+# ebInterface Mappings
 
 This project collects various document mappings, allowing to transform a given ebInterface instance to another document format and vice versa.
 
@@ -12,7 +12,7 @@ The resulting mappings may become parts of other third-party applications.
 
 Executable mappings are integrated in [ebinterface-web](https://github.com/austriapro/ebinterface-web) as well, where they may be easily used by simply uploading an ebInterface XML instance document. 
 
-##Supported mappings
+## Supported mappings
 
 Currently, the following mappings are planned.
 
@@ -23,7 +23,7 @@ Currently, the following mappings are planned.
  * FatturaPA (Italy)
  * GS1 XML (International)
  	
-##Code style
+## Code style
 
 For this project the Google code style is used. Please [download the code style file](https://code.google.com/p/google-styleguide/source/browse/trunk/intellij-java-google-style.xml) and set it in your IDE, before you commit to the repository. 
 
