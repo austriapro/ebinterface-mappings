@@ -12,7 +12,6 @@ import javax.xml.bind.JAXBElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Iterables;
 import com.helger.commons.string.StringHelper;
 import com.helger.ebinterface.builder.EbInterfaceReader;
 import com.helger.ebinterface.v43.*;
@@ -2490,7 +2489,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
   private void mapRelatedDocuments(CrossIndustryDocumentType zugferd,
                                    List<Ebi43RelatedDocumentType> relatedDocuments) {
     //ebInterface: /Invoice/RelatedDocuments
-    if (Iterables.isEmpty(relatedDocuments)) {
+    if (relatedDocuments.isEmpty ()) {
       LOG.debug("No related documents specified in ebInterface - continuing");
       return;
     }
@@ -2795,8 +2794,8 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
   private SupplyChainTradeAgreementType getSupplyChainTradeAgreement(
       CrossIndustryDocumentType zugferd) {
 
-    if (Iterables.isEmpty(zugferd.getSpecifiedSupplyChainTradeTransaction()
-                              .getApplicableSupplyChainTradeAgreement())) {
+    if (zugferd.getSpecifiedSupplyChainTradeTransaction()
+                              .getApplicableSupplyChainTradeAgreement().isEmpty ()) {
       SupplyChainTradeAgreementType
           supplyChainTradeAgreementType =
           new SupplyChainTradeAgreementType();
