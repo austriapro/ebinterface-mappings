@@ -24,6 +24,7 @@
         <logback-version>1.2.3</logback-version>
         <jodatime-version>2.10.3</jodatime-version>
         <junit-version>4.12</junit-version>
+        <ph-ebinterface-version>6.1.1</ph-ebinterface-version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -65,6 +66,12 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${jodatime-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.helger</groupId>
+            <artifactId>ph-ebinterface</artifactId>
+            <version>${ph-ebinterface-version}</version>
         </dependency>
 
         <!--Test dependencies-->
