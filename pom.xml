@@ -18,13 +18,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <apache-commons-io-version>2.4</apache-commons-io-version>
-        <apache-commons-lang-version>3.4</apache-commons-lang-version>
+        <apache-commons-io-version>2.6</apache-commons-io-version>
+        <apache-commons-lang-version>3.9</apache-commons-lang-version>
         <guava-version>18.0</guava-version>
-        <logback-version>1.0.13</logback-version>
-        <jodatime-version>2.8</jodatime-version>
+        <logback-version>1.2.3</logback-version>
+        <jodatime-version>2.10.3</jodatime-version>
         <junit-version>4.12</junit-version>
-        <ph-ebinterface-version>4.0.0</ph-ebinterface-version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
