@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
@@ -110,7 +111,7 @@ public class ZUGFeRDMappingTest {
       ebInterfaceXML =
           IOUtils.toString(
               ZUGFeRDMappingTest.class.getResourceAsStream(ebInterfacePath),
-              "UTF-8");
+              StandardCharsets.UTF_8);
 
       if (ebInterfaceXML == null || ebInterfaceXML.length() == 0){
         throw new Exception("ebInterfaceXML is empty, mapping is not possible.");

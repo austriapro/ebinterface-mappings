@@ -1,9 +1,7 @@
 package at.austriapro.mappings.zugferd;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.security.Signature;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,6 @@ import com.helger.xsds.xmldsig.SignatureType;
 import at.austriapro.Mapping;
 import at.austriapro.MappingException;
 import at.austriapro.MappingFactory;
-import at.austriapro.UnmarshalException;
 import at.austriapro.mappings.zugferd.generated.*;
 import at.austriapro.utils.DocumentTypeUtils;
 import at.austriapro.utils.ISO639Util;
@@ -53,7 +50,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
    * Perform a mapping from ebInterface to ZUGFeRD
    */
   @Override
-  public byte[] mapFromebInterface(String ebinterface) throws MappingException, UnmarshalException {
+  public byte[] mapFromebInterface(String ebinterface) throws MappingException {
 
     //Retrieve an Invoice object
     Ebi43InvoiceType invoice = EbInterfaceReader.ebInterface43 ().read(ebinterface);

@@ -20,7 +20,6 @@ import com.helger.xsds.xmldsig.SignatureType;
 import at.austriapro.Mapping;
 import at.austriapro.MappingException;
 import at.austriapro.MappingFactory;
-import at.austriapro.UnmarshalException;
 import at.austriapro.mappings.zugferd.generated.*;
 import at.austriapro.utils.DocumentTypeUtils;
 import at.austriapro.utils.ISO639Util;
@@ -50,7 +49,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
    * Perform a mapping from ebInterface to ZUGFeRD
    */
   @Override
-  public byte[] mapFromebInterface(String ebinterface) throws MappingException, UnmarshalException {
+  public byte[] mapFromebInterface(String ebinterface) throws MappingException {
 
     //Retrieve an Invoice object
     Ebi42InvoiceType invoice = EbInterfaceReader .ebInterface42 ().read(ebinterface);
