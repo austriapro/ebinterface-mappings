@@ -1,15 +1,5 @@
 package at.austriapro.test.zugferd;
 
-import net.sf.saxon.Controller;
-import net.sf.saxon.serialize.MessageWarner;
-
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.StringReader;
@@ -31,11 +21,21 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import com.helger.commons.io.stream.StreamHelper;
+
 import at.austriapro.Mapping;
 import at.austriapro.MappingErrorHandler;
 import at.austriapro.MappingErrorListener;
 import at.austriapro.MappingFactory;
 import at.austriapro.utils.DocumentTypeUtils;
+import net.sf.saxon.Controller;
+import net.sf.saxon.serialize.MessageWarner;
 
 /**
  * Test for ZUGFeRD mapping
@@ -70,7 +70,7 @@ public class ZUGFeRDMappingTest {
       Source xsl = new StreamSource(new File(
           ZUGFeRDMappingTest.class
               .getResource("/zugferd1p0/ZUGFeRD_1p0-compiled.xsl").toURI()));
-      TransformerFactory transFactory = net.sf.saxon.TransformerFactoryImpl.newInstance();
+      TransformerFactory transFactory = TransformerFactory.newInstance();
       templates = transFactory.newTemplates(xsl);
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
@@ -109,7 +109,7 @@ public class ZUGFeRDMappingTest {
     //Read an eb4p2 sample
     try {
       ebInterfaceXML =
-          IOUtils.toString(
+          StreamHelper.getAllBytesAsString (
               ZUGFeRDMappingTest.class.getResourceAsStream(ebInterfacePath),
               StandardCharsets.UTF_8);
 
