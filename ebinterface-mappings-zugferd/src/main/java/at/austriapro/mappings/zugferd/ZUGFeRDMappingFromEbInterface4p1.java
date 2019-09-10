@@ -8,10 +8,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.lang3.BooleanUtils;
-import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1878,7 +1875,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
     //ebInterface: /Invoice/@IsDuplicate
     //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/CopyIndicator
     if (MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0.equals(zugferdMappingType)) {
-      if (BooleanUtils.isTrue(invoice.isIsDuplicate())) {
+      if (invoice.isIsDuplicate () != null && invoice.isIsDuplicate().booleanValue ()) {
         zugferd.getHeaderExchangedDocument()
             .withCopyIndicator(new IndicatorType().withIndicator(Boolean.TRUE));
       }

@@ -14,11 +14,11 @@ public class MappingFactory {
   //The currently supported mapping types
   public enum ZugferdMappingType {
     ZUGFeRD_BASIC_1p0, ZUGFeRD_COMFORT_1p0, ZUGFeRD_EXTENDED_1p0, UBL, GS1XML, FATTURAPA
-  };
+  }
 
   public enum EbInterfaceMappingType {
     EBINTERFACE_4p1, EBINTERFACE_4p2, EBINTERFACE_4p3
-  };
+  }
 
   //Aggregation of all ZUGFeRD sub types
   private EnumSet<ZugferdMappingType>
