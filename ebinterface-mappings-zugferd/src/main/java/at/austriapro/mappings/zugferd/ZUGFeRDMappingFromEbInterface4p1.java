@@ -27,12 +27,11 @@ import at.austriapro.utils.ISO639Util;
  * Performs mappings from/to ZUGFeRD
  */
 public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
+  private static final Logger LOG = LoggerFactory.getLogger(ZUGFeRDMappingFromEbInterface4p1.class);
 
   private MappingFactory.ZugferdMappingType zugferdMappingType;
   private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern ("uuuuMMdd");
   private final DateTimeFormatter issueDateTimeFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss");
-
-  private static final Logger LOG = LoggerFactory.getLogger(ZUGFeRDMappingFromEbInterface4p1.class.getName());
 
   public ZUGFeRDMappingFromEbInterface4p1(MappingFactory.ZugferdMappingType zugferdMappingType) {
     this.zugferdMappingType = zugferdMappingType;

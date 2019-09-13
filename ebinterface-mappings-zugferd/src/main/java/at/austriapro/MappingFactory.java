@@ -15,11 +15,11 @@ public class MappingFactory {
 
   //The currently supported mapping types
   public enum ZugferdMappingType {
-    ZUGFeRD_BASIC_1p0, ZUGFeRD_COMFORT_1p0, ZUGFeRD_EXTENDED_1p0, UBL, GS1XML, FATTURAPA
+    ZUGFeRD_BASIC_1p0, ZUGFeRD_COMFORT_1p0, ZUGFeRD_EXTENDED_1p0
   }
 
   //Aggregation of all ZUGFeRD sub types
-  private EnumSet<ZugferdMappingType>
+  private static final EnumSet<ZugferdMappingType>
       ZUGFeRDTYPES =
       EnumSet.of(ZugferdMappingType.ZUGFeRD_BASIC_1p0, ZugferdMappingType.ZUGFeRD_COMFORT_1p0,
                  ZugferdMappingType.ZUGFeRD_EXTENDED_1p0);
@@ -42,19 +42,12 @@ public class MappingFactory {
    * Create a ZUGFeRD mapper
    */
   private Mapping createZUGFeRDMapper(ZugferdMappingType zugferdMappingType, EEbInterfaceVersion ebInterfaceMappingType) {
-    Mapping zUGFeRDMapping;
-
-    if (ebInterfaceMappingType == EEbInterfaceVersion.V41) {
-      zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p1(zugferdMappingType);
-    }else if (ebInterfaceMappingType == EEbInterfaceVersion.V42) {
-      zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p2(zugferdMappingType);
+    switch (ebInterfaceMappingType) {
+      case V41: return new ZUGFeRDMappingFromEbInterface4p1(zugferdMappingType);
+      case V42: return new ZUGFeRDMappingFromEbInterface4p2(zugferdMappingType);
+      case V43: return new ZUGFeRDMappingFromEbInterface4p3(zugferdMappingType);
     }
-    else if (ebInterfaceMappingType == EEbInterfaceVersion.V43) {
-      zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p3(zugferdMappingType);
-    }
-    else
-      zUGFeRDMapping = null;
-    return zUGFeRDMapping;
+    return null;
   }
 
 }
