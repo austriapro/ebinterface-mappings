@@ -3,6 +3,7 @@ package at.austriapro.utils;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -12,11 +13,11 @@ import javax.xml.bind.Unmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.ebinterface.EEbInterfaceVersion;
 import com.helger.ebinterface.builder.EbInterfaceReader;
 import com.helger.jaxb.validation.CollectingValidationEventHandler;
 
 import at.austriapro.MappingException;
-import at.austriapro.MappingFactory;
 import at.austriapro.mappings.zugferd.generated.CrossIndustryDocumentType;
 import at.austriapro.mappings.zugferd.generated.ObjectFactory;
 
@@ -44,14 +45,16 @@ public class DocumentTypeUtils {
     }
   }
 
-  public static MappingFactory.EbInterfaceMappingType getEbInterfaceType (String input) throws MappingException{
+  @Nonnull
+  public static EEbInterfaceVersion getEbInterfaceType (byte[] input) throws MappingException{
     CollectingValidationEventHandler aVEH = new CollectingValidationEventHandler ();
     if (EbInterfaceReader.ebInterface41 ().setValidationEventHandler (aVEH).read (input) != null) 
-      return MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1;
+      return EEbInterfaceVersion.V41;
     if (EbInterfaceReader.ebInterface42 ().setValidationEventHandler (aVEH).read (input) != null) 
-      return MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2;
+      return EEbInterfaceVersion.V42;
     if (EbInterfaceReader.ebInterface43 ().setValidationEventHandler (aVEH).read (input) != null) 
-      return MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p3;
+      return EEbInterfaceVersion.V43;
+    // Other mappings are not supported
 
     throw new MappingException("Unable to retrieve ebInterface version for ebInterface XML string.");
   }

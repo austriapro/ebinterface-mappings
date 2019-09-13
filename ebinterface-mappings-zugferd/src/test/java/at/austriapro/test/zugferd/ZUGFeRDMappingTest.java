@@ -28,6 +28,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.helger.commons.io.stream.StreamHelper;
+import com.helger.ebinterface.EEbInterfaceVersion;
 
 import at.austriapro.Mapping;
 import at.austriapro.MappingErrorHandler;
@@ -105,15 +106,14 @@ public class ZUGFeRDMappingTest {
   }
 
   public boolean testMapping (String ebInterfacePath, MappingFactory.ZugferdMappingType level) {
-    String ebInterfaceXML;
+    byte[] ebInterfaceXML;
     //Read an eb4p2 sample
     try {
       ebInterfaceXML =
-          StreamHelper.getAllBytesAsString (
-              ZUGFeRDMappingTest.class.getResourceAsStream(ebInterfacePath),
-              StandardCharsets.UTF_8);
+          StreamHelper.getAllBytes (
+              ZUGFeRDMappingTest.class.getResourceAsStream(ebInterfacePath));
 
-      if (ebInterfaceXML == null || ebInterfaceXML.length() == 0){
+      if (ebInterfaceXML == null || ebInterfaceXML.length == 0){
         throw new Exception("ebInterfaceXML is empty, mapping is not possible.");
       }
     } catch (Exception e) {
@@ -133,18 +133,9 @@ public class ZUGFeRDMappingTest {
     }
 
     try {
-      MappingFactory.EbInterfaceMappingType ebType = DocumentTypeUtils.getEbInterfaceType(ebInterfaceXML);
+      EEbInterfaceVersion ebType = DocumentTypeUtils.getEbInterfaceType(ebInterfaceXML);
 
-      String ebTypeText;
-
-      if (ebType == MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1) {
-        ebTypeText = "4.1";
-      }else if (ebType == MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2) {
-        ebTypeText = "4.2";
-      }
-      else {
-        ebTypeText = "4.3";
-      }
+      final String ebTypeText = ebType.getVersion ().getAsString (false, true);
 
       LOG.info("ebInterface input version: ebInterface {}", ebTypeText);
 
@@ -159,7 +150,7 @@ public class ZUGFeRDMappingTest {
       }
 
       SAXSource saxSource = new SAXSource(new InputSource(
-          new ByteArrayInputStream(zugferd.getBytes("UTF-8"))));
+          new ByteArrayInputStream(zugferd.getBytes(StandardCharsets.UTF_8))));
 
       MappingErrorHandler eh = new MappingErrorHandler();
       validator.setErrorHandler(eh);

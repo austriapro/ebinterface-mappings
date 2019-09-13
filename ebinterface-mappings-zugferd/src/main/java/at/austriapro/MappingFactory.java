@@ -2,6 +2,8 @@ package at.austriapro;
 
 import java.util.EnumSet;
 
+import com.helger.ebinterface.EEbInterfaceVersion;
+
 import at.austriapro.mappings.zugferd.ZUGFeRDMappingFromEbInterface4p1;
 import at.austriapro.mappings.zugferd.ZUGFeRDMappingFromEbInterface4p2;
 import at.austriapro.mappings.zugferd.ZUGFeRDMappingFromEbInterface4p3;
@@ -16,10 +18,6 @@ public class MappingFactory {
     ZUGFeRD_BASIC_1p0, ZUGFeRD_COMFORT_1p0, ZUGFeRD_EXTENDED_1p0, UBL, GS1XML, FATTURAPA
   }
 
-  public enum EbInterfaceMappingType {
-    EBINTERFACE_4p1, EBINTERFACE_4p2, EBINTERFACE_4p3
-  }
-
   //Aggregation of all ZUGFeRD sub types
   private EnumSet<ZugferdMappingType>
       ZUGFeRDTYPES =
@@ -29,7 +27,7 @@ public class MappingFactory {
   /**
    * Create a mapper of the given type
    */
-  public Mapping getMapper(ZugferdMappingType zugferdMappingType, EbInterfaceMappingType ebInterfaceMappingType) {
+  public Mapping getMapper(ZugferdMappingType zugferdMappingType, EEbInterfaceVersion ebInterfaceMappingType) {
 
     if (ZUGFeRDTYPES.contains(zugferdMappingType)) {
       return createZUGFeRDMapper(zugferdMappingType, ebInterfaceMappingType);
@@ -43,17 +41,19 @@ public class MappingFactory {
   /**
    * Create a ZUGFeRD mapper
    */
-  private Mapping createZUGFeRDMapper(ZugferdMappingType zugferdMappingType, EbInterfaceMappingType ebInterfaceMappingType) {
+  private Mapping createZUGFeRDMapper(ZugferdMappingType zugferdMappingType, EEbInterfaceVersion ebInterfaceMappingType) {
     Mapping zUGFeRDMapping;
 
-    if (ebInterfaceMappingType == EbInterfaceMappingType.EBINTERFACE_4p1) {
+    if (ebInterfaceMappingType == EEbInterfaceVersion.V41) {
       zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p1(zugferdMappingType);
-    }else if (ebInterfaceMappingType == EbInterfaceMappingType.EBINTERFACE_4p2) {
+    }else if (ebInterfaceMappingType == EEbInterfaceVersion.V42) {
       zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p2(zugferdMappingType);
     }
-    else {
+    else if (ebInterfaceMappingType == EEbInterfaceVersion.V43) {
       zUGFeRDMapping = new ZUGFeRDMappingFromEbInterface4p3(zugferdMappingType);
     }
+    else
+      zUGFeRDMapping = null;
     return zUGFeRDMapping;
   }
 

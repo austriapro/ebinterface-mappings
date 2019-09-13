@@ -42,7 +42,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
    * Perform a mapping from ebInterface to ZUGFeRD
    */
   @Override
-  public byte[] mapFromebInterface(String ebinterface) throws MappingException {
+  public byte[] mapFromebInterface(byte[] ebinterface) throws MappingException {
 
     //Retrieve an Invoice object
     Ebi41InvoiceType invoice = EbInterfaceReader.ebInterface41 ().read (ebinterface);
@@ -1591,7 +1591,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
                 Ebi41AdditionalInformationType ai = item.getAdditionalInformation();
 
                 String typeCode, description, unitCode, value;
-                BigDecimal valueMeasure = null;
+                BigDecimal valueMeasure;
 
                 //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/SerialNumber
                 if (ai.getSerialNumber() != null && ai.getSerialNumber().size() > 0) {

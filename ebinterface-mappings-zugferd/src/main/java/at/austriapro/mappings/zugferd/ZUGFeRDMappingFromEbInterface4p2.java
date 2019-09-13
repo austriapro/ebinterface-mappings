@@ -42,10 +42,10 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
    * Perform a mapping from ebInterface to ZUGFeRD
    */
   @Override
-  public byte[] mapFromebInterface(String ebinterface) throws MappingException {
+  public byte[] mapFromebInterface(byte[] ebinterface) throws MappingException {
 
     //Retrieve an Invoice object
-    Ebi42InvoiceType invoice = EbInterfaceReader .ebInterface42 ().read(ebinterface);
+    Ebi42InvoiceType invoice = EbInterfaceReader.ebInterface42 ().read(ebinterface);
 
     //Perform mapping
     CrossIndustryDocumentType zugferd = performMapping(invoice);

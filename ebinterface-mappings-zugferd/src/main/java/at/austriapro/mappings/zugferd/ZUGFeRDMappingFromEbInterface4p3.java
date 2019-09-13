@@ -49,7 +49,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
    * Perform a mapping from ebInterface to ZUGFeRD
    */
   @Override
-  public byte[] mapFromebInterface(String ebinterface) throws MappingException {
+  public byte[] mapFromebInterface(byte[] ebinterface) throws MappingException {
 
     //Retrieve an Invoice object
     Ebi43InvoiceType invoice = EbInterfaceReader.ebInterface43 ().read(ebinterface);
