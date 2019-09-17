@@ -1,5 +1,7 @@
 package at.austriapro.utils;
 
+import java.util.Locale;
+
 import com.google.common.collect.HashBiMap;
 
 /**
@@ -899,16 +901,17 @@ public class ISO639Util {
   }
 
   public static String convertISO639_2ToISO639_1(String langISO639_2) {
-    if (ISO639_1_2.containsKey(langISO639_2.toUpperCase())) {
-      return ISO639_1_2.get(langISO639_2.toUpperCase());
+    final String sUnified = langISO639_2.toUpperCase(Locale.US);
+    if (ISO639_1_2.containsKey(sUnified)) {
+      return ISO639_1_2.get(sUnified);
     }
 
-    if (ISO639_1_2_B.containsKey(langISO639_2.toUpperCase())) {
-      return ISO639_1_2_B.get(langISO639_2.toUpperCase());
+    if (ISO639_1_2_B.containsKey(sUnified)) {
+      return ISO639_1_2_B.get(sUnified);
     }
 
-    if (ISO639_1_2_T.containsKey(langISO639_2.toUpperCase())) {
-      return ISO639_1_2_T.get(langISO639_2.toUpperCase());
+    if (ISO639_1_2_T.containsKey(sUnified)) {
+      return ISO639_1_2_T.get(sUnified);
     }
 
     //Language not supported
@@ -916,12 +919,13 @@ public class ISO639Util {
   }
 
   public static String convertISO639_1ToISO639_2Bibliographic(String langISO639_1) {
-    if (ISO639_1_2_B.containsValue(langISO639_1.toUpperCase())) {
-      return ISO639_1_2_B.inverse().get(langISO639_1.toUpperCase());
+    final String sUnified = langISO639_1.toUpperCase(Locale.US);
+    if (ISO639_1_2_B.containsValue(sUnified)) {
+      return ISO639_1_2_B.inverse().get(sUnified);
     }
 
-    if (ISO639_1_2.containsValue(langISO639_1.toUpperCase())) {
-      return ISO639_1_2.inverse().get(langISO639_1.toUpperCase());
+    if (ISO639_1_2.containsValue(sUnified)) {
+      return ISO639_1_2.inverse().get(sUnified);
     }
 
     //Language not supported
@@ -929,12 +933,13 @@ public class ISO639Util {
   }
 
   public static String convertISO639_1ToISO639_2Terminology(String langISO639_1) {
-    if (ISO639_1_2_T.containsValue(langISO639_1.toUpperCase())) {
-      return ISO639_1_2_T.inverse().get(langISO639_1.toUpperCase());
+    final String sUnified = langISO639_1.toUpperCase(Locale.US);
+    if (ISO639_1_2_T.containsValue(sUnified)) {
+      return ISO639_1_2_T.inverse().get(sUnified);
     }
 
-    if (ISO639_1_2.containsValue(langISO639_1.toUpperCase())) {
-      return ISO639_1_2.inverse().get(langISO639_1.toUpperCase());
+    if (ISO639_1_2.containsValue(sUnified)) {
+      return ISO639_1_2.inverse().get(sUnified);
     }
 
     //Language not supported

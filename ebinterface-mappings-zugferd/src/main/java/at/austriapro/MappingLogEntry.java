@@ -52,6 +52,7 @@ public class MappingLogEntry {
     this.logLevel = logLevel;
   }
 
+  @Override
   public String toString() {
     StringBuilder text = new StringBuilder();
 

@@ -1,14 +1,15 @@
 package at.austriapro;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Paul on 16.10.2015.
  */
 public class MappingLog {
 
-  MappingLogLevel appliedLogLevel = MappingLogLevel.DEBUG;
-  ArrayList<MappingLogEntry> logEntries = new ArrayList();
+  final MappingLogLevel appliedLogLevel;
+  final List<MappingLogEntry> logEntries = new ArrayList<>();
 
   public MappingLog(MappingLogLevel appliedLogLevel) {
     this.appliedLogLevel = appliedLogLevel;
@@ -18,10 +19,11 @@ public class MappingLog {
     return appliedLogLevel;
   }
 
-  public ArrayList<MappingLogEntry> getLogEntries() {
+  public List<MappingLogEntry> getLogEntries() {
     return logEntries;
   }
 
+  @Override
   public String toString() {
     StringBuilder log = new StringBuilder();
 
@@ -47,14 +49,14 @@ public class MappingLog {
 
     if (appliedLogLevel.equals(MappingLogLevel.DEBUG)) {
       insertIntoLog = true;
-    } else if (appliedLogLevel.equals(MappingLogLevel.INFO) && !entry
+    } else if (appliedLogLevel.equals(MappingLogLevel.INFO) && !entry.logLevel
         .equals(MappingLogLevel.DEBUG)) {
       insertIntoLog = true;
-    } else if (appliedLogLevel.equals(MappingLogLevel.WARNING) && !entry
-        .equals(MappingLogLevel.DEBUG) && !entry.equals(MappingLogLevel.INFO)) {
+    } else if (appliedLogLevel.equals(MappingLogLevel.WARNING) && !entry.logLevel
+        .equals(MappingLogLevel.DEBUG) && !entry.logLevel.equals(MappingLogLevel.INFO)) {
       insertIntoLog = true;
 
-    } else if (appliedLogLevel.equals(MappingLogLevel.ERROR) && entry
+    } else if (appliedLogLevel.equals(MappingLogLevel.ERROR) && entry.logLevel
         .equals(MappingLogLevel.ERROR)) {
       insertIntoLog = true;
     }

@@ -1,20 +1,11 @@
 package at.austriapro.test.zugferd;
 
-import net.sf.saxon.Controller;
-import net.sf.saxon.serialize.MessageWarner;
-
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
@@ -30,11 +21,22 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import com.helger.commons.io.stream.StreamHelper;
+import com.helger.ebinterface.EEbInterfaceVersion;
+
 import at.austriapro.Mapping;
 import at.austriapro.MappingErrorHandler;
 import at.austriapro.MappingErrorListener;
 import at.austriapro.MappingFactory;
 import at.austriapro.utils.DocumentTypeUtils;
+import net.sf.saxon.Controller;
+import net.sf.saxon.serialize.MessageWarner;
 
 /**
  * Test for ZUGFeRD mapping
@@ -69,7 +71,7 @@ public class ZUGFeRDMappingTest {
       Source xsl = new StreamSource(new File(
           ZUGFeRDMappingTest.class
               .getResource("/zugferd1p0/ZUGFeRD_1p0-compiled.xsl").toURI()));
-      TransformerFactory transFactory = net.sf.saxon.TransformerFactoryImpl.newInstance();
+      TransformerFactory transFactory = TransformerFactory.newInstance();
       templates = transFactory.newTemplates(xsl);
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
@@ -104,15 +106,14 @@ public class ZUGFeRDMappingTest {
   }
 
   public boolean testMapping (String ebInterfacePath, MappingFactory.ZugferdMappingType level) {
-    String ebInterfaceXML;
+    byte[] ebInterfaceXML;
     //Read an eb4p2 sample
     try {
       ebInterfaceXML =
-          IOUtils.toString(
-              ZUGFeRDMappingTest.class.getResourceAsStream(ebInterfacePath),
-              "UTF-8");
+          StreamHelper.getAllBytes (
+              ZUGFeRDMappingTest.class.getResourceAsStream(ebInterfacePath));
 
-      if (ebInterfaceXML == null || ebInterfaceXML.length() == 0){
+      if (ebInterfaceXML == null || ebInterfaceXML.length == 0){
         throw new Exception("ebInterfaceXML is empty, mapping is not possible.");
       }
     } catch (Exception e) {
@@ -132,18 +133,9 @@ public class ZUGFeRDMappingTest {
     }
 
     try {
-      MappingFactory.EbInterfaceMappingType ebType = DocumentTypeUtils.getEbInterfaceType(ebInterfaceXML);
+      EEbInterfaceVersion ebType = DocumentTypeUtils.getEbInterfaceType(ebInterfaceXML);
 
-      String ebTypeText;
-
-      if (ebType == MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1) {
-        ebTypeText = "4.1";
-      }else if (ebType == MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2) {
-        ebTypeText = "4.2";
-      }
-      else {
-        ebTypeText = "4.3";
-      }
+      final String ebTypeText = ebType.getVersion ().getAsString (false, true);
 
       LOG.info("ebInterface input version: ebInterface {}", ebTypeText);
 
@@ -158,7 +150,7 @@ public class ZUGFeRDMappingTest {
       }
 
       SAXSource saxSource = new SAXSource(new InputSource(
-          new ByteArrayInputStream(zugferd.getBytes("UTF-8"))));
+          new ByteArrayInputStream(zugferd.getBytes(StandardCharsets.UTF_8))));
 
       MappingErrorHandler eh = new MappingErrorHandler();
       validator.setErrorHandler(eh);
