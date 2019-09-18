@@ -1,32 +1,44 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
     <groupId>at.austriapro</groupId>
-    <artifactId>ebinterface-mappings-zugferd</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>ebinterface-mappings-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>ebinterface to ZUGFeRD mapping</name>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
 
-    <parent>
-        <groupId>at.austriapro</groupId>
-        <artifactId>ebinterface-mappings</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+  <groupId>at.austriapro</groupId>
+  <artifactId>ebinterface-mappings-zugferd</artifactId>
+  <packaging>jar</packaging>
+  <name>ebinterface to ZUGFeRD mapping</name>
 
-    <dependencies>
-        <!-- Saxon XSLT processing for Java -->
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>Saxon-HE</artifactId>
-            <version>9.5.1-6</version>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
 
-    </dependencies>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-ebinterface</artifactId>
+    </dependency>
 
-    <build>
+    <!-- Saxon XSLT processing for Java -->
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>Saxon-HE</artifactId>
+      <version>9.9.1-5</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
+  <build>
     <plugins>
         <!--
            We only execute the generation of the JAX-B classes once, since no change is to be
@@ -34,27 +46,27 @@
            able to deal with the generate-sources Maven phase and the referenced Schema files.
 -->
 
-        <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-                <execution>
-                    <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/classes</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/classes</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
         <!--
             <plugin>
@@ -100,6 +112,6 @@
             </plugin>
         -->
 
-        </plugins>
-    </build>
+    </plugins>
+  </build>
 </project>

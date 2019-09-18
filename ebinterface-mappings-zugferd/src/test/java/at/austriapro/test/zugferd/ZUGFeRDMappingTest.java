@@ -35,160 +35,200 @@ import at.austriapro.MappingErrorHandler;
 import at.austriapro.MappingErrorListener;
 import at.austriapro.MappingFactory;
 import at.austriapro.utils.DocumentTypeUtils;
-import net.sf.saxon.Controller;
+import net.sf.saxon.jaxp.TransformerImpl;
 import net.sf.saxon.serialize.MessageWarner;
 
 /**
  * Test for ZUGFeRD mapping
  */
-public class ZUGFeRDMappingTest {
+public class ZUGFeRDMappingTest
+{
 
-
-  private static final Logger LOG = LoggerFactory.getLogger(ZUGFeRDMappingTest.class.getName());
+  private static final Logger LOG = LoggerFactory.getLogger (ZUGFeRDMappingTest.class.getName ());
 
   private static Validator validator;
 
   private static Templates templates;
 
-  static {
+  static
+  {
 
-    SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    final SchemaFactory factory = SchemaFactory.newInstance (XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
     Schema schema = null;
-    try {
-      schema = factory.newSchema(new StreamSource(new File(
-          ZUGFeRDMappingTest.class
-              .getResource("/zugferd1p0/ZUGFeRD1p0.xsd").toURI())));
-    } catch (SAXException e) {
-      LOG.error(e.getMessage(), e);
-    } catch (URISyntaxException e) {
-      LOG.error(e.getMessage(), e);
+    try
+    {
+      schema = factory.newSchema (new StreamSource (new File (ZUGFeRDMappingTest.class.getResource ("/zugferd1p0/ZUGFeRD1p0.xsd")
+                                                                                      .toURI ())));
+    }
+    catch (final SAXException e)
+    {
+      LOG.error (e.getMessage (), e);
+    }
+    catch (final URISyntaxException e)
+    {
+      LOG.error (e.getMessage (), e);
     }
 
-    validator = schema.newValidator();
+    validator = schema.newValidator ();
 
-    try {
-      Source xsl = new StreamSource(new File(
-          ZUGFeRDMappingTest.class
-              .getResource("/zugferd1p0/ZUGFeRD_1p0-compiled.xsl").toURI()));
-      TransformerFactory transFactory = TransformerFactory.newInstance();
-      templates = transFactory.newTemplates(xsl);
-    } catch (Exception e) {
-      LOG.error(e.getMessage(), e);
+    try
+    {
+      final Source xsl = new StreamSource (new File (ZUGFeRDMappingTest.class.getResource ("/zugferd1p0/ZUGFeRD_1p0-compiled.xsl")
+                                                                             .toURI ()));
+      final TransformerFactory transFactory = TransformerFactory.newInstance ();
+      templates = transFactory.newTemplates (xsl);
+    }
+    catch (final Exception e)
+    {
+      LOG.error (e.getMessage (), e);
     }
   }
 
   @Test
-  public void testMappingBasic(){
-    assert(testMapping("/ebinterface/rechnung_ebI_4.1_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
-    assert(testMapping("/ebinterface/rechnung_ebI_4.1_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
-    assert(testMapping("/ebinterface/rechnung_ebI_4.2_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
-    assert(testMapping("/ebinterface/rechnung_ebI_4.2_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
-    assert(testMapping("/ebinterface/rechnung_ebI_4.3_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
+  public void testMappingBasic ()
+  {
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.1_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.1_sample_2.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.2_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.2_sample_2.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.3_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0));
   }
 
   @Test
-  public void testMappingComfort(){
-    assert(testMapping("/ebinterface/rechnung_ebI_4.1_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
-    assert(testMapping("/ebinterface/rechnung_ebI_4.1_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
-    assert(testMapping("/ebinterface/rechnung_ebI_4.2_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
-    assert(testMapping("/ebinterface/rechnung_ebI_4.2_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
-    assert(testMapping("/ebinterface/rechnung_ebI_4.3_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
+  public void testMappingComfort ()
+  {
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.1_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.1_sample_2.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.2_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.2_sample_2.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.3_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0));
   }
 
   @Test
-  public void testMappingExtended(){
-    assert (testMapping("/ebinterface/rechnung_ebI_4.1_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
-    assert (testMapping("/ebinterface/rechnung_ebI_4.1_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
-    assert (testMapping("/ebinterface/rechnung_ebI_4.2_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
-    assert (testMapping("/ebinterface/rechnung_ebI_4.2_sample_2.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
-    assert (testMapping("/ebinterface/rechnung_ebI_4.3_sample_1.xml", MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
+  public void testMappingExtended ()
+  {
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.1_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.1_sample_2.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.2_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.2_sample_2.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
+    assert (testMapping ("/ebinterface/rechnung_ebI_4.3_sample_1.xml",
+                         MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0));
   }
 
-  public boolean testMapping (String ebInterfacePath, MappingFactory.ZugferdMappingType level) {
-    byte[] ebInterfaceXML;
-    //Read an eb4p2 sample
-    try {
-      ebInterfaceXML =
-          StreamHelper.getAllBytes (
-              ZUGFeRDMappingTest.class.getResourceAsStream(ebInterfacePath));
+  public boolean testMapping (final String ebInterfacePath, final MappingFactory.ZugferdMappingType level)
+  {
+    byte [] ebInterfaceXML;
+    // Read an eb4p2 sample
+    try
+    {
+      ebInterfaceXML = StreamHelper.getAllBytes (ZUGFeRDMappingTest.class.getResourceAsStream (ebInterfacePath));
 
-      if (ebInterfaceXML == null || ebInterfaceXML.length == 0){
-        throw new Exception("ebInterfaceXML is empty, mapping is not possible.");
+      if (ebInterfaceXML == null || ebInterfaceXML.length == 0)
+      {
+        throw new Exception ("ebInterfaceXML is empty, mapping is not possible.");
       }
-    } catch (Exception e) {
-      LOG.error("Unable to read ebInterfaceXML");
+    }
+    catch (final Exception e)
+    {
+      LOG.error ("Unable to read ebInterfaceXML");
 
       return false;
     }
 
     String levelText;
 
-    if (MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0.equals(level)) {
+    if (MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0.equals (level))
+    {
       levelText = "BASIC";
-    } else if (MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0.equals(level)) {
-      levelText = "COMFORT";
-    } else {
-      levelText = "EXTENDED";
     }
+    else
+      if (MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0.equals (level))
+      {
+        levelText = "COMFORT";
+      }
+      else
+      {
+        levelText = "EXTENDED";
+      }
 
-    try {
-      EEbInterfaceVersion ebType = DocumentTypeUtils.getEbInterfaceType(ebInterfaceXML);
+    try
+    {
+      final EEbInterfaceVersion ebType = DocumentTypeUtils.getEbInterfaceType (ebInterfaceXML);
 
       final String ebTypeText = ebType.getVersion ().getAsString (false, true);
 
-      LOG.info("ebInterface input version: ebInterface {}", ebTypeText);
+      LOG.info ("ebInterface input version: ebInterface {}", ebTypeText);
 
-      MappingFactory mf = new MappingFactory();
-      Mapping zugFeRDMapping = mf.getMapper(level, ebType);
+      final MappingFactory mf = new MappingFactory ();
+      final Mapping zugFeRDMapping = mf.getMapper (level, ebType);
 
-      //Map to ZUGFeRD Basic
-      String zugferd = new String(zugFeRDMapping.mapFromebInterface(ebInterfaceXML));
+      // Map to ZUGFeRD Basic
+      final String zugferd = new String (zugFeRDMapping.mapFromebInterface (ebInterfaceXML));
 
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(zugferd);
+      if (LOG.isDebugEnabled ())
+      {
+        LOG.debug (zugferd);
       }
 
-      SAXSource saxSource = new SAXSource(new InputSource(
-          new ByteArrayInputStream(zugferd.getBytes(StandardCharsets.UTF_8))));
+      final SAXSource saxSource = new SAXSource (new InputSource (new ByteArrayInputStream (zugferd.getBytes (StandardCharsets.UTF_8))));
 
-      MappingErrorHandler eh = new MappingErrorHandler();
-      validator.setErrorHandler(eh);
-      validator.validate(saxSource);
+      final MappingErrorHandler eh = new MappingErrorHandler ();
+      validator.setErrorHandler (eh);
+      validator.validate (saxSource);
 
-      if (eh.catchedError()) {
-        throw new RuntimeException(
-            "ZUGFeRD-" + levelText + " XSD validation failed:\n" + eh.toString());
+      if (eh.catchedError ())
+      {
+        throw new RuntimeException ("ZUGFeRD-" + levelText + " XSD validation failed:\n" + eh.toString ());
       }
 
-      System.out.println(zugFeRDMapping.getMappingLog());
+      System.out.println (zugFeRDMapping.getMappingLog ());
 
-      Source source = new StreamSource(new StringReader(zugferd));
-      Result result = new StreamResult(new StringWriter());
+      final Source source = new StreamSource (new StringReader (zugferd));
+      final Result result = new StreamResult (new StringWriter ());
 
-      Transformer transformer = templates.newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+      final Transformer transformer = templates.newTransformer ();
+      transformer.setOutputProperty (OutputKeys.INDENT, "yes");
 
-      MappingErrorListener el = new MappingErrorListener();
+      final MappingErrorListener el = new MappingErrorListener ();
 
-      transformer.setErrorListener(el);
+      transformer.setErrorListener (el);
 
-      //saxon is used, MessageErmitter has to be set, otherwise, ErrorListener will mention Errors
-      ((Controller) transformer).setMessageEmitter(new MessageWarner());
+      // saxon is used, MessageErmitter has to be set, otherwise, ErrorListener
+      // will mention Errors
+      ((TransformerImpl) transformer).getUnderlyingXsltTransformer ()
+                                     .getUnderlyingController ()
+                                     .setMessageEmitter (new MessageWarner ());
 
-      transformer.transform(source, result);
+      transformer.transform (source, result);
 
-      if (el.catchedError()) {
-        throw new RuntimeException(
-            "ZUGFeRD-" + levelText + " Schematron validation failed:\n" + el.toString());
+      if (el.catchedError ())
+      {
+        throw new RuntimeException ("ZUGFeRD-" + levelText + " Schematron validation failed:\n" + el.toString ());
       }
 
-      LOG.info("Result of ZUGFeRD-" + levelText + " mapping is {}", zugferd);
+      LOG.info ("Result of ZUGFeRD-" + levelText + " mapping is {}", zugferd);
 
       return true;
 
-    } catch (Exception e) {
-      LOG.error("Unable to perform ZUGFeRD-" + levelText + " mapping.", e);
+    }
+    catch (final Exception e)
+    {
+      LOG.error ("Unable to perform ZUGFeRD-" + levelText + " mapping.", e);
 
       return false;
     }
