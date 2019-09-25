@@ -35,7 +35,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>9.3.6</version>
+        <version>9.3.7</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
