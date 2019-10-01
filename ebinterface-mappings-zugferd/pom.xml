@@ -3,7 +3,7 @@
   <parent>
     <groupId>at.austriapro</groupId>
     <artifactId>ebinterface-mappings-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
