@@ -29,11 +29,11 @@ import at.austriapro.utils.ISO639Util;
 public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   private static final Logger LOG = LoggerFactory.getLogger(ZUGFeRDMappingFromEbInterface4p2.class);
 
-  private MappingFactory.ZugferdMappingType zugferdMappingType;
+  private final MappingFactory.ZugferdMappingType zugferdMappingType;
   private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern ("uuuuMMdd");
   private final DateTimeFormatter issueDateTimeFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss");
 
-  public ZUGFeRDMappingFromEbInterface4p2(MappingFactory.ZugferdMappingType zugferdMappingType) {
+  public ZUGFeRDMappingFromEbInterface4p2(final MappingFactory.ZugferdMappingType zugferdMappingType) {
     this.zugferdMappingType = zugferdMappingType;
   }
 
@@ -41,13 +41,13 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
    * Perform a mapping from ebInterface to ZUGFeRD
    */
   @Override
-  public byte[] mapFromebInterface(byte[] ebinterface) throws MappingException {
+  public byte[] mapFromebInterface(final byte[] ebinterface) throws MappingException {
 
     //Retrieve an Invoice object
-    Ebi42InvoiceType invoice = EbInterfaceReader.ebInterface42 ().read(ebinterface);
+    final Ebi42InvoiceType invoice = EbInterfaceReader.ebInterface42 ().read(ebinterface);
 
     //Perform mapping
-    CrossIndustryDocumentType zugferd = performMapping(invoice);
+    final CrossIndustryDocumentType zugferd = performMapping(invoice);
 
     return DocumentTypeUtils.writeZUGFeRD(zugferd);
   }
@@ -56,10 +56,10 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the ebInterface object to a ZUGFeRD object
    */
-  private CrossIndustryDocumentType performMapping(Ebi42InvoiceType invoice) {
+  private CrossIndustryDocumentType performMapping(final Ebi42InvoiceType invoice) {
 
     //Get an empty cross industry document type
-    CrossIndustryDocumentType zugferd = getEmptyCrossIndustryDocumentType();
+    final CrossIndustryDocumentType zugferd = getEmptyCrossIndustryDocumentType();
 
     //ebInterface: ROOT element attributes
     mapRootAttributes(zugferd, invoice);
@@ -128,7 +128,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map details of ebInterface comments
    */
-  private void mapComment(CrossIndustryDocumentType zugferd, String comment) {
+  private void mapComment(final CrossIndustryDocumentType zugferd, final String comment) {
     //ebInterface: /Invoice/Comment
     if (comment != null) {
       zugferd.getHeaderExchangedDocument()
@@ -140,8 +140,8 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map presentation details
    */
-  private void mapPresentationDetails(CrossIndustryDocumentType zugferd,
-                                      Ebi42PresentationDetailsType presentationDetails) {
+  private void mapPresentationDetails(final CrossIndustryDocumentType zugferd,
+                                      final Ebi42PresentationDetailsType presentationDetails) {
     //ebInterface: /Invoice/PresentationDetails
     if (presentationDetails != null) {
       if (presentationDetails.getURL() != null) {
@@ -209,11 +209,11 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the details of payment conditions
    */
-  private void mapPaymentConditions(CrossIndustryDocumentType zugferd,
-                                    Ebi42PaymentConditionsType paymentConditions) {
+  private void mapPaymentConditions(final CrossIndustryDocumentType zugferd,
+                                    final Ebi42PaymentConditionsType paymentConditions) {
     if (!MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0.equals(zugferdMappingType)
         && paymentConditions != null) {
-      String
+      final String
           documentCurrency =
           zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
@@ -224,7 +224,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
           && paymentConditions.getDiscount() != null
           && paymentConditions.getDiscount().size() > 0) {
         //ebInterface: /Invoice/PaymentConditions/Discount
-        for (Ebi42DiscountType discount : paymentConditions.getDiscount()) {
+        for (final Ebi42DiscountType discount : paymentConditions.getDiscount()) {
           //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms
           stpt = new TradePaymentTermsType();
           zugferd.getSpecifiedSupplyChainTradeTransaction()
@@ -245,7 +245,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
           }
 
           //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradePaymentTerms/ApplicableTradePaymentDiscountTerms
-          TradePaymentDiscountTermsType atpd = new TradePaymentDiscountTermsType();
+          final TradePaymentDiscountTermsType atpd = new TradePaymentDiscountTermsType();
           stpt.withApplicableTradePaymentDiscountTerms(atpd);
 
           if (discount.getPaymentDate() != null) {
@@ -361,7 +361,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map details of payment method
    */
-  private void mapPaymentMethod(CrossIndustryDocumentType zugferd, Ebi42PaymentMethodType paymentMethod) {
+  private void mapPaymentMethod(final CrossIndustryDocumentType zugferd, final Ebi42PaymentMethodType paymentMethod) {
     if (paymentMethod != null) {
       TradeSettlementPaymentMeansType tspmt = new TradeSettlementPaymentMeansType();
 
@@ -492,7 +492,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
             .withSpecifiedTradeSettlementPaymentMeans(
                 tspmt);
       } else if (paymentMethod.getUniversalBankTransaction() != null) {
-        for (Ebi42AccountType ba : paymentMethod.getUniversalBankTransaction()
+        for (final Ebi42AccountType ba : paymentMethod.getUniversalBankTransaction()
             .getBeneficiaryAccount()) {
           tspmt = new TradeSettlementPaymentMeansType();
 
@@ -506,7 +506,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
           }
 
           //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialAccount
-          CreditorFinancialAccountType cfa = new CreditorFinancialAccountType();
+          final CreditorFinancialAccountType cfa = new CreditorFinancialAccountType();
           tspmt
               .withPayeePartyCreditorFinancialAccount(cfa);
 
@@ -530,7 +530,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
           }
 
           //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementPaymentMeans/PayeePartyCreditorFinancialInstitution
-          CreditorFinancialInstitutionType cft = new CreditorFinancialInstitutionType();
+          final CreditorFinancialInstitutionType cft = new CreditorFinancialInstitutionType();
           tspmt
               .withPayeeSpecifiedCreditorFinancialInstitution(cft);
 
@@ -575,7 +575,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map details of payable amount
    */
-  private void mapPayableAmount(CrossIndustryDocumentType zugferd, BigDecimal payableAmount) {
+  private void mapPayableAmount(final CrossIndustryDocumentType zugferd, final BigDecimal payableAmount) {
     //ebInterface: /Invoice/PayableAmount
     if (!MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0.equals(zugferdMappingType)
         && payableAmount != null) {
@@ -604,7 +604,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * ebInterface total gross details
    */
-  private void mapTotalGrossAmount(CrossIndustryDocumentType zugferd, BigDecimal totalGrossAmount) {
+  private void mapTotalGrossAmount(final CrossIndustryDocumentType zugferd, final BigDecimal totalGrossAmount) {
     //ebInterface: /Invoice/TotalGrossAmount
     if (totalGrossAmount != null) {
       TradeSettlementMonetarySummationType stsms;
@@ -621,7 +621,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                 .getSpecifiedTradeSettlementMonetarySummation();
       }
 
-      String documentCurrency = zugferd.getSpecifiedSupplyChainTradeTransaction()
+      final String documentCurrency = zugferd.getSpecifiedSupplyChainTradeTransaction()
           .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
 
       //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/SpecifiedTradeSettlementMonetarySummation/GrandTotalAmount
@@ -637,12 +637,12 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
       if (zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getIncludedSupplyChainTradeLineItem() != null && zugferd.getSpecifiedSupplyChainTradeTransaction()
                                                                     .getIncludedSupplyChainTradeLineItem().size() > 0) {
-        for (SupplyChainTradeLineItemType items : zugferd.getSpecifiedSupplyChainTradeTransaction()
+        for (final SupplyChainTradeLineItemType items : zugferd.getSpecifiedSupplyChainTradeTransaction()
             .getIncludedSupplyChainTradeLineItem()) {
           if (items.getSpecifiedSupplyChainTradeSettlement() != null
               && items.getSpecifiedSupplyChainTradeSettlement()
                      .getSpecifiedTradeSettlementMonetarySummation() != null) {
-            TradeSettlementMonetarySummationType
+            final TradeSettlementMonetarySummationType
                 monSum =
                 items.getSpecifiedSupplyChainTradeSettlement()
                     .getSpecifiedTradeSettlementMonetarySummation();
@@ -656,7 +656,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                     .getApplicableTradeTax() != null
                 && items.getSpecifiedSupplyChainTradeSettlement()
                        .getApplicableTradeTax().size() > 0) {
-              for (TradeTaxType tt : items.getSpecifiedSupplyChainTradeSettlement()
+              for (final TradeTaxType tt : items.getSpecifiedSupplyChainTradeSettlement()
                   .getApplicableTradeTax()) {
                 if (!tt.getCategoryCode().getValue().equals("E")) {
                   totalTaxBasisAmount =
@@ -679,9 +679,9 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                      .getGrossPriceProductTradePrice().get(0).getAppliedTradeAllowanceCharge()
                      .size()
                  > 0) {
-            for (TradeAllowanceChargeType tac : items.getSpecifiedSupplyChainTradeAgreement()
+            for (final TradeAllowanceChargeType tac : items.getSpecifiedSupplyChainTradeAgreement()
                 .getGrossPriceProductTradePrice().get(0).getAppliedTradeAllowanceCharge()) {
-              if (tac.getChargeIndicator().getIndicator()) {
+              if (tac.getChargeIndicator().getIndicator().booleanValue ()) {
                 totalChargeAmount =
                     totalChargeAmount.add(tac.getActualAmount().get(0).getValue());
               } else {
@@ -699,9 +699,9 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                  .getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge()
                  .size()
              > 0) {
-        for (TradeAllowanceChargeType tac : zugferd.getSpecifiedSupplyChainTradeTransaction()
+        for (final TradeAllowanceChargeType tac : zugferd.getSpecifiedSupplyChainTradeTransaction()
             .getApplicableSupplyChainTradeSettlement().getSpecifiedTradeAllowanceCharge()) {
-          if (tac.getChargeIndicator().getIndicator()) {
+          if (tac.getChargeIndicator().getIndicator().booleanValue ()) {
             totalChargeAmount =
                 totalChargeAmount.add(tac.getActualAmount().get(0).getValue());
           } else {
@@ -742,10 +742,10 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the tax details to the ZUGFeRD equivalent
    */
-  private void mapTax(CrossIndustryDocumentType zugferd, Ebi42TaxType tax) {
+  private void mapTax(final CrossIndustryDocumentType zugferd, final Ebi42TaxType tax) {
     //ebInterface: /Invoice/Tax
     if (tax != null) {
-      String
+      final String
           documentCurrency =
           zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
@@ -754,9 +754,9 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
       if (tax.getVAT() != null && tax.getVAT().getVATItem().size() > 0) {
 
         //ebInterface: /Invoice/Tax/VAT/VATItem
-        for (Ebi42VATItemType vATItems : tax.getVAT().getVATItem()) {
+        for (final Ebi42VATItemType vATItems : tax.getVAT().getVATItem()) {
           //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/ApplicableTradeTax
-          TradeTaxType tradeTaxType = new TradeTaxType();
+          final TradeTaxType tradeTaxType = new TradeTaxType();
           zugferd.getSpecifiedSupplyChainTradeTransaction()
               .getApplicableSupplyChainTradeSettlement().withApplicableTradeTax(tradeTaxType);
 
@@ -809,12 +809,12 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
       //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/?
       if (tax.getOtherTax() != null && tax.getOtherTax().size() > 0) {
 
-        SupplyChainTradeSettlementType
+        final SupplyChainTradeSettlementType
             ascts =
             zugferd.getSpecifiedSupplyChainTradeTransaction()
                 .getApplicableSupplyChainTradeSettlement();
 
-        for (Ebi42OtherTaxType otherTax : tax.getOtherTax()) {
+        for (final Ebi42OtherTaxType otherTax : tax.getOtherTax()) {
           boolean chargeIndicator;
           BigDecimal amount = null;
           String comment = null;
@@ -848,8 +848,8 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the different reductions and surcharges in ebInterface to the respective fields in ZUGFeRD
    */
-  private void mapReductionAndSurchargeDetails(CrossIndustryDocumentType zugferd,
-                                               Ebi42ReductionAndSurchargeDetailsType reductionAndSurchargeDetails) {
+  private void mapReductionAndSurchargeDetails(final CrossIndustryDocumentType zugferd,
+                                               final Ebi42ReductionAndSurchargeDetailsType reductionAndSurchargeDetails) {
     if (!MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0.equals(zugferdMappingType)
         && reductionAndSurchargeDetails != null) {
       //ebInterface: /Invoice/ReductionAndSurchargeDetails
@@ -857,17 +857,17 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
           && !reductionAndSurchargeDetails.getReductionOrSurchargeOrOtherVATableTax ()
           .isEmpty()) {
 
-        String
+        final String
             documentCurrency =
             zugferd.getSpecifiedSupplyChainTradeTransaction()
                 .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
 
-        SupplyChainTradeSettlementType
+        final SupplyChainTradeSettlementType
             ascts =
             zugferd.getSpecifiedSupplyChainTradeTransaction()
                 .getApplicableSupplyChainTradeSettlement();
 
-        for (JAXBElement<?> rSVItem : reductionAndSurchargeDetails
+        for (final JAXBElement<?> rSVItem : reductionAndSurchargeDetails
             .getReductionOrSurchargeOrOtherVATableTax ()) {
           boolean chargeIndicator;
           BigDecimal baseAmount = null;
@@ -882,7 +882,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
           if (aValue instanceof Ebi42OtherVATableTaxType) {
             //ebInterface: /Invoice/ReductionAndSurchargeDetails/OtherVATableTax
-            Ebi42OtherVATableTaxType
+            final Ebi42OtherVATableTaxType
                 oVatItem =
                 (Ebi42OtherVATableTaxType) aValue;
 
@@ -937,7 +937,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
             //ebInterface: /Invoice/ReductionAndSurchargeDetails/Reduction
             //and
             //ebInterface: /Invoice/ReductionAndSurchargeDetails/Surcharge
-            Ebi42ReductionAndSurchargeType
+            final Ebi42ReductionAndSurchargeType
                 rsItem =
                 (Ebi42ReductionAndSurchargeType) aValue;
 
@@ -999,7 +999,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
    * Map the details section of ebInterace, containing the different line items, to the correct
    * fields in ZUGFeRD from: ebInterface: Details to: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem
    */
-  private void mapDetails(CrossIndustryDocumentType zugferd, Ebi42DetailsType details) {
+  private void mapDetails(final CrossIndustryDocumentType zugferd, final Ebi42DetailsType details) {
     //ebInterface: /Invoice/Details
     if (details != null) {
       if (details.getHeaderDescription() != null) {
@@ -1027,21 +1027,21 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
       }
 
       if (details.getItemList() != null && details.getItemList().size() > 0) {
-        String
+        final String
             documentCurrency =
             zugferd.getSpecifiedSupplyChainTradeTransaction()
                 .getApplicableSupplyChainTradeSettlement().getInvoiceCurrencyCode().getValue();
 
         //Create a collection of SupplyChainTradeLineItems
-        List<SupplyChainTradeLineItemType>
+        final List<SupplyChainTradeLineItemType>
             listSCTLI =
             new ArrayList<>();
-        TreeSet<BigInteger> posNr = new TreeSet<>();
+        final TreeSet<BigInteger> posNr = new TreeSet<>();
 
         int iList = 0;
 
         //ebInterface: loop all /Invoice/Details/ItemList
-        for (Ebi42ItemListType itemList : details.getItemList()) {
+        for (final Ebi42ItemListType itemList : details.getItemList()) {
           NoteType listHeaderDescription = null;
           NoteType listFooterDescription = null;
 
@@ -1075,18 +1075,18 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
             int iItems = 0;
 
             //ebInterface: loop all /Invoice/Details/ItemLists/ListLineItem
-            for (Ebi42ListLineItemType item : itemList.getListLineItem()) {
+            for (final Ebi42ListLineItemType item : itemList.getListLineItem()) {
               //Create a SupplyChainTradeLineItem for a Detail
-              SupplyChainTradeLineItemType sctli = new SupplyChainTradeLineItemType();
+              final SupplyChainTradeLineItemType sctli = new SupplyChainTradeLineItemType();
 
               //create a SpecifiedTradeProduct
               //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct
-              TradeProductType stp = new TradeProductType();
+              final TradeProductType stp = new TradeProductType();
               sctli.withSpecifiedTradeProduct(stp);
 
               //create a AssociatedDocumentLineDocument
               //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/AssociatedDocumentLineDocument
-              DocumentLineDocumentType adld = new DocumentLineDocumentType();
+              final DocumentLineDocumentType adld = new DocumentLineDocumentType();
               sctli.withAssociatedDocumentLineDocument(adld);
 
               //Add listHeaderDescription
@@ -1106,7 +1106,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                       new IDType().withValue(item.getPositionNumber().toString()));
                   posNr.add(item.getPositionNumber());
                 } else {
-                  BigInteger tPosNr = posNr.last().add(new BigInteger("100"));
+                  final BigInteger tPosNr = posNr.last().add(new BigInteger("100"));
                   adld.withLineID(
                       new IDType().withValue(tPosNr.toString()));
                   posNr.add(tPosNr);
@@ -1115,12 +1115,12 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
               //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Description
               if (item.getDescription() != null && item.getDescription().size() > 0) {
-                StringBuilder zugDesc = new StringBuilder();
+                final StringBuilder zugDesc = new StringBuilder();
 
                 int i = 0;
 
                 //the first description entry will be used for ZUGFeRD.name, the other entries are ZUGFeRD.description
-                for (String ebDesc : item.getDescription()) {
+                for (final String ebDesc : item.getDescription()) {
                   if (i == 0) {
                     stp.withName(new TextType().withValue(ebDesc));
                   } else {
@@ -1143,7 +1143,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                 if (item.getArticleNumber() != null && item.getArticleNumber().size() > 0) {
                   int iArt = 0;
 
-                  for (Ebi42ArticleNumberType art : item.getArticleNumber()) {
+                  for (final Ebi42ArticleNumberType art : item.getArticleNumber()) {
                     if (art.getArticleNumberType().value().equals("GTIN")) {
                       //GTIN
                       //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/GlobalID
@@ -1179,7 +1179,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
               //Create SupplyChainTradeDelivery and add it to ZUGFeRD
               //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeDelivery
-              SupplyChainTradeDeliveryType ssctd = new SupplyChainTradeDeliveryType();
+              final SupplyChainTradeDeliveryType ssctd = new SupplyChainTradeDeliveryType();
               sctli.withSpecifiedSupplyChainTradeDelivery(ssctd);
 
               //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Quantity
@@ -1192,13 +1192,13 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
               //Create SpecifiedSupplyChainTradeAgreement and add it to ZUGFeRD
               //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement
-              SupplyChainTradeAgreementType scta = new SupplyChainTradeAgreementType();
+              final SupplyChainTradeAgreementType scta = new SupplyChainTradeAgreementType();
               sctli.withSpecifiedSupplyChainTradeAgreement(scta);
 
               if (!MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0.equals(zugferdMappingType)) {
                 if (item.getUnitPrice() != null) {
                   //Create NetPriceProductTradePrice and add it to ZUGFeRD
-                  TradePriceType npptp = new TradePriceType();
+                  final TradePriceType npptp = new TradePriceType();
                   scta.withNetPriceProductTradePrice(npptp);
 
                   //ebInterface: /Invoice/Details/ItemLists/ListLineItem/UnitPrice
@@ -1217,12 +1217,12 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
               //Create SpecifiedSupplyChainTradeSettlement and add it to ZUGFeRD
               //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement
-              SupplyChainTradeSettlementType scts = new SupplyChainTradeSettlementType();
+              final SupplyChainTradeSettlementType scts = new SupplyChainTradeSettlementType();
               sctli.withSpecifiedSupplyChainTradeSettlement(scts);
 
               if (!MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0.equals(zugferdMappingType)) {
                 //Create ApplicableTradeTax and add it to ZUGFeRD
-                TradeTaxType att = new TradeTaxType();
+                final TradeTaxType att = new TradeTaxType();
                 scts.withApplicableTradeTax(att);
 
                 //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeSettlement/ApplicableTradeTax/TypeCode
@@ -1251,18 +1251,18 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
               //Create GrossPriceProductTradePrice and add it to ZUGFeRD
               //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice
-              TradePriceType gpptp = new TradePriceType();
+              final TradePriceType gpptp = new TradePriceType();
               scta.withGrossPriceProductTradePrice(gpptp);
 
               //ebInterface: [/Invoice/Details/ItemLists/ListLineItem/] (Quantity/nvl(BaseQuantity, 1)*UnitPrice)
-              BigDecimal quantity = item.getQuantity().getValue();
+              final BigDecimal quantity = item.getQuantity().getValue();
               BigDecimal baseQuantity;
               if (item.getUnitPrice().getBaseQuantity() != null) {
                 baseQuantity = item.getUnitPrice().getBaseQuantity();
               } else {
                 baseQuantity = new BigDecimal(1);
               }
-              BigDecimal unitPrice = item.getUnitPrice().getValue();
+              final BigDecimal unitPrice = item.getUnitPrice().getValue();
               //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/ChargeAmount
               gpptp.withChargeAmount(
                   new AmountType().withValue(quantity.divide(baseQuantity).multiply(unitPrice))
@@ -1294,7 +1294,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                                                                                                  .getReductionListLineItemOrSurchargeListLineItemOrOtherVATableTaxListLineItem()
                                                                                                  .size()
                                                                                              > 0) {
-                  for (JAXBElement<?> rSVItem : item
+                  for (final JAXBElement<?> rSVItem : item
                       .getReductionAndSurchargeListLineItemDetails()
                       .getReductionListLineItemOrSurchargeListLineItemOrOtherVATableTaxListLineItem ()) {
                     boolean chargeIndicator;
@@ -1307,7 +1307,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                         .getName().getLocalPart().equals("SurchargeListLineItem")) {
                       //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/ReductionListLineItem
                       //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/SurchargeListLineItem
-                      Ebi42ReductionAndSurchargeBaseType
+                      final Ebi42ReductionAndSurchargeBaseType
                           rsItem =
                           (Ebi42ReductionAndSurchargeBaseType) rSVItem.getValue();
 
@@ -1341,7 +1341,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                       }
                     } else { //rSVItem.getName().getLocalPart().equals("OtherVATableTaxListLineItem")
                       //ebInterface: /Invoice/Details/ItemLists/ListLineItem/ReductionAndSurchargeListLineItemDetails/OtherVATableTaxListLineItem
-                      Ebi42OtherVATableTaxBaseType
+                      final Ebi42OtherVATableTaxBaseType
                           otherTaxItem =
                           (Ebi42OtherVATableTaxBaseType) rSVItem.getValue();
 
@@ -1393,7 +1393,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
               if (MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0.equals(zugferdMappingType)
                   && item.getDelivery() != null) {
                 //Create the necessary elements in ZUGFeRD
-                TradePartyType stttp = new TradePartyType();
+                final TradePartyType stttp = new TradePartyType();
                 ssctd.withShipToTradeParty(stttp);
 
                 //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/DeliveryID
@@ -1539,7 +1539,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                   && item.getInvoiceRecipientsOrderReference() != null) {
 
                 //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/BuyerOrderReferencedDocument
-                ReferencedDocumentType bor = new ReferencedDocumentType();
+                final ReferencedDocumentType bor = new ReferencedDocumentType();
                 scta.withBuyerOrderReferencedDocument(bor);
 
                 //ebInterface: /Invoice/Details/ItemLists/ListLineItem/InvoiceRecipientsOrderReference/OrderID
@@ -1587,14 +1587,14 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
               //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic
               if (MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0.equals(zugferdMappingType)
                   && item.getAdditionalInformation() != null) {
-                Ebi42AdditionalInformationType ai = item.getAdditionalInformation();
+                final Ebi42AdditionalInformationType ai = item.getAdditionalInformation();
 
                 String typeCode, description, unitCode, value;
-                BigDecimal valueMeasure = null;
+                BigDecimal valueMeasure;
 
                 //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/SerialNumber
                 if (ai.getSerialNumber() != null && ai.getSerialNumber().size() > 0) {
-                  for (String sn : ai.getSerialNumber()) {
+                  for (final String sn : ai.getSerialNumber()) {
                     typeCode = "SERIAL_NUMBER";
                     description = "Seriennummer";
                     valueMeasure = null;
@@ -1609,7 +1609,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
                 //ebInterface: /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/ChargeNumber
                 if (ai.getChargeNumber() != null && ai.getChargeNumber().size() > 0) {
-                  for (String ch : ai.getChargeNumber()) {
+                  for (final String ch : ai.getChargeNumber()) {
                     typeCode = "LOT_NUMBER";
                     description = "Chargennummer";
                     valueMeasure = null;
@@ -1624,7 +1624,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
                 //ebInterface: loop all /Invoice/Details/ItemLists/ListLineItem/AdditionalInformation/Classification
                 if (ai.getClassification() != null && ai.getClassification().size() > 0) {
-                  for (Ebi42ClassificationType cl : ai.getClassification()) {
+                  for (final Ebi42ClassificationType cl : ai.getClassification()) {
                     //TODO - Classifications can't be mapped to a typeCode, OTHER is not documented and a placeholder for now
                     typeCode = "OTHER";
                     description = cl.getClassificationSchema();
@@ -1730,7 +1730,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                     && gpptp.getAppliedTradeAllowanceCharge().size() > 0) {
                   BigDecimal sum = BigDecimal.ZERO;
 
-                  for (TradeAllowanceChargeType ch : gpptp.getAppliedTradeAllowanceCharge()) {
+                  for (final TradeAllowanceChargeType ch : gpptp.getAppliedTradeAllowanceCharge()) {
                     BigDecimal am;
 
                     if (ch.getActualAmount() != null && ch.getActualAmount().size() > 0) {
@@ -1745,7 +1745,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
                     }
 
                     if (am != null) {
-                      if (ch.getChargeIndicator().getIndicator()) {
+                      if (ch.getChargeIndicator().getIndicator().booleanValue ()) {
                         sum = sum.subtract(am);
                       } else {
                         sum = sum.add(am);
@@ -1793,9 +1793,9 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the attributes from the ebInterface ROOT element
    */
-  private void mapRootAttributes(CrossIndustryDocumentType zugferd, Ebi42InvoiceType invoice) {
+  private void mapRootAttributes(final CrossIndustryDocumentType zugferd, final Ebi42InvoiceType invoice) {
     //ZUGFeRD type
-    String zugFeRDType = getZUGfeRDType();
+    final String zugFeRDType = getZUGfeRDType();
     zugferd.getSpecifiedExchangedDocumentContext().withGuidelineSpecifiedDocumentContextParameter(
         new DocumentContextParameterType().withID(new IDType().withValue(zugFeRDType)));
 
@@ -1813,17 +1813,17 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
     //ebInterface: ebInterface: /Invoice/@DocumentType
     //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/Name
-    String documentType = getDocumentType(invoice);
+    final String documentType = getDocumentType(invoice);
     zugferd.getHeaderExchangedDocument().withName(new TextType().withValue(documentType));
 
     //ebInterface: Document type code
     //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/TypeCode
-    String typeCode = getDocumentTypeCode(invoice);
+    final String typeCode = getDocumentTypeCode(invoice);
     zugferd.getHeaderExchangedDocument().withTypeCode(new DocumentCodeType().withValue(typeCode));
 
     //ebInterface: /Invoice/@InvoiceCurrency
     //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeSettlement/InvoiceCurrencyCode
-    String documentCurrency = invoice.getInvoiceCurrency();
+    final String documentCurrency = invoice.getInvoiceCurrency();
     zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeSettlement()
         .withInvoiceCurrencyCode(new CodeType().withValue(documentCurrency));
 
@@ -1885,7 +1885,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the signature from the ebInterface
    */
-  private void mapSignature(CrossIndustryDocumentType zugferd, SignatureType signature) {
+  private void mapSignature(final CrossIndustryDocumentType zugferd, final SignatureType signature) {
     //TODO not supported in ZUGFeRD
     //ebInterface: /Invoice/Signature
     if (signature != null) {
@@ -1900,7 +1900,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the ordering party Target in ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/ProductEndUserTradeParty
    */
-  private void mapOrderingParty(CrossIndustryDocumentType zugferd, Ebi42OrderingPartyType orderingParty) {
+  private void mapOrderingParty(final CrossIndustryDocumentType zugferd, final Ebi42OrderingPartyType orderingParty) {
     //ebInterface: /Invoice/OrderingParty
     if (MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0.equals(zugferdMappingType)) {
       if (orderingParty == null) {
@@ -1909,8 +1909,8 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
       }
 
       //Create a trade party for the invoice recipient
-      TradePartyType productEndUserTradeParty = new TradePartyType();
-      SupplyChainTradeAgreementType
+      final TradePartyType productEndUserTradeParty = new TradePartyType();
+      final SupplyChainTradeAgreementType
           supplyChainTradeAgreementType =
           getSupplyChainTradeAgreement(zugferd);
       supplyChainTradeAgreementType.withProductEndUserTradeParty(productEndUserTradeParty);
@@ -1923,7 +1923,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
           && orderingParty.getFurtherIdentification().size() > 0) {
 
         //ebInterface: /Invoice/OrderingParty/FurtherIdentification
-        for (Ebi42FurtherIdentificationType furtherIdentification : orderingParty
+        for (final Ebi42FurtherIdentificationType furtherIdentification : orderingParty
             .getFurtherIdentification()) {
 
           //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/IncludedNote
@@ -1943,7 +1943,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
           && orderingParty.getAddress().getAddressIdentifier().size() > 0) {
         int i = 0;
 
-        for (Ebi42AddressIdentifierType aId : orderingParty.getAddress().getAddressIdentifier()) {
+        for (final Ebi42AddressIdentifierType aId : orderingParty.getAddress().getAddressIdentifier()) {
           //ebInterface: /Invoice/OrderingParty/Address/AddressIdentifier
           String schema;
           if (aId.getAddressIdentifierType()
@@ -2078,8 +2078,8 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the invoice recipient Target in ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/BuyerTradeParty
    */
-  private void mapInvoiceRecipient(CrossIndustryDocumentType zugferd,
-                                   Ebi42InvoiceRecipientType invoiceRecipient) {
+  private void mapInvoiceRecipient(final CrossIndustryDocumentType zugferd,
+                                   final Ebi42InvoiceRecipientType invoiceRecipient) {
     //ebInterface: /Invoice/InvoiceRecipient
 
     if (invoiceRecipient == null) {
@@ -2088,8 +2088,8 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
     }
 
     //Create a trade party for the invoice recipient
-    TradePartyType buyerTradeParty = new TradePartyType();
-    SupplyChainTradeAgreementType
+    final TradePartyType buyerTradeParty = new TradePartyType();
+    final SupplyChainTradeAgreementType
         supplyChainTradeAgreementType =
         getSupplyChainTradeAgreement(zugferd);
     supplyChainTradeAgreementType.withBuyerTradeParty(buyerTradeParty);
@@ -2103,7 +2103,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
         && invoiceRecipient.getFurtherIdentification().size() > 0) {
 
       //ebInterface: /Invoice/InvoiceRecipient/FurtherIdentification
-      for (Ebi42FurtherIdentificationType furtherIdentification : invoiceRecipient
+      for (final Ebi42FurtherIdentificationType furtherIdentification : invoiceRecipient
           .getFurtherIdentification()) {
 
         //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/IncludedNote
@@ -2125,7 +2125,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
         && invoiceRecipient.getAddress().getAddressIdentifier().size() > 0) {
       int i = 0;
 
-      for (Ebi42AddressIdentifierType aId : invoiceRecipient.getAddress().getAddressIdentifier()) {
+      for (final Ebi42AddressIdentifierType aId : invoiceRecipient.getAddress().getAddressIdentifier()) {
         //ebInterface: /Invoice/InvoiceRecipient/Address/AddressIdentifier
         String schema;
         if (aId.getAddressIdentifierType()
@@ -2289,18 +2289,18 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the biller Target in ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/SellerTradeParty
    */
-  private void mapBiller(CrossIndustryDocumentType zugferd, Ebi42BillerType biller) {
+  private void mapBiller(final CrossIndustryDocumentType zugferd, final Ebi42BillerType biller) {
     //ebInterface: /Invoice/Biller
     if (biller == null) {
       LOG.debug("No blller element specified in ebInterface - continuing.");
       return;
     }
 
-    SupplyChainTradeAgreementType
+    final SupplyChainTradeAgreementType
         supplyChainTradeAgreementType =
         getSupplyChainTradeAgreement(zugferd);
     //CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/SellerTradeParty
-    TradePartyType sellerTradePartyType = new TradePartyType();
+    final TradePartyType sellerTradePartyType = new TradePartyType();
     supplyChainTradeAgreementType.withSellerTradeParty(sellerTradePartyType);
 
     //ebInterface: /Invoice/Biller/VATIdentification
@@ -2312,7 +2312,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
         && biller.getFurtherIdentification().size() > 0) {
 
       //ebInterface: /Invoice/InvoiceRecipient/FurtherIdentification
-      for (Ebi42FurtherIdentificationType furtherIdentification : biller
+      for (final Ebi42FurtherIdentificationType furtherIdentification : biller
           .getFurtherIdentification()) {
 
         //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/IncludedNote
@@ -2332,7 +2332,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
     if (!MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0.equals(zugferdMappingType)
         && biller.getAddress().getAddressIdentifier() != null
         && biller.getAddress().getAddressIdentifier().size() > 0) {
-      for (Ebi42AddressIdentifierType aId : biller.getAddress().getAddressIdentifier()) {
+      for (final Ebi42AddressIdentifierType aId : biller.getAddress().getAddressIdentifier()) {
         //ebInterface: /Invoice/Biller/Address/AddressIdentifier
         String schema;
         if (aId.getAddressIdentifierType()
@@ -2473,26 +2473,26 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the details of related documents Target in ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument
    */
-  private void mapRelatedDocuments(CrossIndustryDocumentType zugferd,
-                                   List<Ebi42RelatedDocumentType> relatedDocuments) {
+  private void mapRelatedDocuments(final CrossIndustryDocumentType zugferd,
+                                   final List<Ebi42RelatedDocumentType> relatedDocuments) {
     //ebInterface: /Invoice/RelatedDocuments
     if (relatedDocuments.isEmpty ()) {
       LOG.debug("No related documents specified in ebInterface - continuing");
       return;
     }
 
-    SupplyChainTradeAgreementType
+    final SupplyChainTradeAgreementType
         supplyChainTradeAgreementType =
         getSupplyChainTradeAgreement(zugferd);
 
     int i = 0;
 
-    for (Ebi42RelatedDocumentType relatedDocument : relatedDocuments) {
+    for (final Ebi42RelatedDocumentType relatedDocument : relatedDocuments) {
 
       if (MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0.equals(zugferdMappingType)) {
         //Create a new related document type and assign it to the supply chain trade agreement
 
-        ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
+        final ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
         supplyChainTradeAgreementType.getAdditionalReferencedDocument().add(referencedDocumentType);
 
         //ebInterface: /Invoice/RelatedDocument/InvoiceNumber
@@ -2519,7 +2519,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
               "???");
         }
       } else {
-        StringBuilder text = new StringBuilder();
+        final StringBuilder text = new StringBuilder();
 
         text.append("Zugehörige Rechnung:\n");
 
@@ -2549,8 +2549,8 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Map the details of the cancelled document Target in ZUGFeRD:
    */
-  private void mapCancelledOriginalDocument(CrossIndustryDocumentType zugferd,
-                                            Ebi42CancelledOriginalDocumentType cancelledOriginalDocument) {
+  private void mapCancelledOriginalDocument(final CrossIndustryDocumentType zugferd,
+                                            final Ebi42CancelledOriginalDocumentType cancelledOriginalDocument) {
     //ebInterface: /Invoice/CancelledOriginalDocument
     if (cancelledOriginalDocument == null) {
       LOG.debug("No cancelled original document specified in ebInterface - continuing");
@@ -2558,12 +2558,12 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
     }
 
     if (MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0.equals(zugferdMappingType)) {
-      SupplyChainTradeAgreementType
+      final SupplyChainTradeAgreementType
           supplyChainTradeAgreementType =
           getSupplyChainTradeAgreement(zugferd);
 
       //Create a new related document type and assign it to the supply chain trade agreement
-      ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
+      final ReferencedDocumentType referencedDocumentType = new ReferencedDocumentType();
       supplyChainTradeAgreementType.getAdditionalReferencedDocument().add(referencedDocumentType);
 
       //ebInterface: /Invoice/CancelledOriginalDocument/InvoiceNumber
@@ -2593,7 +2593,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
       }
 
     } else {
-      StringBuilder text = new StringBuilder();
+      final StringBuilder text = new StringBuilder();
 
       text.append("Stornierte Rechnung:\n");
 
@@ -2622,7 +2622,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
    * Map the details of an ebInterface delivery element Target in ZUGFeRD:
    * /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeDelivery/ShipToTradeParty
    */
-  private void mapDelivery(CrossIndustryDocumentType zugferd, Ebi42DeliveryType delivery) {
+  private void mapDelivery(final CrossIndustryDocumentType zugferd, final Ebi42DeliveryType delivery) {
     //ebInterface: /Invoice/Delivery
     if (delivery == null) {
       LOG.debug("No delivery element specified in ebInterface - continuing.");
@@ -2662,7 +2662,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
     if (MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0.equals(zugferdMappingType)) {
       if (delivery.getAddress() != null) {
-        TradePartyType sttp = new TradePartyType();
+        final TradePartyType sttp = new TradePartyType();
 
         //Create the necessary elements in ZUGFeRD
         zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery().withShipToTradeParty(
@@ -2710,7 +2710,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
    * empty content
    */
   private CrossIndustryDocumentType getEmptyCrossIndustryDocumentType() {
-    CrossIndustryDocumentType zugferd = new CrossIndustryDocumentType();
+    final CrossIndustryDocumentType zugferd = new CrossIndustryDocumentType();
 
     zugferd.withSpecifiedExchangedDocumentContext(new ExchangedDocumentContextType());
     zugferd.withHeaderExchangedDocument(new ExchangedDocumentType());
@@ -2733,7 +2733,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
    * BELASTUNGSANZEIGE <xs:enumeration value="SubsequentCredit"/>          RECHNUNG <xs:enumeration
    * value="SubsequentDebit"/> RECHNUNG
    */
-  private String getDocumentType(Ebi42InvoiceType invoice) {
+  private String getDocumentType(final Ebi42InvoiceType invoice) {
 
     if (Ebi42DocumentTypeType.SELF_BILLING.equals(invoice.getDocumentType())) {
       return "BELASTUNGSANZEIGE";
@@ -2748,7 +2748,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
   /**
    * Return the correct document type code. Valid document type codes in ZUGFeRD are 380, 84, 389
    */
-  private String getDocumentTypeCode(Ebi42InvoiceType invoice) {
+  private String getDocumentTypeCode(final Ebi42InvoiceType invoice) {
 
     //Code 84 has no equivalent in ebInterface
     if (Ebi42DocumentTypeType.SELF_BILLING.equals(invoice.getDocumentType())) {
@@ -2779,11 +2779,11 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
    * new one and return it.
    */
   private SupplyChainTradeAgreementType getSupplyChainTradeAgreement(
-      CrossIndustryDocumentType zugferd) {
+      final CrossIndustryDocumentType zugferd) {
 
     if (zugferd.getSpecifiedSupplyChainTradeTransaction()
                               .getApplicableSupplyChainTradeAgreement().isEmpty ()) {
-      SupplyChainTradeAgreementType
+      final SupplyChainTradeAgreementType
           supplyChainTradeAgreementType =
           new SupplyChainTradeAgreementType();
       zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeAgreement()
@@ -2797,18 +2797,18 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
   }
 
-  private TradeAllowanceChargeType getTradeAllowanceCharge(boolean chargeIndicator,
-                                                           BigDecimal baseAmount,
-                                                           String documentCurrency,
-                                                           BigDecimal percentage,
-                                                           BigDecimal amount, String comment) {
+  private TradeAllowanceChargeType getTradeAllowanceCharge(final boolean chargeIndicator,
+                                                           final BigDecimal baseAmount,
+                                                           final String documentCurrency,
+                                                           final BigDecimal percentage,
+                                                           final BigDecimal amount, final String comment) {
     //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge
-    TradeAllowanceChargeType atac = new TradeAllowanceChargeType();
+    final TradeAllowanceChargeType atac = new TradeAllowanceChargeType();
 
     //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedSupplyChainTradeAgreement/GrossPriceProductTradePrice/AppliedTradeAllowanceCharge/ChargeIndicator
     //surcharge: true
     //reduction: false
-    atac.withChargeIndicator(new IndicatorType().withIndicator(chargeIndicator));
+    atac.withChargeIndicator(new IndicatorType().withIndicator(Boolean.valueOf (chargeIndicator)));
 
     if (MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0.equals(zugferdMappingType)) {
       if (baseAmount != null) {
@@ -2845,13 +2845,13 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
     return atac;
   }
 
-  private ProductCharacteristicType getApplicableProductCharacteristic(String typeCode,
-                                                                       String description,
-                                                                       BigDecimal valueMeasure,
-                                                                       String unitCode,
-                                                                       String value) {
+  private ProductCharacteristicType getApplicableProductCharacteristic(final String typeCode,
+                                                                       final String description,
+                                                                       final BigDecimal valueMeasure,
+                                                                       final String unitCode,
+                                                                       final String value) {
     //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic
-    ProductCharacteristicType pc = new ProductCharacteristicType();
+    final ProductCharacteristicType pc = new ProductCharacteristicType();
 
     //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic/TypeCode
     if (typeCode != null) {
@@ -2865,7 +2865,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
 
     if (valueMeasure != null) {
       //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/IncludedSupplyChainTradeLineItem/SpecifiedTradeProduct/ApplicableProductCharacteristic/ValueMeasure
-      MeasureType m = new MeasureType();
+      final MeasureType m = new MeasureType();
 
       m.withValue(valueMeasure);
 
@@ -2885,8 +2885,8 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
     return pc;
   }
 
-  private TradeAddressType getTradeAddressType(Ebi42AddressType address) {
-    TradeAddressType tat = new TradeAddressType();
+  private TradeAddressType getTradeAddressType(final Ebi42AddressType address) {
+    final TradeAddressType tat = new TradeAddressType();
 
     //ebInterface: /Invoice/*/Address/Street
     //ebInterface: /Invoice/*/Address/POBox
@@ -2938,7 +2938,7 @@ public class ZUGFeRDMappingFromEbInterface4p2 extends Mapping {
     return tat;
   }
 
-  private TradeContactType getTradeContactType(Ebi42AddressType address) {
+  private TradeContactType getTradeContactType(final Ebi42AddressType address) {
     TradeContactType tct = null;
 
     if (address.getContact() != null || address.getPhone() != null || address.getEmail() != null) {

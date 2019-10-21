@@ -38,21 +38,21 @@ public class DocumentTypeUtils {
       zugferdContext = JAXBContext.newInstance(CrossIndustryDocumentType.class);
       zugferdUnmarshaller = zugferdContext.createUnmarshaller();
       zugferdMarshaller = zugferdContext.createMarshaller();
-      zugferdMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+      zugferdMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-    } catch (JAXBException e) {
+    } catch (final JAXBException e) {
       LOG.error("Unable to initialize JAXB context.", e);
     }
   }
 
   @Nonnull
-  public static EEbInterfaceVersion getEbInterfaceType (byte[] input) throws MappingException{
-    CollectingValidationEventHandler aVEH = new CollectingValidationEventHandler ();
-    if (EbInterfaceReader.ebInterface41 ().setValidationEventHandler (aVEH).read (input) != null) 
+  public static EEbInterfaceVersion getEbInterfaceType (final byte[] input) throws MappingException{
+    final CollectingValidationEventHandler aVEH = new CollectingValidationEventHandler ();
+    if (EbInterfaceReader.ebInterface41 ().setValidationEventHandler (aVEH).read (input) != null)
       return EEbInterfaceVersion.V41;
-    if (EbInterfaceReader.ebInterface42 ().setValidationEventHandler (aVEH).read (input) != null) 
+    if (EbInterfaceReader.ebInterface42 ().setValidationEventHandler (aVEH).read (input) != null)
       return EEbInterfaceVersion.V42;
-    if (EbInterfaceReader.ebInterface43 ().setValidationEventHandler (aVEH).read (input) != null) 
+    if (EbInterfaceReader.ebInterface43 ().setValidationEventHandler (aVEH).read (input) != null)
       return EEbInterfaceVersion.V43;
     // Other mappings are not supported
 
@@ -62,12 +62,12 @@ public class DocumentTypeUtils {
   /**
    * Parse the given ZUGFeRD input XML string and creates a JAX-B object
    */
-  public static CrossIndustryDocumentType parseZUGFeRD(String input) throws MappingException {
-    StringReader reader = new StringReader(input);
+  public static CrossIndustryDocumentType parseZUGFeRD(final String input) throws MappingException {
+    final StringReader reader = new StringReader(input);
     CrossIndustryDocumentType zugferd;
     try {
       zugferd = (CrossIndustryDocumentType) zugferdUnmarshaller.unmarshal(reader);
-    } catch (JAXBException e) {
+    } catch (final JAXBException e) {
       throw new MappingException("Unable to retrieve JAX-B object for ZUGFeRD XML string.");
     }
     return zugferd;
@@ -76,14 +76,14 @@ public class DocumentTypeUtils {
   /**
    * Write the ZUGFeRD JAX-B object to a byte array
    */
-  public static byte[] writeZUGFeRD(CrossIndustryDocumentType zugferd) throws MappingException {
+  public static byte[] writeZUGFeRD(final CrossIndustryDocumentType zugferd) throws MappingException {
 
-    StringWriter sw = new StringWriter();
+    final StringWriter sw = new StringWriter();
     try {
-      ObjectFactory of = new ObjectFactory();
-      JAXBElement<CrossIndustryDocumentType> cii = of.createCrossIndustryDocument(zugferd);
+      final ObjectFactory of = new ObjectFactory();
+      final JAXBElement<CrossIndustryDocumentType> cii = of.createCrossIndustryDocument(zugferd);
       zugferdMarshaller.marshal(cii, sw);
-    } catch (JAXBException e) {
+    } catch (final JAXBException e) {
       throw new MappingException("Unable to retrieve String from JAX-B ZUGFeRD object.", e);
     }
 
