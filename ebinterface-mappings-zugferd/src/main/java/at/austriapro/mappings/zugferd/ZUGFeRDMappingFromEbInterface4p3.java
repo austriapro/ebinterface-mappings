@@ -240,7 +240,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                                                  .withValue(
                                                      dateTimeFormatter
                                                          .format(
-                                                             getLocalDate(paymentConditions.getDueDate())))
+                                                             paymentConditions.getDueDate().atStartOfDay ()))
                                                  .withFormat(
                                                      "102")));
           }
@@ -258,7 +258,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                                                .withValue(
                                                    dateTimeFormatter
                                                        .format(
-                                                           getLocalDate(discount.getPaymentDate())))
+                                                           discount.getPaymentDate().atStartOfDay ()))
                                                .withFormat(
                                                    "102")));
           }
@@ -324,7 +324,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                                                .withValue(
                                                    dateTimeFormatter
                                                        .format(
-                                                           getLocalDate(paymentConditions.getDueDate())))
+                                                           paymentConditions.getDueDate().atStartOfDay ()))
                                                .withFormat(
                                                    "102")));
         }
@@ -470,9 +470,9 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                                                                         .withValue(
                                                                             dateTimeFormatter
                                                                                 .format(
-                                                                                    getLocalDate(paymentMethod
+                                                                                    paymentMethod
                                                                                         .getSEPADirectDebit()
-                                                                                        .getDebitCollectionDate())))
+                                                                                        .getDebitCollectionDate().atStartOfDay ()))
                                                                         .withFormat(
                                                                             "102")))
                     .withEndDateTime(new DateTimeType()
@@ -481,9 +481,9 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                                                  .withValue(
                                                      dateTimeFormatter
                                                          .format(
-                                                             getLocalDate(paymentMethod
+                                                             paymentMethod
                                                                  .getSEPADirectDebit()
-                                                                 .getDebitCollectionDate())))
+                                                                 .getDebitCollectionDate().atStartOfDay ()))
                                                  .withFormat(
                                                      "102"))));
           }
@@ -1416,7 +1416,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                       new SupplyChainEventType().withOccurrenceDateTime(
                           new DateTimeType()
                               .withDateTimeString(new DateTimeType.DateTimeString().withValue(
-                                  dateTimeFormatter.format(getLocalDate(item.getDelivery().getDate()))).withFormat(
+                                  dateTimeFormatter.format(item.getDelivery().getDate().atStartOfDay ())).withFormat(
                                   "102"))));
                 } else if (item.getDelivery().getPeriod().getFromDate() != null) {
                   //ebInterface: /Invoice/Details/ItemLists/ListLineItem/Delivery/Period/FromDate
@@ -1428,9 +1428,9 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                                                                                .withValue(
                                                                                    dateTimeFormatter
                                                                                        .format(
-                                                                                           getLocalDate(item.getDelivery()
+                                                                                           item.getDelivery()
                                                                                                .getPeriod()
-                                                                                               .getFromDate())))
+                                                                                               .getFromDate().atStartOfDay ()))
                                                                                .withFormat(
                                                                                    "102"))));
                 }
@@ -1501,8 +1501,8 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                                             .withContent(new TextType().withValue(
                                                 issueDateTimeFormatter
                                                     .format(
-                                                        getLocalDateTime(item.getBillersOrderReference()
-                                                            .getReferenceDate())))));
+                                                        item.getBillersOrderReference()
+                                                            .getReferenceDate().atStartOfDay ()))));
                   mLog.add(
                       "BillersOrderReference/ReferenceDate does not exist in ZUGFeRD, mapped to IncludedNote",
                       "/Invoice/Details/ItemList[" + iList + "]/ListLineItem[" + iItems
@@ -1569,8 +1569,8 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                 if (item.getInvoiceRecipientsOrderReference().getReferenceDate() != null) {
                   bor.withIssueDateTime(issueDateTimeFormatter
                                             .format(
-                                                getLocalDateTime(item.getInvoiceRecipientsOrderReference()
-                                                    .getReferenceDate())));
+                                                item.getInvoiceRecipientsOrderReference()
+                                                    .getReferenceDate().atStartOfDay ()));
                 }
 
                 //ebInterface: /Invoice/Details/ItemLists/ListLineItem/InvoiceRecipientsOrderReference/Description
@@ -1885,7 +1885,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
     //ZUGFeRD: /CrossIndustryDocument/HeaderExchangedDocument/IssueDateTime
     zugferd.getHeaderExchangedDocument().withIssueDateTime(new DateTimeType().withDateTimeString(
         new DateTimeType.DateTimeString().withFormat("102")
-            .withValue(dateTimeFormatter.format(getLocalDate(invoice.getInvoiceDate())))));
+            .withValue(dateTimeFormatter.format(invoice.getInvoiceDate().atStartOfDay ()))));
   }
 
   /**
@@ -2015,8 +2015,8 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                   .withContent(
                       new TextType().withValue(issueDateTimeFormatter
                                                    .format(
-                                                       getLocalDateTime(orderingParty.getOrderReference()
-                                                           .getReferenceDate())))));
+                                                       orderingParty.getOrderReference()
+                                                           .getReferenceDate().atStartOfDay ()))));
           mLog.add(
               "OrderReference/ReferenceDate does not exist in ZUGFeRD, mapped to IncludedNote",
               "/Invoice/OrderingParty/OrderReference/ReferenceDate",
@@ -2197,8 +2197,8 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                 .withContent(
                     new TextType().withValue(issueDateTimeFormatter
                                                  .format(
-                                                     getLocalDateTime(invoiceRecipient.getOrderReference()
-                                                         .getReferenceDate())))));
+                                                     invoiceRecipient.getOrderReference()
+                                                         .getReferenceDate().atStartOfDay ()))));
         mLog.add(
             "OrderReference/ReferenceDate does not exist in ZUGFeRD, mapped to IncludedNote",
             "/Invoice/InvoiceRecipient/OrderReference/ReferenceDate",
@@ -2398,8 +2398,8 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
                   .withContent(
                       new TextType().withValue(issueDateTimeFormatter
                                                    .format(
-                                                       getLocalDateTime(biller.getOrderReference()
-                                                           .getReferenceDate())))));
+                                                       biller.getOrderReference()
+                                                           .getReferenceDate().atStartOfDay ()))));
           mLog.add(
               "OrderReference/ReferenceDate does not exist in ZUGFeRD, mapped to IncludedNote",
               "/Invoice/Biller/OrderReference/ReferenceDate",
@@ -2508,7 +2508,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
         //ebInterface: /Invoice/RelatedDocument/InvoiceDate
         //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/IssueDateTime
         referencedDocumentType.withIssueDateTime(
-            issueDateTimeFormatter.format(getLocalDateTime(relatedDocument.getInvoiceDate())));
+            issueDateTimeFormatter.format(relatedDocument.getInvoiceDate().atStartOfDay ()));
 
         //ebInterface: /Invoice/RelatedDocument/DocumentType
         //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/TypeCode
@@ -2536,7 +2536,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
 
         //ebInterface: /Invoice/RelatedDocument/InvoiceDate
         if (relatedDocument.getInvoiceDate() != null) {
-          text.append(dateTimeFormatter.format(getLocalDate(relatedDocument.getInvoiceDate()))).append("\n");
+          text.append(dateTimeFormatter.format(relatedDocument.getInvoiceDate().atStartOfDay ())).append("\n");
         }
 
         //ebInterface: /Invoice/RelatedDocument/Comment
@@ -2580,7 +2580,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
       //ebInterface: /Invoice/CancelledOriginalDocument/InvoiceDate
       //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/IssueDateTime
       referencedDocumentType.withIssueDateTime(
-          issueDateTimeFormatter.format(getLocalDateTime(cancelledOriginalDocument.getInvoiceDate())));
+          issueDateTimeFormatter.format(cancelledOriginalDocument.getInvoiceDate().atStartOfDay ()));
 
       //ebInterface: /Invoice/CancelledOriginalDocument/DocumentType
       //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/TypeCode
@@ -2610,7 +2610,7 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
 
       //ebInterface: /Invoice/CancelledOriginalDocument/InvoiceDate
       if (cancelledOriginalDocument.getInvoiceDate() != null) {
-        text.append(dateTimeFormatter.format(getLocalDate(cancelledOriginalDocument.getInvoiceDate())))
+        text.append(dateTimeFormatter.format(cancelledOriginalDocument.getInvoiceDate().atStartOfDay ()))
             .append("\n");
       }
 
@@ -2655,14 +2655,14 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
       zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
           .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
               new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
-                  dateTimeFormatter.format(getLocalDate(delivery.getDate()))).withFormat(
+                  dateTimeFormatter.format(delivery.getDate().atStartOfDay ())).withFormat(
                   "102"))));
     } else if (delivery.getPeriod().getFromDate() != null) {
       //ebInterface: /Invoice/Delivery/Period/FromDate
       zugferd.getSpecifiedSupplyChainTradeTransaction().getApplicableSupplyChainTradeDelivery()
           .withActualDeliverySupplyChainEvent(new SupplyChainEventType().withOccurrenceDateTime(
               new DateTimeType().withDateTimeString(new DateTimeType.DateTimeString().withValue(
-                  dateTimeFormatter.format(getLocalDate(delivery.getPeriod().getFromDate()))).withFormat(
+                  dateTimeFormatter.format(delivery.getPeriod().getFromDate().atStartOfDay ())).withFormat(
                   "102"))));
     }
 
@@ -2743,12 +2743,11 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
 
     if (Ebi43DocumentTypeType.SELF_BILLING.equals(invoice.getDocumentType())) {
       return "BELASTUNGSANZEIGE";
-    } else if (Ebi43DocumentTypeType.CREDIT_MEMO.equals(invoice.getDocumentType())) {
-      return "GUTSCHRIFT";
-    } else {
-      return "RECHNUNG";
     }
-
+    if (Ebi43DocumentTypeType.CREDIT_MEMO.equals(invoice.getDocumentType())) {
+      return "GUTSCHRIFT";
+    }
+    return "RECHNUNG";
   }
 
   /**
@@ -2759,9 +2758,8 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
     //Code 84 has no equivalent in ebInterface
     if (Ebi43DocumentTypeType.SELF_BILLING.equals(invoice.getDocumentType())) {
       return "389";
-    } else {
-      return "380";
     }
+    return "380";
   }
 
 
@@ -2796,11 +2794,9 @@ public class ZUGFeRDMappingFromEbInterface4p3 extends Mapping {
           .add(
               supplyChainTradeAgreementType);
       return supplyChainTradeAgreementType;
-    } else {
-      return zugferd.getSpecifiedSupplyChainTradeTransaction()
-          .getApplicableSupplyChainTradeAgreement().get(0);
     }
-
+    return zugferd.getSpecifiedSupplyChainTradeTransaction()
+          .getApplicableSupplyChainTradeAgreement().get(0);
   }
 
   private TradeAllowanceChargeType getTradeAllowanceCharge(final boolean chargeIndicator,
