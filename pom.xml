@@ -34,20 +34,20 @@
       <dependency>
         <groupId>net.sf.saxon</groupId>
         <artifactId>Saxon-HE</artifactId>
-        <version>10.2</version>
+        <version>10.3</version>
       </dependency>
 
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>9.4.8</version>
+        <version>9.5.3</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-ebinterface</artifactId>
-        <version>6.2.0</version>
+        <version>6.2.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
