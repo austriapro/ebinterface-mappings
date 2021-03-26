@@ -1887,7 +1887,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
   /**
    * Map the signature from the ebInterface
    */
-  private void mapSignature(final CrossIndustryDocumentType zugferd, final SignatureType signature) {
+  private void mapSignature(@SuppressWarnings ("unused") final CrossIndustryDocumentType zugferd, final SignatureType signature) {
     //TODO not supported in ZUGFeRD
     //ebInterface: /Invoice/Signature
     if (signature != null) {
@@ -2012,7 +2012,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
                       new TextType().withValue(issueDateTimeFormatter
                                                    .format(
                                                        orderingParty.getOrderReference()
-                                                           .getReferenceDate().atStartOfDay ()))));
+                                                           .getReferenceDateLocal().atStartOfDay ()))));
           mLog.add(
               "OrderReference/ReferenceDate does not exist in ZUGFeRD, mapped to IncludedNote",
               "/Invoice/OrderingParty/OrderReference/ReferenceDate",
@@ -2191,7 +2191,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
                     new TextType().withValue(issueDateTimeFormatter
                                                  .format(
                                                      invoiceRecipient.getOrderReference()
-                                                         .getReferenceDate().atStartOfDay ()))));
+                                                         .getReferenceDateLocal().atStartOfDay ()))));
         mLog.add(
             "OrderReference/ReferenceDate does not exist in ZUGFeRD, mapped to IncludedNote",
             "/Invoice/InvoiceRecipient/OrderReference/ReferenceDate",
@@ -2389,7 +2389,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
                       new TextType().withValue(issueDateTimeFormatter
                                                    .format(
                                                        biller.getOrderReference()
-                                                           .getReferenceDate().atStartOfDay ()))));
+                                                           .getReferenceDateLocal().atStartOfDay ()))));
           mLog.add(
               "OrderReference/ReferenceDate does not exist in ZUGFeRD, mapped to IncludedNote",
               "/Invoice/Biller/OrderReference/ReferenceDate",
@@ -2495,7 +2495,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
         //ebInterface: /Invoice/RelatedDocument/InvoiceDate
         //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/IssueDateTime
         referencedDocumentType.withIssueDateTime(
-            issueDateTimeFormatter.format(relatedDocument.getInvoiceDate().atStartOfDay ()));
+            issueDateTimeFormatter.format(relatedDocument.getInvoiceDateLocal().atStartOfDay ()));
 
         //ebInterface: /Invoice/RelatedDocument/DocumentType
         //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/TypeCode
@@ -2567,7 +2567,7 @@ public class ZUGFeRDMappingFromEbInterface4p1 extends Mapping {
       //ebInterface: /Invoice/CancelledOriginalDocument/InvoiceDate
       //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/IssueDateTime
       referencedDocumentType.withIssueDateTime(
-          issueDateTimeFormatter.format(cancelledOriginalDocument.getInvoiceDate().atStartOfDay ()));
+          issueDateTimeFormatter.format(cancelledOriginalDocument.getInvoiceDateLocal().atStartOfDay ()));
 
       //ebInterface: /Invoice/CancelledOriginalDocument/DocumentType
       //ZUGFeRD: /CrossIndustryDocument/SpecifiedSupplyChainTradeTransaction/ApplicableSupplyChainTradeAgreement/AdditionalReferencedDocument/TypeCode
