@@ -9,14 +9,14 @@
   <groupId>at.austriapro</groupId>
   <artifactId>ebinterface-mappings-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>ebInterface mappings</name>
 
   <scm>
     <connection>scm:git:git@github.com:austriapro/ebinterface-mappings.git</connection>
     <url>https://github.com/austriapro/ebinterface-mappings</url>
     <developerConnection>scm:git:git@github.com:austriapro/ebinterface-mappings.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>ebinterface-mappings-parent-1.0.1</tag>
   </scm>
 
   <modules>
